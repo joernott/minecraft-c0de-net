@@ -101,7 +101,7 @@ END FUNCTION
 
 A request takes time, and the server MUST NOT wait for it. The function sends the request to the client and returns without results; the cursor stays on the CALL line (like INPUT, `NativeResult.waitForValue()`) until the answer arrives, an error occurs or the timeout of the connection has passed. Other processes and the server continue meanwhile.
 
-A request that is still running when the process ends, is aborted or the server stops is cancelled. After a restart, a restored process calls the function again, so the request is sent a second time. Programs SHOULD keep this in mind for requests that change data (POST, PATCH, DELETE).
+A request that is still running when the process ends, is aborted or the server stops is cancelled: the server cancels a request whose process hasn't called its function for 100 ticks. This also happens to a process that the debugging tool pauses for longer; when it continues, it sends the request again. After a restart, a restored process calls the function again, so the request is sent a second time. Programs SHOULD keep this in mind for requests that change data (POST, PATCH, DELETE).
 
 ## Running requests on the client
 
@@ -113,6 +113,7 @@ A request that is still running when the process ends, is aborted or the server 
   - The server sends the description of the request (method, URL, headers, data, timeout, proxy, SSL setting) to that client. The client sends the request with the Java HTTP client in a thread of its own and sends the answer back.
   - Answers are sent to the server in parts, because a packet from a client to the server is limited to 32 KiB. The server puts them together.
   - The server limits the size of an answer (setting `maxResponseSize`, default 1 MiB). A larger answer is cancelled by the client and raises RESPONSE_TOO_LARGE.
+  - The server waits for the answer for the timeout of the connection and 5 more seconds for the way back; then it raises REQUEST_TIMEOUT and cancels the request on the client.
   - Every player decides on their own computer whether their client sends requests: the client setting `allowRequests` (default true) in `c0de_net-client.properties`. With false, all requests of their processes raise REQUESTS_DISABLED.
   - On a single-player world, server and client run on the same computer; requests work the same way.
   - Apart from this, there are no limits: every program MAY call every host, including hosts in the network of the player who runs it (user decision).
@@ -123,7 +124,7 @@ The functions raise the errors of c0de where they fit and errors of their own fr
 
 | Code | Name | Handling | Description |
 |---|---|---|---|
-| 309 | INVALID_ARGUMENT | raise | The connection is not valid: empty server, port outside of 1 to 65535, timeout outside of 1 to 300, a proxy that is not an `http://` URL. |
+| 309 | INVALID_ARGUMENT | raise | The connection is not valid: empty server, port outside of 1 to 65535, timeout outside of 1 to 300, a proxy that is not an `http://` URL, a header that can't be sent. Or the request is larger than 1,000,000 bytes, the most a packet to a client may carry. |
 | 1000 | HTTP_STATUS | raise | The server answered with a status of 400 or higher. The message is the status line, e.g. `404 Not Found`. The results (`result`, `status`, `headers`) are delivered as well, so a program that catches the error can read the answer. |
 | 1001 | CLIENT_UNAVAILABLE | raise | The player who runs the process is not online, or their client doesn't have c0de net installed. Processes without such a player (e.g. a timer block without owner) can't send requests. |
 | 1002 | REQUESTS_DISABLED | raise | The client of the player who runs the process doesn't send requests (`allowRequests` is false). |

@@ -27,3 +27,7 @@ I have created the project on modrinth, too. The modrinth ID for it is P2irzbnD 
 yes, please push the changes and start sprint 2 as soon as there are green results.
 
 There is one change I'd like to implement. Change the library name to c0de_net/http, as we might add other libraries in this mod for other network related protocols like SMTP, IMAP etc.
+
+## 2026-10-28 – Sprint 3
+
+please go head with sprint 3
