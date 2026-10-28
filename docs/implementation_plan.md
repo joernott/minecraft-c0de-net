@@ -35,7 +35,7 @@ A task is done when
 | Sprint | Goal | Result | Done |
 |---|---|---|:---:|
 | 0 | Concept and plan | Concept and implementation plan | ✅ |
-| 1 | Project skeleton | The mod loads on all nodes with c0de; programs can include `c0de_net/http`; CI and VM are ready |  |
+| 1 | Project skeleton | The mod loads on all nodes with c0de; programs can include `c0de_net/http`; CI and VM are ready | ✅ |
 | 2 | Requests in `core` | Connections become requests, which are sent with the Java HTTP client; answers become results |  |
 | 3 | Requests on the client | The functions send requests through the client of the player who runs the process and wait for the answer |  |
 | 4 | Documentation and handbook | Handbook, Patchouli book, README, Modrinth page |  |
@@ -55,12 +55,12 @@ A task is done when
 
 | Task | Description | Done |
 |---|---|:---:|
-| 1.1 | Build of c0de taken over: Stonecutter with the ten nodes, `core` module, Gradle wrapper, Spotless, `.gitignore`, `.gitattributes`, whitespace check. |  |
-| 1.2 | c0de as dependency of every node from the Modrinth Maven repository (c0de 0.3.0 of the node's version and loader), required in `fabric.mod.json` and `neoforge.mods.toml`, available in the development runs. |  |
-| 1.3 | Mod entry points for Fabric and NeoForge (client and server); the library `c0de_net/http` is registered with `ModLibraries` (empty for now). |  |
-| 1.4 | GameTests on every node: the library is registered, a program with `INCLUDE c0de_net/http` is valid. |  |
-| 1.5 | GitHub Actions: checks, unit tests (Linux and Windows), build and GameTests per node; Dependabot as in c0de. The client GameTests follow with the client code (3.6). |  |
-| 1.6 | VM: a clone of the repository builds and tests all nodes; `docs/development_environment.md`. |  |
+| 1.1 | Build of c0de taken over: Stonecutter with the ten nodes, `core` module, Gradle wrapper, Spotless, `.gitignore`, `.gitattributes`, whitespace check. || ✅ |
+| 1.2 | c0de as dependency of every node from the Modrinth Maven repository (c0de 0.3.0 of the node's version and loader), required in `fabric.mod.json` and `neoforge.mods.toml`, available in the development runs. || ✅ |
+| 1.3 | Mod entry points for Fabric and NeoForge (client and server); the library `c0de_net/http` is registered with `ModLibraries` (empty for now). || ✅ |
+| 1.4 | GameTests on every node: the library is registered, a program with `INCLUDE c0de_net/http` is valid. || ✅ |
+| 1.5 | GitHub Actions: checks, unit tests (Linux and Windows), build and GameTests per node; Dependabot as in c0de. The client GameTests follow with the client code (3.6). || ✅ |
+| 1.6 | VM: a clone of the repository builds and tests all nodes; `docs/development_environment.md`. || ✅ |
 
 ## Sprint 2: Requests in `core`
 
