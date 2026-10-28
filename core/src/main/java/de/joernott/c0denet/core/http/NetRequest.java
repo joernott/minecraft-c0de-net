@@ -9,6 +9,7 @@ import java.io.UncheckedIOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -31,7 +32,8 @@ public record NetRequest(
         URI proxy,
         boolean skipSslValidation) {
     public NetRequest {
-        headers = Map.copyOf(new LinkedHashMap<>(headers));
+        // In their order, so that a request and its copy from the network are the same bytes
+        headers = Collections.unmodifiableMap(new LinkedHashMap<>(headers));
     }
 
     /**

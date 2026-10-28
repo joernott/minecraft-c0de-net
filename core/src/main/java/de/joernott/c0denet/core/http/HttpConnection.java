@@ -2,6 +2,7 @@ package de.joernott.c0denet.core.http;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -31,7 +32,7 @@ public record HttpConnection(
     public static final int MAX_TIMEOUT = 300;
 
     public HttpConnection {
-        headers = Map.copyOf(new LinkedHashMap<>(headers));
+        headers = Collections.unmodifiableMap(new LinkedHashMap<>(headers));
     }
 
     /**
