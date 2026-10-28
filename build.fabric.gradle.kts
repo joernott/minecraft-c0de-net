@@ -50,6 +50,8 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:${sc.properties.get<String>("deps.fabric_api")}")
     // c0de of the same Minecraft version, which runs the programs that use the library
     modImplementation(c0de("fabric", sc.current.version, sc.properties["deps.c0de"]))
+    // c0de embeds snakeyaml with jar-in-jar; the development runs before 26.1 don't load the embedded jar
+    if (sc.current.parsed < "26.1") localRuntime("org.snakeyaml:snakeyaml-engine:3.2")
     // Patchouli is optional: with it, the handbook of the mod can be crafted and read
     // Development runs without Patchouli: -Ppatchouli=false
     if (providers.gradleProperty("patchouli").orNull != "false") {

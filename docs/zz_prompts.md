@@ -19,3 +19,5 @@ Answers to the questions: the library is named c0de_net/net; everyone may send r
 2: Remove the socks proxies part.
 3.a c0de INCLUDE book surrounded by 8 strings. After all, it's about the worldwide web.
 After implementing the changes, please push sprint 0 and start with sprint 1
+
+I have created the project on modrinth, too. The modrinth ID for it is P2irzbnD and the modrinth token has been set. in the git secrets for github actions.

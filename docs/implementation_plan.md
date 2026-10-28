@@ -59,7 +59,7 @@ A task is done when
 | 1.2 | c0de as dependency of every node from the Modrinth Maven repository (c0de 0.3.0 of the node's version and loader), required in `fabric.mod.json` and `neoforge.mods.toml`, available in the development runs. |  |
 | 1.3 | Mod entry points for Fabric and NeoForge (client and server); the library `c0de_net/net` is registered with `ModLibraries` (empty for now). |  |
 | 1.4 | GameTests on every node: the library is registered, a program with `INCLUDE c0de_net/net` is valid. |  |
-| 1.5 | GitHub Actions: checks, unit tests, GameTests per node, client GameTests (Fabric 1.21.11 and 26.x); Dependabot as in c0de. |  |
+| 1.5 | GitHub Actions: checks, unit tests (Linux and Windows), build and GameTests per node; Dependabot as in c0de. The client GameTests follow with the client code (3.6). |  |
 | 1.6 | VM: a clone of the repository builds and tests all nodes; `docs/development_environment.md`. |  |
 
 ## Sprint 2: Requests in `core`
@@ -101,7 +101,7 @@ A task is done when
 
 | Task | Description | Done |
 |---|---|:---:|
-| 5.1 | Modrinth project (environment "client and server", c0de as required dependency) and release workflow as in c0de. |  |
+| 5.1 | Modrinth project (created by the user: `P2irzbnD`, secret `MODRINTH_TOKEN` set; environment "client and server", c0de as required dependency) and release workflow as in c0de. |  |
 | 5.2 | Release 0.1.0 for all nodes. |  |
 
 ## Risks

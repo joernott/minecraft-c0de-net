@@ -37,7 +37,7 @@ public final class SmokeTests {
                         NOOP
                         FUNCTION run
                         BEGIN
-                            EXIT 0
+                            EXIT 0 ;
                         END FUNCTION
                         """),
                 ModLibraries.registry());

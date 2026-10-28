@@ -93,17 +93,6 @@ neoForge {
     }
 }
 
-// c0de embeds snakeyaml with jar-in-jar, which is only unpacked in production. The development runs get it as
-// a library, like the development runs of c0de: before 1.21.11 through the additional runtime classpath of
-// ModDevGradle, since then through the normal runtime classpath.
-dependencies {
-    if (sc.current.parsed < "1.21.11") {
-        "additionalRuntimeClasspath"("org.snakeyaml:snakeyaml-engine:3.2")
-    } else {
-        runtimeOnly("org.snakeyaml:snakeyaml-engine:3.2")
-    }
-}
-
 java {
     withSourcesJar()
     targetCompatibility = requiredJava

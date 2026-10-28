@@ -1,0 +1,109 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Formatting and unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          # 21 for the toolchain of the 1.21.x nodes, 25 for the Gradle daemon (Loom needs Java 25)
+          java-version: |
+            21
+            25
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Whitespace
+        run: scripts/check-whitespace.sh
+      - name: Formatting and unit tests of core
+        run: ./gradlew :core:check --console=plain
+      - name: Report failed unit tests
+        if: failure()
+        run: scripts/ci/report-junit.sh core/build/test-results/test
+
+  core-windows:
+    name: Unit tests on Windows
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          # 21 for the toolchain of the 1.21.x nodes, 25 for the Gradle daemon (Loom needs Java 25)
+          java-version: |
+            21
+            25
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Unit tests of core
+        run: ./gradlew :core:test --console=plain
+      - name: Report failed unit tests
+        if: failure()
+        run: scripts/ci/report-junit.sh core/build/test-results/test
+
+  node:
+    name: ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # One entry per Stonecutter node (see settings.gradle.kts)
+        include:
+          - node: 1.21.1-fabric
+            gametest: runGametest
+          - node: 1.21.1-neoforge
+            gametest: runGameTestServer
+          - node: 1.21.11-fabric
+            gametest: runGametest
+          - node: 1.21.11-neoforge
+            gametest: runGameTestServer
+          - node: 26.1.2-fabric
+            gametest: runGametest
+          - node: 26.1.2-neoforge
+            gametest: runGameTestServer
+          - node: 26.2-fabric
+            gametest: runGametest
+          - node: 26.2-neoforge
+            gametest: runGameTestServer
+          - node: 26.3-fabric
+            gametest: runGametest
+          - node: 26.3-neoforge
+            gametest: runGameTestServer
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          # 21 for the toolchain of the 1.21.x nodes, 25 for the Gradle daemon (Loom needs Java 25)
+          java-version: |
+            21
+            25
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Build
+        run: ./gradlew :${{ matrix.node }}:build --console=plain
+      - name: GameTests
+        run: scripts/ci/run-gametests.sh :${{ matrix.node }}:${{ matrix.gametest }} gametest.log
+      - name: Report failed GameTests
+        if: failure()
+        run: scripts/ci/report-gametest.sh gametest.log
+      - name: Upload jars
+        uses: actions/upload-artifact@v7
+        with:
+          name: c0de_net-${{ matrix.node }}
+          path: versions/${{ matrix.node }}/build/libs/*.jar
+          if-no-files-found: error
