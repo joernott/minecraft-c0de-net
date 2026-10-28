@@ -10,3 +10,4 @@
 *.png binary
 *.nbt binary
 *.zip binary
+*.p12 binary
