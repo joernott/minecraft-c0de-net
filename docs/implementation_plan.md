@@ -36,7 +36,7 @@ A task is done when
 |---|---|---|:---:|
 | 0 | Concept and plan | Concept and implementation plan | ✅ |
 | 1 | Project skeleton | The mod loads on all nodes with c0de; programs can include `c0de_net/http`; CI and VM are ready | ✅ |
-| 2 | Requests in `core` | Connections become requests, which are sent with the Java HTTP client; answers become results |  |
+| 2 | Requests in `core` | Connections become requests, which are sent with the Java HTTP client; answers become results | ✅ |
 | 3 | Requests on the client | The functions send requests through the client of the player who runs the process and wait for the answer |  |
 | 4 | Documentation and handbook | Handbook, Patchouli book, README, Modrinth page |  |
 | 5 | Release 0.1.0 | c0de net on Modrinth and GitHub for all nodes |  |
@@ -68,11 +68,11 @@ A task is done when
 
 | Task | Description | Done |
 |---|---|:---:|
-| 2.1 | Connection: the values of HTTP_CONNECTION, their validation (INVALID_ARGUMENT) and the URL of a request. |  |
-| 2.2 | Request description: method, URL, headers (including basic authentication), data, timeout, proxy, SSL setting; serializable for the network. |  |
-| 2.3 | Sending requests with `java.net.http.HttpClient`: all eight methods, HTTP proxies, skipped SSL validation (own trust manager, without hostname check), timeout, cancellation, size limit. Unit tests against `com.sun.net.httpserver.HttpServer` (also with a self-signed certificate). |  |
-| 2.4 | Answers: decoding with the charset of the answer, headers as HASH, headers as JSON for HEAD, HTTP_STATUS for status ≥ 400 with results. |  |
-| 2.5 | Error codes 1000 to 1005 with their messages. |  |
+| 2.1 | Connection: the values of HTTP_CONNECTION, their validation (INVALID_ARGUMENT) and the URL of a request. || ✅ |
+| 2.2 | Request description: method, URL, headers (including basic authentication), data, timeout, proxy, SSL setting; serializable for the network. || ✅ |
+| 2.3 | Sending requests with `java.net.http.HttpClient`: all eight methods, HTTP proxies, skipped SSL validation (own trust manager, without hostname check), timeout, cancellation, size limit. Unit tests against `com.sun.net.httpserver.HttpServer` (also with a self-signed certificate). || ✅ |
+| 2.4 | Answers: decoding with the charset of the answer, headers as HASH, headers as JSON for HEAD, HTTP_STATUS for status ≥ 400 with results. || ✅ |
+| 2.5 | Error codes 1000 to 1005 with their messages. || ✅ |
 
 ## Sprint 3: Requests on the client
 
