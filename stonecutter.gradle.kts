@@ -24,6 +24,10 @@ stonecutter parameters {
             replace("ResourceLocation", "Identifier")
             replace(".location()", ".identifier()")
         }
+        // ChunkPos is a record since 26.1
+        string(current.parsed >= "26.1") {
+            replace("chunk.x, chunk.z", "chunk.x(), chunk.z()")
+        }
         // The GameTest framework was rewritten in 1.21.5; Fabric has an annotation of its own (FabricGameTests)
         string(current.parsed >= "1.21.5" && loader == "fabric") {
             replace("import net.minecraft.gametest.framework.GameTest;", "import net.fabricmc.fabric.api.gametest.v1.GameTest;")
