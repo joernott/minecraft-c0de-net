@@ -34,21 +34,20 @@ A task is done when
 
 | Sprint | Goal | Result | Done |
 |---|---|---|:---:|
-| 0 | Concept and plan | Concept and implementation plan |  |
+| 0 | Concept and plan | Concept and implementation plan | ✅ |
 | 1 | Project skeleton | The mod loads on all nodes with c0de; programs can include `c0de_net/net`; CI and VM are ready |  |
 | 2 | Requests in `core` | Connections become requests, which are sent with the Java HTTP client; answers become results |  |
-| 3 | Requests on the client | The functions send requests through the client of the owner and wait for the answer |  |
+| 3 | Requests on the client | The functions send requests through the client of the player who runs the process and wait for the answer |  |
 | 4 | Documentation and handbook | Handbook, Patchouli book, README, Modrinth page |  |
-| 5 | SOCKS5 proxies | Requests through SOCKS5 proxies, or a documented decision against them |  |
-| 6 | Release 0.1.0 | c0de net on Modrinth and GitHub for all nodes |  |
+| 5 | Release 0.1.0 | c0de net on Modrinth and GitHub for all nodes |  |
 
 ## Sprint 0: Concept and plan
 
 | Task | Description | Done |
 |---|---|:---:|
-| 0.1 | Concept: type, functions, client execution, errors, settings, documentation. |  |
-| 0.2 | Implementation plan. |  |
-| 0.3 | Review of the open questions of the concept with the user. |  |
+| 0.1 | Concept: type, functions, client execution, errors, settings, documentation. | ✅ |
+| 0.2 | Implementation plan. | ✅ |
+| 0.3 | Review of the open questions of the concept with the user: the client of the player who runs the process sends the requests, no SOCKS5 proxies, the handbook is crafted from an INCLUDE block and eight strings. | ✅ |
 
 ## Sprint 1: Project skeleton
 
@@ -77,14 +76,14 @@ A task is done when
 
 ## Sprint 3: Requests on the client
 
-**Goal:** programs in the game send requests through the client of their owner.
+**Goal:** programs in the game send requests through the client of the player who runs them.
 
 | Task | Description | Done |
 |---|---|:---:|
 | 3.1 | Type HTTP_CONNECTION and the functions HTTP_GET, HTTP_HEAD, HTTP_OPTIONS, HTTP_TRACE, HTTP_DELETE, HTTP_PATCH, HTTP_POST, HTTP_PUT in the library. |  |
 | 3.2 | Network: request payload to the client, answer in parts of at most 32 KiB to the server, cancellation; both loaders. |  |
-| 3.3 | Pending requests on the server: the function waits (`waitForValue`) until the answer, an error or the timeout; requests of ended processes are cancelled; `maxRequestsPerOwner`. Check that results are delivered together with HTTP_STATUS. |  |
-| 3.4 | Client: requests in a thread of their own, `allowRequests`; CLIENT_UNAVAILABLE for owners that are offline or don't have the mod. |  |
+| 3.3 | Pending requests on the server: the function waits (`waitForValue`) until the answer, an error or the timeout; requests of ended processes are cancelled; `maxRequestsPerPlayer`. Check that results are delivered together with HTTP_STATUS. |  |
+| 3.4 | Client: the player who runs the process (activator, otherwise the owner of the trigger block); requests in a thread of their own, `allowRequests`; CLIENT_UNAVAILABLE for players that are offline or don't have the mod. |  |
 | 3.5 | Settings `c0de_net.properties` and `c0de_net-client.properties`. |  |
 | 3.6 | GameTests with a local HTTP server and a client stand-in on every node; client GameTests (Fabric) with the real client. |  |
 
@@ -98,25 +97,18 @@ A task is done when
 | 4.2 | Patchouli book "c0de net handbook" generated from the handbook (1.21.1), with its recipe. |  |
 | 4.3 | README, CHANGELOG, `docs/modrinth.md`, logo. |  |
 
-## Sprint 5: SOCKS5 proxies
+## Sprint 5: Release 0.1.0
 
 | Task | Description | Done |
 |---|---|:---:|
-| 5.1 | Decide how SOCKS5 proxies are supported (second client or bundled library) and update the concept. |  |
-| 5.2 | Implement it with unit tests against a local SOCKS5 proxy, or document that `proxy_is_socks` is not supported. |  |
-
-## Sprint 6: Release 0.1.0
-
-| Task | Description | Done |
-|---|---|:---:|
-| 6.1 | Modrinth project (environment "client and server", c0de as required dependency) and release workflow as in c0de. |  |
-| 6.2 | Release 0.1.0 for all nodes. |  |
+| 5.1 | Modrinth project (environment "client and server", c0de as required dependency) and release workflow as in c0de. |  |
+| 5.2 | Release 0.1.0 for all nodes. |  |
 
 ## Risks
 
 | Risk | Mitigation |
 |---|---|
-| The owner is offline when a process runs, e.g. for timers. | CLIENT_UNAVAILABLE is a normal error that programs catch; the handbook shows how. |
+| The player who runs a process is offline, e.g. the owner of a timer. | CLIENT_UNAVAILABLE is a normal error that programs catch; the handbook shows how. |
 | Answers are larger than the network allows in one packet. | Answers are sent in parts and limited by `maxResponseSize`. |
 | GameTests have no real client. | The client side is behind an interface; GameTests use a stand-in that sends the request in the server JVM. The Fabric client GameTests cover the real path. |
 | A new c0de version changes the library API. | The API of c0de is documented for other mods; c0de net is built against a fixed c0de version and tested in CI. |
