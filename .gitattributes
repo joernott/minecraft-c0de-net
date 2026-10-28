@@ -1,0 +1,12 @@
+# Text files use LF everywhere, so that builds on Windows, Linux and in CI see the same content
+* text=auto eol=lf
+
+# Windows scripts need CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary files
+*.jar binary
+*.png binary
+*.nbt binary
+*.zip binary

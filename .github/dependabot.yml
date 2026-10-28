@@ -1,0 +1,20 @@
+# Dependency updates as pull requests.
+# Minecraft, loader and Fabric API versions in stonecutter.properties.toml are not covered by Dependabot;
+# they are updated manually (see docs/development_environment.md).
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ["*"]
+
+  - package-ecosystem: gradle
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      gradle:
+        patterns: ["*"]

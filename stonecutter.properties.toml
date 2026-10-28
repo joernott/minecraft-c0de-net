@@ -1,0 +1,85 @@
+# Mod properties and dependency versions per node.
+# See https://stonecutter.kikugie.dev/wiki/config/properties#centralized-properties
+mod.id = "c0de_net"
+mod.name = "c0de net"
+mod.group = "de.joernott.c0denet"
+mod.version = "0.1.0"
+mod.description = "The library c0de_net/net for c0de: programs send HTTP requests from the client of the player who runs them."
+mod.authors = "Jörn Ott"
+mod.license = "BSD-3-Clause"
+mod.sources_url = "https://github.com/joernott/minecraft-c0de-net"
+mod.issues_url = "https://github.com/joernott/minecraft-c0de-net/issues"
+# The ID of the Modrinth project (task 5.1); publishMods is a dry run without it or without MODRINTH_TOKEN
+publish.modrinth_id = "P2irzbnD"
+
+# The version of c0de the mod is built and tested against; the mod requires it or a newer one
+deps.c0de = "0.3.0"
+deps.fabric_loader = "0.19.5"
+loomx.loom_version = "1.18-SNAPSHOT"
+
+# The Minecraft and loader versions are the ones of c0de (stonecutter.properties.toml of minecraft-c0de)
+["1.21.1"]
+# Releases the mod is marked compatible with on Modrinth, separated by commas
+mod.mc_releases = "1.21.1"
+deps.parchment = "2024.11.17"
+# Optional: the in-game handbook; only loaded in the development runs
+deps.patchouli = "1.21.1-93"
+
+[fabric."1.21.1"]
+# Compatibility range in fabric.mod.json
+mod.mc_compat = "~1.21.1"
+deps.fabric_api = "0.116.17+1.21.1"
+
+[neoforge."1.21.1"]
+# Compatibility range in neoforge.mods.toml
+mod.mc_compat = "[1.21.1, 1.21.2)"
+deps.neo_loader = "21.1.264"
+
+["1.21.11"]
+mod.mc_releases = "1.21.11"
+deps.parchment = "2025.12.20"
+
+[fabric."1.21.11"]
+mod.mc_compat = "~1.21.11"
+deps.fabric_api = "0.141.6+1.21.11"
+
+[neoforge."1.21.11"]
+mod.mc_compat = "[1.21.11, 1.21.12)"
+deps.neo_loader = "21.11.48"
+
+["26.1.2"]
+mod.mc_releases = "26.1.2"
+# Unobfuscated: no Parchment mappings needed
+deps.fabric_loader = "0.20.1"
+
+[fabric."26.1.2"]
+mod.mc_compat = "~26.1.2"
+deps.fabric_api = "0.155.3+26.1.2"
+
+[neoforge."26.1.2"]
+mod.mc_compat = "[26.1.2, 26.1.3)"
+deps.neo_loader = "26.1.2.124"
+
+["26.2"]
+mod.mc_releases = "26.2"
+deps.fabric_loader = "0.20.1"
+
+[fabric."26.2"]
+mod.mc_compat = "~26.2"
+deps.fabric_api = "0.161.0+26.2"
+
+[neoforge."26.2"]
+mod.mc_compat = "[26.2, 26.2.1)"
+deps.neo_loader = "26.2.0.93"
+
+["26.3"]
+mod.mc_releases = "26.3"
+deps.fabric_loader = "0.20.1"
+
+[fabric."26.3"]
+mod.mc_compat = "~26.3"
+deps.fabric_api = "0.165.0+26.3"
+
+[neoforge."26.3"]
+mod.mc_compat = "[26.3, 26.3.1)"
+deps.neo_loader = "26.3.0.99"

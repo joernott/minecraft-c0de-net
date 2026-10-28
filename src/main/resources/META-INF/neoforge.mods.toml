@@ -1,0 +1,28 @@
+license = "${license}"
+issueTrackerURL = "${issues}"
+
+modLoader = "javafml"
+loaderVersion = "[1,)"
+
+[[mods]]
+modId = "${id}"
+displayName = "${name}"
+version = "${version}"
+authors = "${authors}"
+description = "${description}"
+displayURL = "${sources}"
+
+[[dependencies.${id}]]
+modId = "minecraft"
+type = "required"
+versionRange = "${minecraft}"
+ordering = "NONE"
+side = "BOTH"
+
+# c0de runs the programs that use the library; it is loaded first, so the library can be registered
+[[dependencies.${id}]]
+modId = "c0de"
+type = "required"
+versionRange = "[${c0de},)"
+ordering = "AFTER"
+side = "BOTH"

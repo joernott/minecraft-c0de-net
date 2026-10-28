@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "${id}",
+  "version": "${version}",
+  "name": "${name}",
+  "description": "${description}",
+  "authors": [
+    "${authors}"
+  ],
+  "contact": {
+    "sources": "${sources}",
+    "issues": "${issues}"
+  },
+  "license": "${license}",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "de.joernott.c0denet.platform.fabric.C0deNetFabric"
+    ],
+    "fabric-gametest": [
+      "de.joernott.c0denet.gametest.fabric.FabricGameTests"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=${loader}",
+    "fabric-api": "*",
+    "minecraft": "${minecraft}",
+    "c0de": ">=${c0de}",
+    "java": ">=21"
+  }
+}

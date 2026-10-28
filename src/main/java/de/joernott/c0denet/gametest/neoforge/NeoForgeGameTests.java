@@ -1,0 +1,25 @@
+package de.joernott.c0denet.gametest.neoforge;
+
+//? if neoforge {
+/*import de.joernott.c0denet.C0deNet;
+import de.joernott.c0denet.gametest.SmokeTests;
+import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.neoforged.neoforge.gametest.GameTestHolder;
+import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
+
+// Registers the GameTests with NeoForge, which finds this class by its annotation
+@GameTestHolder(C0deNet.MOD_ID)
+@PrefixGameTestTemplate(false)
+public class NeoForgeGameTests {
+    @GameTest(template = "empty")
+    public static void libraryIsRegistered(GameTestHelper helper) {
+        SmokeTests.libraryIsRegistered(helper);
+    }
+
+    @GameTest(template = "empty")
+    public static void programsIncludeTheLibrary(GameTestHelper helper) {
+        SmokeTests.programsIncludeTheLibrary(helper);
+    }
+}
+*///?}
