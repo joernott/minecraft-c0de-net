@@ -17,6 +17,7 @@ import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
@@ -117,7 +118,7 @@ public final class HttpTests {
     }
 
     /** A server that answers /api/echo with method, path and body, /api/missing with 404 and /api/big with 100 KB. */
-    private static HttpServer server() {
+    public static HttpServer server() {
         try {
             // The programs connect to 127.0.0.1; the loopback address of Java may be ::1 (NeoForge prefers IPv6)
             HttpServer server = HttpServer.create(new InetSocketAddress(InetAddress.getByName("127.0.0.1"), 0), 0);
@@ -146,46 +147,72 @@ public final class HttpTests {
     }
 
     /**
-     * A program sends GET and POST requests and gets their answers, the results and HTTP_STATUS of a 404, a large
-     * answer in several parts, and INVALID_ARGUMENT for an invalid port.
+     * Places the web program on a sheet and starts it with a trigger block that a player configured.
+     *
+     * @param level the level of the trigger block
+     * @param pos the position of the trigger block
      */
-    public static void programsSendRequests(GameTestHelper helper) {
-        ServerLevel c0de = helper.getLevel().getServer().getLevel(C0deDimension.LEVEL);
-        SheetBuilder sheet = new SheetBuilder(c0de, 600).place(WEB);
-        SheetValidation.validate(c0de, 600);
-        HttpServer server = server();
-        LocalClients.install();
-        ServerPlayer player = helper.makeMockServerPlayerInLevel();
-        LocalClients.add(player.getUUID());
-        helper.setBlock(BlockPos.ZERO, C0deBlocks.TRIGGER_BLOCK.get());
-        TriggerBlockEntity trigger = (TriggerBlockEntity) TestCompat.blockEntity(helper, BlockPos.ZERO);
+    public static TriggerBlockEntity startWeb(
+            ServerLevel level, BlockPos pos, ServerPlayer player, int port, int sheet) {
+        ServerLevel c0de = level.getServer().getLevel(C0deDimension.LEVEL);
+        new SheetBuilder(c0de, sheet).place(WEB);
+        SheetValidation.validate(c0de, sheet);
+        level.setBlockAndUpdate(pos, C0deBlocks.TRIGGER_BLOCK.get().defaultBlockState());
+        TriggerBlockEntity trigger = (TriggerBlockEntity) level.getBlockEntity(pos);
         trigger.configure(player, "web", "run", 20);
-        trigger.input().setItem(0, variable("port", "INTEGER", String.valueOf(server.getAddress().getPort())));
+        trigger.input().setItem(0, variable("port", "INTEGER", String.valueOf(port)));
         for (int i = 1; i <= 7; i++) {
             trigger.input().setItem(i, new ItemStack(C0deItems.VARIABLE_ITEM.get()));
         }
         trigger.start();
+        return trigger;
+    }
+
+    /** The problem with the results of the web program, or empty if they are right. */
+    public static Optional<String> checkWeb(TriggerBlockEntity trigger) {
+        if (trigger.isRunning()) {
+            return Optional.of("The process is still running");
+        }
+        if (trigger.exitCode() != 0) {
+            return Optional.of("Exit code " + trigger.exitCode() + " " + trigger.error());
+        }
+        Map<String, String> results = results(trigger);
+        boolean right = "\"GET /api/echo?x=1 \"".equals(results.get("got"))
+                && "\"POST /api/echo hello\"".equals(results.get("posted"))
+                && "1000".equals(results.get("missing"))
+                && "404".equals(results.get("status"))
+                && "\"nothing here\"".equals(results.get("body"))
+                && String.valueOf(BIG).equals(results.get("size"))
+                && "309".equals(results.get("invalid"));
+        return right ? Optional.empty() : Optional.of("The results are " + results);
+    }
+
+    /** Removes the web program from its sheet. */
+    public static void clearWeb(ServerLevel level, int sheet) {
+        ServerLevel c0de = level.getServer().getLevel(C0deDimension.LEVEL);
+        new SheetBuilder(c0de, sheet).clearLines(48);
+        SheetValidation.validate(c0de, sheet);
+    }
+
+    /**
+     * A program sends GET and POST requests and gets their answers, the results and HTTP_STATUS of a 404, a large
+     * answer in several parts, and INVALID_ARGUMENT for an invalid port.
+     */
+    public static void programsSendRequests(GameTestHelper helper) {
+        HttpServer server = server();
+        LocalClients.install();
+        ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        LocalClients.add(player.getUUID());
+        TriggerBlockEntity trigger = startWeb(
+                helper.getLevel(), helper.absolutePos(BlockPos.ZERO), player, server.getAddress().getPort(), 600);
         helper.assertTrue(trigger.isRunning(), "The process didn't start: " + trigger.status());
         TestCompat.await(helper, () -> !trigger.isRunning(), () -> {
             try {
-                helper.assertTrue(!trigger.isRunning(), "The process is still running");
-                helper.assertTrue(trigger.exitCode() == 0, "Exit code " + trigger.exitCode() + " " + trigger.error());
-                Map<String, String> results = results(trigger);
-                helper.assertTrue(results.get("got").equals("\"GET /api/echo?x=1 \""), "GET: " + results.get("got"));
-                helper.assertTrue(
-                        results.get("posted").equals("\"POST /api/echo hello\""), "POST: " + results.get("posted"));
-                helper.assertTrue(
-                        results.get("missing").equals("1000")
-                                && results.get("status").equals("404")
-                                && results.get("body").equals("\"nothing here\""),
-                        "404: " + results);
-                helper.assertTrue(results.get("size").equals(String.valueOf(BIG)), "Size: " + results.get("size"));
-                helper.assertTrue(results.get("invalid").equals("309"), "Invalid port: " + results.get("invalid"));
+                checkWeb(trigger).ifPresent(problem -> helper.assertTrue(false, problem));
             } finally {
                 server.stop(0);
                 LocalClients.remove(player.getUUID());
-                sheet.clear();
-                SheetValidation.validate(c0de, 600);
+                clearWeb(helper.getLevel(), 600);
             }
             helper.succeed();
         });

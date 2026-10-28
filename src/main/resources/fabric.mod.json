@@ -22,6 +22,9 @@
     ],
     "fabric-gametest": [
       "de.joernott.c0denet.gametest.fabric.FabricGameTests"
+    ],
+    "fabric-client-gametest": [
+      "de.joernott.c0denet.gametest.fabric.FabricClientGameTests"
     ]
   },
   "depends": {

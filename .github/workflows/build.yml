@@ -107,3 +107,38 @@ jobs:
           name: c0de_net-${{ matrix.node }}
           path: versions/${{ matrix.node }}/build/libs/*.jar
           if-no-files-found: error
+
+  client:
+    name: Client GameTests ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    # A client that can't create its window hangs instead of exiting
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        # Fabric API has client GameTests since 1.21.4
+        node: [1.21.11-fabric, 26.1.2-fabric, 26.2-fabric, 26.3-fabric]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: |
+            21
+            25
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Install a virtual display with software rendering
+        # OpenGL and Vulkan (lavapipe) in software, as in c0de
+        run: >-
+          sudo apt-get update -q && sudo apt-get install -y -q xvfb libgl1-mesa-dri libglx-mesa0 libegl1
+          libegl-mesa0 mesa-vulkan-drivers mesa-utils
+      - name: Client GameTests
+        # Loom starts the client in xvfb-run itself when xvfb is installed
+        run: ./gradlew :${{ matrix.node }}:runClientGameTest --console=plain
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: client-screenshots-${{ matrix.node }}
+          path: versions/${{ matrix.node }}/build/clientGameTest/screenshots/
+          if-no-files-found: ignore
