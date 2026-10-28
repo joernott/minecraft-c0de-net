@@ -32,12 +32,12 @@ The requirement keywords (MUST, SHOULD, MAY, …) are used as in the [c0de conce
 | `password` | STRING | Password for HTTP basic authentication. | "" |
 | `skip_ssl_validation` | BOOLEAN | true: certificates are not checked, which is needed for self-signed certificates. | false |
 | `proxy` | STRING | URL of an HTTP proxy, e.g. `http://proxy.example.com:3128`; empty: no proxy. | "" |
-| `headers` | HASH of STRING | Headers sent with every request, e.g. `Content-Type` → `application/json` or an `Authorization` header with a token. | empty |
+| `headers` | HASH of STRING | Headers sent with every request, e.g. `Content-Type` → `application/json` or an `Authorization` header with a token. The headers that the HTTP client sets itself (`Host`, `Content-Length`, `Connection`, `Expect`, `Upgrade`) can't be set. | empty |
 | `timeout` | INTEGER | Seconds a request may take, 1 to 300. 0 means 60 seconds. | 0 |
 
 Differences to lra:
   - lra's `ValidateSSL` becomes `skip_ssl_validation`, because a struct element starts with the default value of its type: a new connection validates certificates unless the program explicitly turns it off.
-  - User and password are sent as an `Authorization: Basic …` header instead of being part of the URL (the Java HTTP client doesn't accept credentials in URLs). The effect is the same as in lra.
+  - User and password are sent as an `Authorization: Basic …` header instead of being part of the URL (the Java HTTP client doesn't accept credentials in URLs). The effect is the same as in lra; an `Authorization` header in `headers` wins, as in Go.
   - The derived fields of lra (`Protocol`, `BaseURL`, `Client`) are not part of the struct; they are computed for every request.
   - lra's SOCKS5 proxies (`ProxyIsSocks`) are not supported (user decision); `proxy` is always an HTTP proxy.
 
@@ -66,11 +66,13 @@ Parameters:
   - `data` (STRING, default ""): the body of the request, sent as UTF-8. The content type is not set automatically; it comes from the headers of the connection.
 
 Results:
-  - `result` (STRING): the raw data of the response, decoded with the charset of its `Content-Type` header (UTF-8 if there is none; invalid bytes become �). For HEAD, which has no body, `result` contains the headers of the response as a JSON object, as in lra.
+  - `result` (STRING): the raw data of the response, decoded with the charset of its `Content-Type` header (UTF-8 if there is none or it is unknown; invalid bytes become �). For HEAD, which has no body, `result` contains the headers of the response as a JSON object, as in lra, but with lower-case names in alphabetical order and one string per header, e.g. `{"content-length":"12","content-type":"text/plain"}`.
   - `status` (INTEGER): the HTTP status code, e.g. 200.
   - `headers` (HASH of STRING): the headers of the response, with lower-case names. Repeated headers are joined with ", ".
 
-There are no `<VERB>JSON` variants: programs parse the raw data with JSON_PARSE of c0de/strings.
+Redirects (301, 302, 303, 307, 308) are followed, except from `https` to `http`, as Go's HTTP client in lra does; the results are those of the last answer. The timeout of the connection covers the whole request, until the last byte of the answer.
+
+There are no `<VERB>JSON` variants: programs read the raw data into variables with FROM_JSON of c0de/strings.
 
 CONNECT, which lra also offers, is left out: it opens a tunnel through a proxy instead of returning data, and the Java HTTP client doesn't allow it.
 
