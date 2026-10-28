@@ -1,7 +1,7 @@
 package de.joernott.c0denet;
 
 import de.joernott.c0de.library.ModLibraries;
-import de.joernott.c0denet.library.NetLibrary;
+import de.joernott.c0denet.library.HttpLibrary;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,9 +13,9 @@ public final class C0deNet {
 
     private C0deNet() {}
 
-    /** Registers the library c0de_net/net with c0de, which is a required dependency and always loaded. */
+    /** Registers the library c0de_net/http with c0de, which is a required dependency and always loaded. */
     public static void init() {
-        ModLibraries.register(new NetLibrary());
+        ModLibraries.register(new HttpLibrary());
     }
 
     /** An identifier in the namespace of the mod. */

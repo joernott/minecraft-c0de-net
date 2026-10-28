@@ -21,3 +21,9 @@ Answers to the questions: the library is named c0de_net/net; everyone may send r
 After implementing the changes, please push sprint 0 and start with sprint 1
 
 I have created the project on modrinth, too. The modrinth ID for it is P2irzbnD and the modrinth token has been set. in the git secrets for github actions.
+
+## 2026-10-28 – Library c0de_net/http
+
+yes, please push the changes and start sprint 2 as soon as there are green results.
+
+There is one change I'd like to implement. Change the library name to c0de_net/http, as we might add other libraries in this mod for other network related protocols like SMTP, IMAP etc.

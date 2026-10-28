@@ -2,7 +2,7 @@
 
 ## Abstract
 
-c0de net is a Minecraft mod that adds the library `c0de_net/net` to the [c0de](https://github.com/joernott/minecraft-c0de) programming language. With it, c0de programs send HTTP requests to web servers and REST APIs and read the answers. It is inspired by the Go library [lra](https://github.com/joernott/lra), a low-level REST API client: a connection holds the base information (server, port, credentials, proxy, headers), and every HTTP method has a function that returns the raw data.
+c0de net is a Minecraft mod that adds the library `c0de_net/http` to the [c0de](https://github.com/joernott/minecraft-c0de) programming language. With it, c0de programs send HTTP requests to web servers and REST APIs and read the answers. It is inspired by the Go library [lra](https://github.com/joernott/lra), a low-level REST API client: a connection holds the base information (server, port, credentials, proxy, headers), and every HTTP method has a function that returns the raw data.
 
 The requests are not sent by the Minecraft server but by the game client of the player who runs the process. The server's network can't be reached through programs, and a request only reaches what the computer of that player can reach: a program that switches the lamp of its owner's home automation can't be used by other players to do the same.
 
@@ -10,7 +10,7 @@ The requirement keywords (MUST, SHOULD, MAY, …) are used as in the [c0de conce
 
 ## The mod
 
-  - **Mod ID** `c0de_net`, **library** `c0de_net/net`. Programs include it with `INCLUDE c0de_net/net` and call its functions as `c0de_net/net/HTTP_GET`.
+  - **Mod ID** `c0de_net`, **library** `c0de_net/http`. The mod MAY get further libraries for other network protocols later, e.g. `c0de_net/smtp` or `c0de_net/imap` (user decision); this concept describes `c0de_net/http`. Programs include it with `INCLUDE c0de_net/http` and call its functions as `c0de_net/http/HTTP_GET`.
   - **Dependencies**: c0de is REQUIRED; without c0de, the mod has nothing to do. c0de net requires the version of c0de that was current at its release (0.3.0 for c0de net 0.1.0) or newer, for the same Minecraft version and loader.
   - **Versions**: the same Minecraft versions and loaders as c0de: 1.21.1, 1.21.11, 26.1.2, 26.2 and 26.3, each for Fabric and NeoForge. New Minecraft versions are added when c0de adds them.
   - **Environment**: client and server. The server runs the library, the client sends the requests. Both need the mod; a client without it can't send requests (see [Errors](#errors)).
@@ -20,7 +20,7 @@ The requirement keywords (MUST, SHOULD, MAY, …) are used as in the [c0de conce
 
 ### HTTP_CONNECTION
 
-`c0de_net/net/HTTP_CONNECTION` is a struct type with the base information of the requests to one server. Programs declare it with `VARIABLE api STRUCT c0de_net/net/HTTP_CONNECTION` and set its elements with ASSIGN. Every element has the default value of its type, and the defaults are the common case:
+`c0de_net/http/HTTP_CONNECTION` is a struct type with the base information of the requests to one server. Programs declare it with `VARIABLE api STRUCT c0de_net/http/HTTP_CONNECTION` and set its elements with ASSIGN. Every element has the default value of its type, and the defaults are the common case:
 
 | Element | Type | Meaning | Default |
 |---|---|---|---|
@@ -61,7 +61,7 @@ There is one function per HTTP method. All of them take the connection and an en
 | `HTTP_PUT` | connection, endpoint, data | yes |
 
 Parameters:
-  - `connection` (STRUCT c0de_net/net/HTTP_CONNECTION, required)
+  - `connection` (STRUCT c0de_net/http/HTTP_CONNECTION, required)
   - `endpoint` (STRING, default "")
   - `data` (STRING, default ""): the body of the request, sent as UTF-8. The content type is not set automatically; it comes from the headers of the connection.
 
@@ -79,16 +79,16 @@ CONNECT, which lra also offers, is left out: it opens a tunnel through a proxy i
 ```c0de
 PROGRAM weather
 NOOP
-INCLUDE c0de_net/net
+INCLUDE c0de_net/http
 NOOP
 FUNCTION forecast
     RESULT answer STRING
 BEGIN
-    VARIABLE api STRUCT c0de_net/net/HTTP_CONNECTION
+    VARIABLE api STRUCT c0de_net/http/HTTP_CONNECTION
     ASSIGN api.use_ssl TRUE ;
     ASSIGN api.server "api.example.com" ;
     ASSIGN api.base_endpoint "/v1" ;
-    CALL c0de_net/net/HTTP_GET
+    CALL c0de_net/http/HTTP_GET
         PARAMETER connection api ;
         PARAMETER endpoint "/forecast?city=Berlin" ;
         RESULT result answer

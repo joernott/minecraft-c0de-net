@@ -5,7 +5,7 @@ import de.joernott.c0de.core.validation.Validation;
 import de.joernott.c0de.core.validation.Validator;
 import de.joernott.c0de.library.ModLibraries;
 import de.joernott.c0denet.C0deNet;
-import de.joernott.c0denet.library.NetLibrary;
+import de.joernott.c0denet.library.HttpLibrary;
 import net.minecraft.gametest.framework.GameTestHelper;
 
 /**
@@ -21,8 +21,8 @@ public final class SmokeTests {
     /** The library is registered with c0de under its name. */
     public static void libraryIsRegistered(GameTestHelper helper) {
         helper.assertTrue(
-                ModLibraries.registry().find(NetLibrary.NAME).isPresent(),
-                "The library " + NetLibrary.NAME + " is not registered");
+                ModLibraries.registry().find(HttpLibrary.NAME).isPresent(),
+                "The library " + HttpLibrary.NAME + " is not registered");
         helper.succeed();
     }
 
@@ -33,7 +33,7 @@ public final class SmokeTests {
                         """
                         PROGRAM networking
                         NOOP
-                        INCLUDE c0de_net/net
+                        INCLUDE c0de_net/http
                         NOOP
                         FUNCTION run
                         BEGIN
