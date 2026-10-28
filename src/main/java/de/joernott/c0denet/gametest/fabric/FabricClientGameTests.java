@@ -54,6 +54,7 @@ public class FabricClientGameTests implements FabricClientGameTest {
             problem.ifPresent(message -> {
                 throw new AssertionError("Requests through the client: " + message);
             });
+            de.joernott.c0denet.C0deNet.LOGGER.info("Client GameTest: the requests went through the client");
         } finally {
             server.stop(0);
         }
