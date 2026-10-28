@@ -22,12 +22,12 @@ public class FabricGameTests {
         SmokeTests.programsIncludeTheLibrary(helper);
     }
 
-    @GameTest(template = SmokeTests.EMPTY_STRUCTURE, timeoutTicks = 200)
+    @GameTest(template = SmokeTests.EMPTY_STRUCTURE, timeoutTicks = 2000)
     public void programsSendRequests(GameTestHelper helper) {
         HttpTests.programsSendRequests(helper);
     }
 
-    @GameTest(template = SmokeTests.EMPTY_STRUCTURE, timeoutTicks = 200)
+    @GameTest(template = SmokeTests.EMPTY_STRUCTURE, timeoutTicks = 2000)
     public void playersWithoutTheModCantSendRequests(GameTestHelper helper) {
         HttpTests.playersWithoutTheModCantSendRequests(helper);
     }

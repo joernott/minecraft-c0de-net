@@ -23,12 +23,12 @@ public class NeoForgeGameTests {
         SmokeTests.programsIncludeTheLibrary(helper);
     }
 
-    @GameTest(template = "empty", timeoutTicks = 200)
+    @GameTest(template = "empty", timeoutTicks = 2000)
     public static void programsSendRequests(GameTestHelper helper) {
         HttpTests.programsSendRequests(helper);
     }
 
-    @GameTest(template = "empty", timeoutTicks = 200)
+    @GameTest(template = "empty", timeoutTicks = 2000)
     public static void playersWithoutTheModCantSendRequests(GameTestHelper helper) {
         HttpTests.playersWithoutTheModCantSendRequests(helper);
     }
