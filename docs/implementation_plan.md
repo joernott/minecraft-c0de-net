@@ -37,7 +37,7 @@ A task is done when
 | 0 | Concept and plan | Concept and implementation plan | ✅ |
 | 1 | Project skeleton | The mod loads on all nodes with c0de; programs can include `c0de_net/http`; CI and VM are ready | ✅ |
 | 2 | Requests in `core` | Connections become requests, which are sent with the Java HTTP client; answers become results | ✅ |
-| 3 | Requests on the client | The functions send requests through the client of the player who runs the process and wait for the answer |  |
+| 3 | Requests on the client | The functions send requests through the client of the player who runs the process and wait for the answer | ✅ |
 | 4 | Documentation and handbook | Handbook, Patchouli book, README, Modrinth page |  |
 | 5 | Release 0.1.0 | c0de net on Modrinth and GitHub for all nodes |  |
 
@@ -80,12 +80,12 @@ A task is done when
 
 | Task | Description | Done |
 |---|---|:---:|
-| 3.1 | Type HTTP_CONNECTION and the functions HTTP_GET, HTTP_HEAD, HTTP_OPTIONS, HTTP_TRACE, HTTP_DELETE, HTTP_PATCH, HTTP_POST, HTTP_PUT in the library. |  |
-| 3.2 | Network: request payload to the client, answer in parts of at most 32 KiB to the server, cancellation; both loaders. |  |
-| 3.3 | Pending requests on the server: the function waits (`waitForValue`) until the answer, an error or the timeout; requests of ended processes are cancelled; `maxRequestsPerPlayer`. Check that results are delivered together with HTTP_STATUS. |  |
-| 3.4 | Client: the player who runs the process (activator, otherwise the owner of the trigger block); requests in a thread of their own, `allowRequests`; CLIENT_UNAVAILABLE for players that are offline or don't have the mod. |  |
-| 3.5 | Settings `c0de_net.properties` and `c0de_net-client.properties`. |  |
-| 3.6 | GameTests with a local HTTP server and a client stand-in on every node; client GameTests (Fabric) with the real client. |  |
+| 3.1 | Type HTTP_CONNECTION and the functions HTTP_GET, HTTP_HEAD, HTTP_OPTIONS, HTTP_TRACE, HTTP_DELETE, HTTP_PATCH, HTTP_POST, HTTP_PUT in the library. || ✅ |
+| 3.2 | Network: request payload to the client, answer in parts of at most 32 KiB to the server, cancellation; both loaders. || ✅ |
+| 3.3 | Pending requests on the server: the function waits (`waitForValue`) until the answer, an error or the timeout; requests of ended processes are cancelled; `maxRequestsPerPlayer`. Check that results are delivered together with HTTP_STATUS. || ✅ |
+| 3.4 | Client: the player who runs the process (activator, otherwise the owner of the trigger block); requests in a thread of their own, `allowRequests`; CLIENT_UNAVAILABLE for players that are offline or don't have the mod. || ✅ |
+| 3.5 | Settings `c0de_net.properties` and `c0de_net-client.properties`. || ✅ |
+| 3.6 | GameTests with a local HTTP server and a client stand-in on every node; client GameTests (Fabric) with the real client. || ✅ |
 
 ## Sprint 4: Documentation and handbook
 
