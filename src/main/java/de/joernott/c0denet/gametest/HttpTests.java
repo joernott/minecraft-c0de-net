@@ -119,7 +119,8 @@ public final class HttpTests {
     /** A server that answers /api/echo with method, path and body, /api/missing with 404 and /api/big with 100 KB. */
     private static HttpServer server() {
         try {
-            HttpServer server = HttpServer.create(new InetSocketAddress(InetAddress.getLoopbackAddress(), 0), 0);
+            // The programs connect to 127.0.0.1; the loopback address of Java may be ::1 (NeoForge prefers IPv6)
+            HttpServer server = HttpServer.create(new InetSocketAddress(InetAddress.getByName("127.0.0.1"), 0), 0);
             server.createContext("/api/echo", exchange -> {
                 String body;
                 try (InputStream in = exchange.getRequestBody()) {
