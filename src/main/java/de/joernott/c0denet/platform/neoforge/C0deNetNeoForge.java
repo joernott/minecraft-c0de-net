@@ -11,6 +11,9 @@ import net.neoforged.fml.common.Mod;
 public class C0deNetNeoForge {
     public C0deNetNeoForge(IEventBus modEventBus, ModContainer modContainer) {
         C0deNet.init();
+        if (de.joernott.c0de.platform.Platform.INSTANCE.isClient()) {
+            de.joernott.c0denet.client.ClientRequests.init();
+        }
         //? if >=1.21.11 {
         /^de.joernott.c0denet.gametest.neoforge.GameTestRegistration.register(modEventBus);
         ^///?}

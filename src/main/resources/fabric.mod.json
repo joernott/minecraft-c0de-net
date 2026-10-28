@@ -17,6 +17,9 @@
     "main": [
       "de.joernott.c0denet.platform.fabric.C0deNetFabric"
     ],
+    "client": [
+      "de.joernott.c0denet.platform.fabric.C0deNetFabricClient"
+    ],
     "fabric-gametest": [
       "de.joernott.c0denet.gametest.fabric.FabricGameTests"
     ]
