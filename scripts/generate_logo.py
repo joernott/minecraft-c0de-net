@@ -1,14 +1,17 @@
 """The logo of c0de net: the two green slashes of the c0de logo in front of a wire globe, the web, on black.
 
 Writes the picture as PNG (256 x 256, drawn with 4 x 4 samples per pixel) to docs/images/logo.png (for Modrinth)
-and src/main/resources/assets/c0de_net/icon.png (the icon in the mod lists).
-Only the standard library is used.
+and src/main/resources/assets/c0de_net/icon.png (the icon in the mod lists). The alternative docs/images/
+logo_cobweb.png has a cobweb in an item frame behind the slashes, as Minecraft shows it: the frame of birch planks,
+its leather back and the cobweb at half size. Its textures come from the Minecraft client jar in the Gradle cache
+of Loom, so the script runs on a machine that has built the node 1.21.1-fabric. Only the standard library is used.
 
 Usage: python scripts/generate_logo.py
 """
 
 import math
 import sys
+import zipfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -36,6 +39,14 @@ SLASHES = [
 ]
 EDGE = 5.0
 GAP = 9.0
+
+CLIENT_JAR = Path.home() / ".gradle" / "caches" / "fabric-loom" / "1.21.1" / "minecraft-client.jar"
+# The item frame: 12 of its pixels across the picture (20 picture pixels each), one of them its border
+FRAME_PIXEL = 20
+FRAME_START = (SIZE - 12 * FRAME_PIXEL) // 2
+# The item in a frame is drawn at half size: 8 frame pixels for its 16 pixels
+COBWEB_PIXEL = FRAME_PIXEL / 2
+COBWEB_START = (SIZE - 16 * COBWEB_PIXEL) / 2
 
 
 def inside(polygon, x, y) -> bool:
@@ -78,17 +89,50 @@ def on_globe(x: float, y: float) -> bool:
     return False
 
 
-def color(x: float, y: float) -> tuple[int, int, int]:
-    for slash in SLASHES:
-        if inside(slash, x, y):
-            return SLASH if edge_distance(slash, x, y) > EDGE else SLASH_EDGE
-    for slash in SLASHES:
-        if edge_distance(slash, x, y) < GAP:
-            return BACKGROUND
+def globe(x: float, y: float) -> tuple[int, int, int]:
     return GLOBE if on_globe(x, y) else BACKGROUND
 
 
-def raster():
+def texture(name: str):
+    """A block texture of Minecraft, e.g. cobweb, written to a temporary file to read it."""
+    with zipfile.ZipFile(CLIENT_JAR) as jar:
+        data = jar.read("assets/minecraft/textures/block/" + name + ".png")
+    temp = ROOT / "docs" / "images" / ".texture.png"
+    temp.write_bytes(data)
+    image = png_files.read_png(temp)
+    temp.unlink()
+    return image[:16]
+
+
+def framed_cobweb():
+    """The background of the alternative logo: a cobweb in an item frame."""
+    cobweb, back, planks = texture("cobweb"), texture("item_frame"), texture("birch_planks")
+
+    def color(x: float, y: float) -> tuple[int, int, int]:
+        cx, cy = int((x - COBWEB_START) // COBWEB_PIXEL), int((y - COBWEB_START) // COBWEB_PIXEL)
+        if 0 <= cx < 16 and 0 <= cy < 16 and cobweb[cy][cx][3]:
+            return cobweb[cy][cx][:3]
+        fx, fy = int((x - FRAME_START) // FRAME_PIXEL), int((y - FRAME_START) // FRAME_PIXEL)
+        if not (0 <= fx < 12 and 0 <= fy < 12):
+            return BACKGROUND
+        # The frame pixels are those of the textures at the same place of the block (2 to 13)
+        if fx in (0, 11) or fy in (0, 11):
+            return planks[fy + 2][fx + 2][:3]
+        return back[fy + 2][fx + 2][:3]
+
+    return color
+
+
+def raster(background):
+    def color(x: float, y: float) -> tuple[int, int, int]:
+        for slash in SLASHES:
+            if inside(slash, x, y):
+                return SLASH if edge_distance(slash, x, y) > EDGE else SLASH_EDGE
+        for slash in SLASHES:
+            if edge_distance(slash, x, y) < GAP:
+                return BACKGROUND
+        return background(x, y)
+
     image = []
     for py in range(SIZE):
         row = []
@@ -105,9 +149,10 @@ def raster():
 
 
 def main() -> None:
-    image = raster()
+    image = raster(globe)
     png_files.write_png(ROOT / "docs" / "images" / "logo.png", image)
     png_files.write_png(ROOT / "src" / "main" / "resources" / "assets" / "c0de_net" / "icon.png", image)
+    png_files.write_png(ROOT / "docs" / "images" / "logo_cobweb.png", raster(framed_cobweb()))
 
 
 if __name__ == "__main__":

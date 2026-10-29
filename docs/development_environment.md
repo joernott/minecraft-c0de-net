@@ -21,7 +21,7 @@ Common commands:
 | `scripts/check-whitespace.sh` | Whitespace of all files outside of `core` |
 | `python scripts/generate_book.py` | Generates the Patchouli book and its recipe from the handbook `docs/reference/net.md`; the CI fails if the committed files differ |
 | `python scripts/generate_recipe_images.py` | Draws the recipe of the book for the handbook (`docs/reference/images`); needs the jars of c0de and Minecraft from a build of `1.21.1-fabric` |
-| `python scripts/generate_logo.py` | Draws the logo (`docs/images/logo.png`) and the icon of the mod |
+| `python scripts/generate_logo.py` | Draws the logo (`docs/images/logo.png`), the icon of the mod and the alternative logo with a cobweb (`docs/images/logo_cobweb.png`; needs the Minecraft jar from a build of `1.21.1-fabric`) |
 
 The GameTests also check that the complete programs of the handbook are valid (system property `c0denet.handbook`, set by the GameTest runs).
 
@@ -38,4 +38,4 @@ The tests then run in that clone, e.g. `./gradlew :1.21.1-neoforge:runGameTestSe
 
 ## GitHub Actions
 
-`.github/workflows/build.yml` runs on every push: whitespace, formatting and unit tests of `core` (Linux and Windows), and for every node the build and the GameTests. The jars are uploaded as artifacts. The release workflow follows in sprint 5; it needs the secret `MODRINTH_TOKEN` and `publish.modrinth_id` (`P2irzbnD`).
+`.github/workflows/build.yml` runs on every push: whitespace, formatting and unit tests of `core` (Linux and Windows), and for every node the build and the GameTests. The jars are uploaded as artifacts. `.github/workflows/release.yml` publishes a version, as in c0de: pushing the tag `v<mod.version>` checks that `CHANGELOG.md` has a section for it, builds and tests every node, publishes one Modrinth version per node (project `P2irzbnD`, secret `MODRINTH_TOKEN`) and creates a GitHub release with the jars and the changelog section; versions 0.x are pre-releases.

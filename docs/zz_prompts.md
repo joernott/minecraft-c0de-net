@@ -35,3 +35,7 @@ please go head with sprint 3
 ## 2026-10-29 – Sprint 4
 
 yes, please
+
+## 2026-10-29 – Logo with a cobweb, sprint 5
+
+The logo is nice, please create an alternative version with the picture, Minecraft uses for a cobweb in an item frame instead of the globe. Then proceed with sprint 5

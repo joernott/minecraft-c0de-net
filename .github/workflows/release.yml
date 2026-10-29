@@ -1,0 +1,139 @@
+name: Release
+
+# Publishes a version (task 5.1): pushing a tag v<mod.version> builds and tests every node, publishes the jars
+# to Modrinth and creates a GitHub release with the jars and the section of the version in CHANGELOG.md.
+#
+# Needs the repository secret MODRINTH_TOKEN (a Modrinth personal access token with the scopes to create
+# versions) and publish.modrinth_id in stonecutter.properties.toml.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  version:
+    name: Check the version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: version
+        name: The tag matches mod.version and the changelog has a section for it
+        run: |
+          version=$(sed -n 's/^mod.version = "\(.*\)"$/\1/p' stonecutter.properties.toml)
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "::error title=Version::The tag $GITHUB_REF_NAME doesn't match mod.version $version"
+            exit 1
+          fi
+          if ! grep -qE "^## $version( |$)" CHANGELOG.md; then
+            echo "::error title=Changelog::CHANGELOG.md has no section ## $version"
+            exit 1
+          fi
+          if grep -qE '^publish.modrinth_id = ""' stonecutter.properties.toml; then
+            echo "::error title=Modrinth::publish.modrinth_id is not set in stonecutter.properties.toml"
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+  node:
+    name: ${{ matrix.node }}
+    needs: version
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # One entry per Stonecutter node (see settings.gradle.kts)
+        include:
+          - node: 1.21.1-fabric
+            gametest: runGametest
+          - node: 1.21.1-neoforge
+            gametest: runGameTestServer
+          - node: 1.21.11-fabric
+            gametest: runGametest
+          - node: 1.21.11-neoforge
+            gametest: runGameTestServer
+          - node: 26.1.2-fabric
+            gametest: runGametest
+          - node: 26.1.2-neoforge
+            gametest: runGameTestServer
+          - node: 26.2-fabric
+            gametest: runGametest
+          - node: 26.2-neoforge
+            gametest: runGameTestServer
+          - node: 26.3-fabric
+            gametest: runGametest
+          - node: 26.3-neoforge
+            gametest: runGameTestServer
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          # 21 for the toolchain of the 1.21.x nodes, 25 for 26.x and the Gradle daemon (Loom needs Java 25)
+          java-version: |
+            21
+            25
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Build
+        run: ./gradlew :${{ matrix.node }}:build --console=plain
+      - name: GameTests
+        run: scripts/ci/run-gametests.sh :${{ matrix.node }}:${{ matrix.gametest }} gametest.log
+      - name: Report failed GameTests
+        if: failure()
+        run: scripts/ci/report-gametest.sh gametest.log
+      - name: Upload jars
+        uses: actions/upload-artifact@v7
+        with:
+          name: c0de_net-${{ matrix.node }}
+          path: versions/${{ matrix.node }}/build/libs/*.jar
+          if-no-files-found: error
+
+  publish:
+    name: Publish ${{ needs.version.outputs.version }}
+    needs: [version, node]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: |
+            21
+            25
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Modrinth
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+        run: |
+          if [ -z "$MODRINTH_TOKEN" ]; then
+            echo "::error title=Modrinth::The secret MODRINTH_TOKEN is missing"
+            exit 1
+          fi
+          # Every node publishes its jars (one Modrinth version per node)
+          ./gradlew publishMods --console=plain
+      - uses: actions/download-artifact@v8
+        with:
+          path: jars
+          merge-multiple: true
+      - name: GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.version.outputs.version }}
+        run: |
+          # The section of the version in CHANGELOG.md, without its heading
+          awk -v version="$VERSION" '
+            $0 ~ "^## " version "( |$)" { found = 1; next }
+            found && /^## / { exit }
+            found { print }
+          ' CHANGELOG.md > notes.md
+          prerelease=""
+          case "$VERSION" in 0.*) prerelease="--prerelease" ;; esac
+          gh release create "$GITHUB_REF_NAME" jars/*.jar --title "c0de net $VERSION" --notes-file notes.md $prerelease
