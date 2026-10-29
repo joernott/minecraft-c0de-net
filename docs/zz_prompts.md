@@ -41,3 +41,5 @@ yes, please
 The logo is nice, please create an alternative version with the picture, Minecraft uses for a cobweb in an item frame instead of the globe. Then proceed with sprint 5
 
 Please just take the cobweb without the item frame and put it on a black background partially covering the two slashes
+
+Please let the cobweb fill the whole picture, almost covering the slashes is fine with me. And yes, I'd like the cobweb logo to ship with the mod

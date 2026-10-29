@@ -1,9 +1,9 @@
 """The logo of c0de net: the two green slashes of the c0de logo in front of a wire globe, the web, on black.
 
-Writes the picture as PNG (256 x 256, drawn with 4 x 4 samples per pixel) to docs/images/logo.png (for Modrinth)
-and src/main/resources/assets/c0de_net/icon.png (the icon in the mod lists). The alternative docs/images/
-logo_cobweb.png has the cobweb of Minecraft on black instead of the globe, in front of the slashes, which its
-threads partly cover. Its texture comes from the Minecraft client jar in the Gradle cache of Loom, so the script
+Writes the picture as PNG (256 x 256, drawn with 4 x 4 samples per pixel) to docs/images/logo.png. The
+alternative docs/images/logo_cobweb.png has the cobweb of Minecraft on black instead of the globe, filling the
+picture in front of the slashes, which its threads almost cover; it is also the icon of the mod in the mod lists
+(src/main/resources/assets/c0de_net/icon.png, user decision). Its texture comes from the Minecraft client jar in the Gradle cache of Loom, so the script
 runs on a machine that has built the node 1.21.1-fabric. Only the standard library is used.
 
 Usage: python scripts/generate_logo.py
@@ -41,9 +41,8 @@ EDGE = 5.0
 GAP = 9.0
 
 CLIENT_JAR = Path.home() / ".gradle" / "caches" / "fabric-loom" / "1.21.1" / "minecraft-client.jar"
-# The cobweb hangs in the upper right corner, over the upper ends of the slashes: 10 picture pixels per pixel
-COBWEB_PIXEL = 10
-COBWEB_LEFT = SIZE - 16 * COBWEB_PIXEL
+# The cobweb fills the whole picture: 16 picture pixels for each of its pixels
+COBWEB_PIXEL = SIZE // 16
 
 
 def inside(polygon, x, y) -> bool:
@@ -106,10 +105,8 @@ def cobweb():
     image = texture("cobweb")
 
     def color(x: float, y: float):
-        cx, cy = int((x - COBWEB_LEFT) // COBWEB_PIXEL), int(y // COBWEB_PIXEL)
-        if not (0 <= cx < 16 and 0 <= cy < 16) or not image[cy][cx][3]:
-            return None
-        return image[cy][cx][:3]
+        pixel = image[int(y // COBWEB_PIXEL)][int(x // COBWEB_PIXEL)]
+        return pixel[:3] if pixel[3] else None
 
     return color
 
@@ -143,10 +140,10 @@ def raster(background, foreground=None):
 
 
 def main() -> None:
-    image = raster(globe)
-    png_files.write_png(ROOT / "docs" / "images" / "logo.png", image)
+    png_files.write_png(ROOT / "docs" / "images" / "logo.png", raster(globe))
+    image = raster(lambda x, y: BACKGROUND, cobweb())
+    png_files.write_png(ROOT / "docs" / "images" / "logo_cobweb.png", image)
     png_files.write_png(ROOT / "src" / "main" / "resources" / "assets" / "c0de_net" / "icon.png", image)
-    png_files.write_png(ROOT / "docs" / "images" / "logo_cobweb.png", raster(lambda x, y: BACKGROUND, cobweb()))
 
 
 if __name__ == "__main__":

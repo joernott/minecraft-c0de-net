@@ -1,6 +1,6 @@
 # c0de net
 
-![c0de net logo](docs/images/logo.png)
+![c0de net logo](docs/images/logo_cobweb.png)
 
 A Minecraft mod that adds network libraries to [c0de](https://github.com/joernott/minecraft-c0de). The first one, `c0de_net/http`, lets c0de programs send HTTP requests to web servers and REST APIs and read the answers. The requests are sent by the game client of the player who runs the program, not by the server.
 

@@ -21,7 +21,7 @@ Common commands:
 | `scripts/check-whitespace.sh` | Whitespace of all files outside of `core` |
 | `python scripts/generate_book.py` | Generates the Patchouli book and its recipe from the handbook `docs/reference/net.md`; the CI fails if the committed files differ |
 | `python scripts/generate_recipe_images.py` | Draws the recipe of the book for the handbook (`docs/reference/images`); needs the jars of c0de and Minecraft from a build of `1.21.1-fabric` |
-| `python scripts/generate_logo.py` | Draws the logo (`docs/images/logo.png`), the icon of the mod and the alternative logo with a cobweb (`docs/images/logo_cobweb.png`; needs the Minecraft jar from a build of `1.21.1-fabric`) |
+| `python scripts/generate_logo.py` | Draws the logo (`docs/images/logo.png`) and the alternative logo with a cobweb (`docs/images/logo_cobweb.png`), which is also the icon of the mod (needs the Minecraft jar from a build of `1.21.1-fabric`) |
 
 The GameTests also check that the complete programs of the handbook are valid (system property `c0denet.handbook`, set by the GameTest runs).
 
