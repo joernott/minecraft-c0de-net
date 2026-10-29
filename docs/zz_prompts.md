@@ -43,3 +43,5 @@ The logo is nice, please create an alternative version with the picture, Minecra
 Please just take the cobweb without the item frame and put it on a black background partially covering the two slashes
 
 Please let the cobweb fill the whole picture, almost covering the slashes is fine with me. And yes, I'd like the cobweb logo to ship with the mod
+
+That picture is fine, thank you
