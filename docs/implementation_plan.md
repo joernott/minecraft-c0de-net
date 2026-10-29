@@ -39,7 +39,7 @@ A task is done when
 | 2 | Requests in `core` | Connections become requests, which are sent with the Java HTTP client; answers become results | ✅ |
 | 3 | Requests on the client | The functions send requests through the client of the player who runs the process and wait for the answer | ✅ |
 | 4 | Documentation and handbook | Handbook, Patchouli book, README, Modrinth page | ✅ |
-| 5 | Release 0.1.0 | c0de net on Modrinth and GitHub for all nodes |  |
+| 5 | Release 0.1.0 | c0de net on Modrinth and GitHub for all nodes | ✅ |
 
 ## Sprint 0: Concept and plan
 
@@ -103,7 +103,7 @@ A task is done when
 | Task | Description | Done |
 |---|---|:---:|
 | 5.1 | Modrinth project (created by the user: `P2irzbnD`, secret `MODRINTH_TOKEN` set; environment "client and server", c0de as required dependency) and release workflow as in c0de. | ✅ |
-| 5.2 | Release 0.1.0 for all nodes. |  |
+| 5.2 | Release 0.1.0 for all nodes. | ✅ |
 | 5.3 | Alternative logo: the slashes on black, almost covered by the cobweb of Minecraft, which fills the picture (`docs/images/logo_cobweb.png`); it is the icon of the mod (user decision). | ✅ |
 
 ## Risks
