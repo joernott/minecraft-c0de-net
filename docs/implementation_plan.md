@@ -104,7 +104,7 @@ A task is done when
 |---|---|:---:|
 | 5.1 | Modrinth project (created by the user: `P2irzbnD`, secret `MODRINTH_TOKEN` set; environment "client and server", c0de as required dependency) and release workflow as in c0de. |  |
 | 5.2 | Release 0.1.0 for all nodes. |  |
-| 5.3 | Alternative logo: the slashes in front of a cobweb in an item frame (`docs/images/logo_cobweb.png`). | ✅ |
+| 5.3 | Alternative logo: the slashes on black, partly covered by the cobweb of Minecraft (`docs/images/logo_cobweb.png`). | ✅ |
 
 ## Risks
 

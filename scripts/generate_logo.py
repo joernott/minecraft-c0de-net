@@ -2,9 +2,9 @@
 
 Writes the picture as PNG (256 x 256, drawn with 4 x 4 samples per pixel) to docs/images/logo.png (for Modrinth)
 and src/main/resources/assets/c0de_net/icon.png (the icon in the mod lists). The alternative docs/images/
-logo_cobweb.png has a cobweb in an item frame behind the slashes, as Minecraft shows it: the frame of birch planks,
-its leather back and the cobweb at half size. Its textures come from the Minecraft client jar in the Gradle cache
-of Loom, so the script runs on a machine that has built the node 1.21.1-fabric. Only the standard library is used.
+logo_cobweb.png has the cobweb of Minecraft on black instead of the globe, in front of the slashes, which its
+threads partly cover. Its texture comes from the Minecraft client jar in the Gradle cache of Loom, so the script
+runs on a machine that has built the node 1.21.1-fabric. Only the standard library is used.
 
 Usage: python scripts/generate_logo.py
 """
@@ -41,12 +41,9 @@ EDGE = 5.0
 GAP = 9.0
 
 CLIENT_JAR = Path.home() / ".gradle" / "caches" / "fabric-loom" / "1.21.1" / "minecraft-client.jar"
-# The item frame: 12 of its pixels across the picture (20 picture pixels each), one of them its border
-FRAME_PIXEL = 20
-FRAME_START = (SIZE - 12 * FRAME_PIXEL) // 2
-# The item in a frame is drawn at half size: 8 frame pixels for its 16 pixels
-COBWEB_PIXEL = FRAME_PIXEL / 2
-COBWEB_START = (SIZE - 16 * COBWEB_PIXEL) / 2
+# The cobweb hangs in the upper right corner, over the upper ends of the slashes: 10 picture pixels per pixel
+COBWEB_PIXEL = 10
+COBWEB_LEFT = SIZE - 16 * COBWEB_PIXEL
 
 
 def inside(polygon, x, y) -> bool:
@@ -104,27 +101,24 @@ def texture(name: str):
     return image[:16]
 
 
-def framed_cobweb():
-    """The background of the alternative logo: a cobweb in an item frame."""
-    cobweb, back, planks = texture("cobweb"), texture("item_frame"), texture("birch_planks")
+def cobweb():
+    """The foreground of the alternative logo: the cobweb, None where it is transparent."""
+    image = texture("cobweb")
 
-    def color(x: float, y: float) -> tuple[int, int, int]:
-        cx, cy = int((x - COBWEB_START) // COBWEB_PIXEL), int((y - COBWEB_START) // COBWEB_PIXEL)
-        if 0 <= cx < 16 and 0 <= cy < 16 and cobweb[cy][cx][3]:
-            return cobweb[cy][cx][:3]
-        fx, fy = int((x - FRAME_START) // FRAME_PIXEL), int((y - FRAME_START) // FRAME_PIXEL)
-        if not (0 <= fx < 12 and 0 <= fy < 12):
-            return BACKGROUND
-        # The frame pixels are those of the textures at the same place of the block (2 to 13)
-        if fx in (0, 11) or fy in (0, 11):
-            return planks[fy + 2][fx + 2][:3]
-        return back[fy + 2][fx + 2][:3]
+    def color(x: float, y: float):
+        cx, cy = int((x - COBWEB_LEFT) // COBWEB_PIXEL), int(y // COBWEB_PIXEL)
+        if not (0 <= cx < 16 and 0 <= cy < 16) or not image[cy][cx][3]:
+            return None
+        return image[cy][cx][:3]
 
     return color
 
 
-def raster(background):
+def raster(background, foreground=None):
     def color(x: float, y: float) -> tuple[int, int, int]:
+        front = foreground(x, y) if foreground else None
+        if front:
+            return front
         for slash in SLASHES:
             if inside(slash, x, y):
                 return SLASH if edge_distance(slash, x, y) > EDGE else SLASH_EDGE
@@ -152,7 +146,7 @@ def main() -> None:
     image = raster(globe)
     png_files.write_png(ROOT / "docs" / "images" / "logo.png", image)
     png_files.write_png(ROOT / "src" / "main" / "resources" / "assets" / "c0de_net" / "icon.png", image)
-    png_files.write_png(ROOT / "docs" / "images" / "logo_cobweb.png", raster(framed_cobweb()))
+    png_files.write_png(ROOT / "docs" / "images" / "logo_cobweb.png", raster(lambda x, y: BACKGROUND, cobweb()))
 
 
 if __name__ == "__main__":

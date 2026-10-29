@@ -39,3 +39,5 @@ yes, please
 ## 2026-10-29 – Logo with a cobweb, sprint 5
 
 The logo is nice, please create an alternative version with the picture, Minecraft uses for a cobweb in an item frame instead of the globe. Then proceed with sprint 5
+
+Please just take the cobweb without the item frame and put it on a black background partially covering the two slashes
