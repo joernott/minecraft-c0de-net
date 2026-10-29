@@ -1,0 +1,24 @@
+{
+  "name": "Weather forecast",
+  "icon": "c0de:program_block",
+  "category": "c0de_net:examples",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Reads a forecast as JSON and prints it.$(br2)FROM_JSON of c0de/strings reads the answer into a struct. The elements of the struct must match the keys of the JSON object."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(1)PROGRAM weather$(br)NOOP$(br)INCLUDE c0de_net/http$(br)INCLUDE c0de/strings$(br)NOOP$(br)STRUCT forecast$(br)BEGIN$(br)  sky STRING$(br)  temperature FLOAT$(br)END STRUCT$(br)NOOP$(br)FUNCTION show$()"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(1)BEGIN$(br)  VARIABLE api STRUCT c0de_net/http/HTTP_CONNECTION$(br)  VARIABLE answer STRING$(br)  VARIABLE today STRUCT forecast$(br)  ASSIGN api.use_ssl TRUE ;$(br)  ASSIGN api.server \"weather.example.com\" ;$(br)  CALL c0de_net/http/HTTP_GET$(br)    PARAMETER connection api ;$(br)    PARAMETER endpoint \"/today?city=Berlin\" ;$(br)    RESULT result answer$(br)  CALL c0de/strings/FROM_JSON$(br)    PARAMETER source answer ;$()"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(1)    PARAMETER destination today ;$(br)  CALL PRINT$(br)    PARAMETER value today.sky ⊕ \", \" ⊕ today.temperature ⊕ \" °C\" ;$(br)END FUNCTION$()"
+    }
+  ]
+}

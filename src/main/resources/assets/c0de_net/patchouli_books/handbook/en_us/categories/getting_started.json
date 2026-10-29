@@ -1,0 +1,6 @@
+{
+  "name": "Getting started",
+  "description": "Programs that use the library include it with INCLUDE c0de_net/http. Its type and functions start with the library name, like c0de_net/http/HTTP_GET.",
+  "icon": "c0de:include_block",
+  "sortnum": 0
+}

@@ -1,0 +1,48 @@
+{
+  "name": "HTTP_CONNECTION",
+  "icon": "c0de:type_struct_block",
+  "category": "c0de_net:c0de_net_http",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "A struct type with the base information of the requests to one server."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Declare it with $(1)VARIABLE api STRUCT c0de_net/http/HTTP_CONNECTION$() and set its elements with ASSIGN. Only $(1)server$() is needed, all other elements start with defaults that fit most servers.$(br2)$(li)$(1)use_ssl$() BOOLEAN: true for https, false for http (default false)"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(li)$(1)server$() STRING: the server name or IP address, must not be empty$(li)$(1)port$() INTEGER: 1 to 65535, or 0 for 80 or 443 (default 0)$(li)$(1)base_endpoint$() STRING: a path in front of every endpoint, like /api/v2$(li)$(1)user$() STRING: the user name for basic authentication, empty for none"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(li)$(1)password$() STRING: the password for basic authentication$(li)$(1)skip_ssl_validation$() BOOLEAN: true to accept any certificate, e.g. a self-signed one (default false)$(li)$(1)proxy$() STRING: an HTTP proxy like http://proxy:3128, empty for none"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(li)$(1)headers$() HASH STRING: headers sent with every request, like Content-Type$(li)$(1)timeout$() INTEGER: seconds a request may take, 1 to 300, or 0 for 60 (default 0)"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "The URL of a request is the protocol, the server, the port, the base endpoint and the endpoint, like $(1)https://api.example.com/v2/users/7$(). The endpoint is used as it is, with its query, like $(1)/search?q=stone$()."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "An $(1)Authorization$() header in $(1)headers$() replaces the basic authentication. The headers Host, Content-Length, Connection, Expect and Upgrade can't be set."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "The password is stored in the program like any other value, and everybody who can read the sheet can read it. Pass secrets in as a parameter, from a constant item in the trigger block."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(1)PROGRAM connect$(br)NOOP$(br)INCLUDE c0de_net/http$(br)NOOP$(br)FUNCTION run$(br)  PARAMETER token STRING$(br)BEGIN$(br)  VARIABLE api STRUCT c0de_net/http/HTTP_CONNECTION$(br)  ASSIGN api.use_ssl TRUE ;$(br)  ASSIGN api.server \"api.example.com\" ;$(br)  ASSIGN api.base_endpoint \"/v2\" ;$(br)  ASSIGN api.headers[\"Authorization\"] \"Bearer \" ⊕ token ;$()"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(1)  ASSIGN api.headers[\"Content-Type\"] \"application/json\" ;$(br)  ASSIGN api.timeout 10 ;$(br)END FUNCTION$()"
+    }
+  ]
+}

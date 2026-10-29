@@ -94,6 +94,7 @@ A task is done when
 | Task | Description | Done |
 |---|---|:---:|
 | 4.1 | Handbook `docs/reference/net.md`: type, functions, results, errors, examples. |  |
+| 4.1.1 | GameTest: the complete programs of the handbook are valid with the real library. |  |
 | 4.2 | Patchouli book "c0de net handbook" generated from the handbook (1.21.1), with its recipe. |  |
 | 4.3 | README, CHANGELOG, `docs/modrinth.md`, logo. |  |
 

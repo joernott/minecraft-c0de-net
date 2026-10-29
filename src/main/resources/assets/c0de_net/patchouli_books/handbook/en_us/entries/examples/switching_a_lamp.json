@@ -1,0 +1,28 @@
+{
+  "name": "Switching a lamp",
+  "icon": "c0de:program_block",
+  "category": "c0de_net:examples",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Turns a lamp of a home automation on or off."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Put the trigger block next to a lever and give it a constant item $(1)token$() with the token of your home automation. The request is sent from the computer of the player who flips the lever, so only players in your home network can switch it."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(1)PROGRAM lamp$(br)NOOP$(br)INCLUDE c0de_net/http$(br)NOOP$(br)FUNCTION switch$(br)  PARAMETER token STRING$(br)  PARAMETER on BOOLEAN TRUE$(br)  RESULT status INTEGER$(br)BEGIN$(br)  VARIABLE api STRUCT c0de_net/http/HTTP_CONNECTION$(br)  VARIABLE state STRING \"{\\\"on\\\": false}\"$(br)  ASSIGN api.server \"192.168.1.20\" ;$()"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(1)  ASSIGN api.port 8123 ;$(br)  ASSIGN api.base_endpoint \"/api\" ;$(br)  ASSIGN api.headers[\"Authorization\"] \"Bearer \" ⊕ token ;$(br)  ASSIGN api.headers[\"Content-Type\"] \"application/json\" ;$(br)  IF on ;$(br)  BEGIN$(br)    ASSIGN state \"{\\\"on\\\": true}\" ;$(br)  END IF$(br)  CALL c0de_net/http/HTTP_PUT$(br)    PARAMETER connection api ;$(br)    PARAMETER endpoint \"/lamps/kitchen\" ;$(br)    PARAMETER data state ;$()"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(1)    RESULT status status$(br)END FUNCTION$()"
+    }
+  ]
+}

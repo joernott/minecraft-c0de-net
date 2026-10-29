@@ -11,6 +11,7 @@ version = "${version}"
 authors = "${authors}"
 description = "${description}"
 displayURL = "${sources}"
+logoFile = "assets/c0de_net/icon.png"
 
 [[dependencies.${id}]]
 modId = "minecraft"

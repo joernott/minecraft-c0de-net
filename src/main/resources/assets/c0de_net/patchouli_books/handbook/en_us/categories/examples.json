@@ -1,0 +1,6 @@
+{
+  "name": "Examples",
+  "description": "Complete programs that use c0de_net/http. The servers are examples; replace them with the API you want to use.",
+  "icon": "c0de:program_block",
+  "sortnum": 3
+}

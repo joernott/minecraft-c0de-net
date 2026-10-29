@@ -1,0 +1,20 @@
+{
+  "name": "HTTP_STATUS",
+  "icon": "c0de:type_error_block",
+  "category": "c0de_net:errors",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Code 1000: the server answered with a status of 400 or higher."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "The message is the status line, like $(1)404 Not Found$(). The results $(1)result$(), $(1)status$() and $(1)headers$() are delivered as well, so a program that catches the error can read the answer."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(1)CALL c0de_net/http/HTTP_GET problem$(br)  PARAMETER connection api ;$(br)  PARAMETER endpoint \"/lamps/attic\" ;$(br)  RESULT status status$(br)IF problem.code = 1000 AND status = 404 ;$(br)BEGIN$(br)  CALL PRINT$(br)    PARAMETER value \"There is no lamp in the attic\" ;$(br)END IF$()"
+    }
+  ]
+}

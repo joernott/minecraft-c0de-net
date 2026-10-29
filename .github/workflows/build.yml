@@ -28,6 +28,12 @@ jobs:
       - uses: gradle/actions/setup-gradle@v6
       - name: Whitespace
         run: scripts/check-whitespace.sh
+      - name: Generated Patchouli book
+        # The book and its recipe are generated from docs/reference/net.md and committed
+        run: |
+          python3 scripts/generate_book.py
+          git add -N .
+          git diff --exit-code --stat
       - name: Formatting and unit tests of core
         run: ./gradlew :core:check --console=plain
       - name: Report failed unit tests

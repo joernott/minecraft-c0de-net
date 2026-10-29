@@ -1,0 +1,12 @@
+{
+  "name": "CLIENT_UNAVAILABLE",
+  "icon": "c0de:type_error_block",
+  "category": "c0de_net:errors",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Code 1001: there is no client to send the request.$(br2)The player who runs the process is not online, or their game doesn't have c0de net installed. A process that nobody started and whose trigger block has no owner can't send requests either."
+    }
+  ]
+}

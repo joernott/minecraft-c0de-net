@@ -22,6 +22,11 @@ public class FabricGameTests {
         SmokeTests.programsIncludeTheLibrary(helper);
     }
 
+    @GameTest(template = SmokeTests.EMPTY_STRUCTURE, timeoutTicks = 100)
+    public void handbookProgramsAreValid(GameTestHelper helper) {
+        SmokeTests.handbookProgramsAreValid(helper);
+    }
+
     @GameTest(template = SmokeTests.EMPTY_STRUCTURE, timeoutTicks = 2000)
     public void programsSendRequests(GameTestHelper helper) {
         HttpTests.programsSendRequests(helper);

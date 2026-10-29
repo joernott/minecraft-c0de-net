@@ -23,6 +23,11 @@ public class NeoForgeGameTests {
         SmokeTests.programsIncludeTheLibrary(helper);
     }
 
+    @GameTest(template = "empty")
+    public static void handbookProgramsAreValid(GameTestHelper helper) {
+        SmokeTests.handbookProgramsAreValid(helper);
+    }
+
     @GameTest(template = "empty", timeoutTicks = 2000)
     public static void programsSendRequests(GameTestHelper helper) {
         HttpTests.programsSendRequests(helper);

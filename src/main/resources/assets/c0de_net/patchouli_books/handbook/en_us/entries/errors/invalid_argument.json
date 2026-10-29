@@ -1,0 +1,12 @@
+{
+  "name": "INVALID_ARGUMENT",
+  "icon": "c0de:type_error_block",
+  "category": "c0de_net:errors",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Code 309: the connection is not valid.$(br2)The server is empty, the port is not 0 to 65535, the timeout is not 0 to 300, the proxy is not an http:// URL, or a header can't be sent. It is also raised if the request is larger than 1,000,000 bytes."
+    }
+  ]
+}

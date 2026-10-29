@@ -1,0 +1,6 @@
+{
+  "name": "Errors",
+  "description": "The functions raise these errors. Catch them with a variable of type ERROR on the CALL line, and check its $(1)code$().",
+  "icon": "c0de:type_error_block",
+  "sortnum": 2
+}

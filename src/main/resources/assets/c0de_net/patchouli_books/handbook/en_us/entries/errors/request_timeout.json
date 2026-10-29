@@ -1,0 +1,12 @@
+{
+  "name": "REQUEST_TIMEOUT",
+  "icon": "c0de:type_error_block",
+  "category": "c0de_net:errors",
+  "sortnum": 5,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Code 1004: there was no complete answer within the timeout of the connection.$(br2)The timeout covers the whole request, until the last byte of the answer. Raise $(1)timeout$() for slow servers, up to 300 seconds."
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Handling errors",
+  "icon": "c0de:program_block",
+  "category": "c0de_net:examples",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Checks whether a server answers and returns an exit code instead of crashing.$(br2)The exit code is 0 if the server answers, 1 if it answers with an error status and 2 if there is no answer. A comparator next to the trigger block reads it."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(1)PROGRAM ping$(br)NOOP$(br)INCLUDE c0de_net/http$(br)NOOP$(br)FUNCTION check$(br)  PARAMETER host STRING$(br)BEGIN$(br)  VARIABLE api STRUCT c0de_net/http/HTTP_CONNECTION$(br)  VARIABLE problem ERROR$(br)  ASSIGN api.use_ssl TRUE ;$(br)  ASSIGN api.server host ;$(br)  ASSIGN api.timeout 5 ;$()"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(1)  CALL c0de_net/http/HTTP_HEAD problem$(br)    PARAMETER connection api ;$(br)  IF problem.code = 1000 ;$(br)  BEGIN$(br)    EXIT 1 ;$(br)  END IF$(br)  IF problem.code ≠ 0 ;$(br)  BEGIN$(br)    EXIT 2 ;$(br)  END IF$(br)  EXIT 0 ;$(br)END FUNCTION$()"
+    }
+  ]
+}

@@ -98,6 +98,8 @@ loom {
         register("gametest") {
             server()
             jvmArguments.add("-Dfabric-api.gametest")
+            // The GameTests check the programs of the handbook
+            jvmArguments.add("-Dc0denet.handbook=${rootProject.file("docs/reference/net.md")}")
             jvmArguments.add("-Dfabric-api.gametest.report-file=${project.layout.buildDirectory.get()}/reports/gametest/junit.xml")
             runDirectory = project.file("build/gametest")
         }

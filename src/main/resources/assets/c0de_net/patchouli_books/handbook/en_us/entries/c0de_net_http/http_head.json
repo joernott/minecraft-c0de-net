@@ -1,0 +1,24 @@
+{
+  "name": "HTTP_HEAD",
+  "icon": "c0de:call_block",
+  "category": "c0de_net:c0de_net_http",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Sends a HEAD request: like GET, but the answer has no data.$(br2)$(1)result$() holds the headers of the answer as a JSON object instead, with lower-case names in alphabetical order, like $(1){\"content-length\":\"12\"}$()."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(li)$(1)connection$() STRUCT c0de_net/http/HTTP_CONNECTION: the server$(li)$(1)endpoint$() STRING: the path behind the base endpoint (optional, default empty)$(li)result $(1)result$() STRING: the headers as JSON$(li)result $(1)status$() INTEGER: the HTTP status"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(li)result $(1)headers$() HASH STRING: the headers of the answer"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(1)CALL c0de_net/http/HTTP_HEAD$(br)  PARAMETER connection api ;$(br)  PARAMETER endpoint \"/status\" ;$(br)  RESULT status status$()"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "Settings",
+  "icon": "minecraft:writable_book",
+  "category": "c0de_net:getting_started",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The server has the file $(1)config/c0de_net.properties$(). $(1)maxResponseSize$() limits the size of an answer in bytes (1 KiB to 16 MiB, default 1 MiB). $(1)maxRequestsPerPlayer$() limits how many requests run at the same time on the client of one player (1 to 64, default 8); more requests wait."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Every player has the file $(1)config/c0de_net-client.properties$(). With $(1)allowRequests=false$(), their client sends no requests, and the requests of their processes raise REQUESTS_DISABLED.$(br2)Both files are created with the default values. Invalid entries are reported in the log and replaced by the defaults."
+    }
+  ]
+}

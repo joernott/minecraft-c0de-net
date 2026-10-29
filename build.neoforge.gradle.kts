@@ -89,6 +89,8 @@ neoForge {
             type = "gameTestServer"
             gameDirectory = file("build/gametest")
             systemProperty("neoforge.enabledGameTestNamespaces", modId)
+            // The GameTests check the programs of the handbook
+            systemProperty("c0denet.handbook", rootProject.file("docs/reference/net.md").absolutePath)
         }
     }
 }

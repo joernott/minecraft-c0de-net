@@ -1,0 +1,24 @@
+{
+  "name": "HTTP_PATCH",
+  "icon": "c0de:call_block",
+  "category": "c0de_net:c0de_net_http",
+  "sortnum": 6,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Sends a PATCH request: changes a part of something on the server.$(br2)The data is sent as UTF-8. Set its type in the $(1)Content-Type$() header of the connection, like $(1)application/json$()."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(li)$(1)connection$() STRUCT c0de_net/http/HTTP_CONNECTION: the server$(li)$(1)endpoint$() STRING: the path behind the base endpoint (optional, default empty)$(li)$(1)data$() STRING: the data sent with the request (optional, default empty)$(li)result $(1)result$() STRING: the raw data of the answer"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(li)result $(1)status$() INTEGER: the HTTP status$(li)result $(1)headers$() HASH STRING: the headers of the answer"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(1)CALL c0de_net/http/HTTP_PATCH$(br)  PARAMETER connection api ;$(br)  PARAMETER endpoint \"/lamps/kitchen\" ;$(br)  PARAMETER data \"{\\\"on\\\": false}\" ;$(br)  RESULT status status$()"
+    }
+  ]
+}

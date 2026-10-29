@@ -12,6 +12,7 @@
     "issues": "${issues}"
   },
   "license": "${license}",
+  "icon": "assets/c0de_net/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
