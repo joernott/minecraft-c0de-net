@@ -38,7 +38,7 @@ A task is done when
 | 1 | Project skeleton | The mod loads on all nodes with c0de; programs can include `c0de_net/http`; CI and VM are ready | ✅ |
 | 2 | Requests in `core` | Connections become requests, which are sent with the Java HTTP client; answers become results | ✅ |
 | 3 | Requests on the client | The functions send requests through the client of the player who runs the process and wait for the answer | ✅ |
-| 4 | Documentation and handbook | Handbook, Patchouli book, README, Modrinth page |  |
+| 4 | Documentation and handbook | Handbook, Patchouli book, README, Modrinth page | ✅ |
 | 5 | Release 0.1.0 | c0de net on Modrinth and GitHub for all nodes |  |
 
 ## Sprint 0: Concept and plan
@@ -93,10 +93,10 @@ A task is done when
 
 | Task | Description | Done |
 |---|---|:---:|
-| 4.1 | Handbook `docs/reference/net.md`: type, functions, results, errors, examples. |  |
-| 4.1.1 | GameTest: the complete programs of the handbook are valid with the real library. |  |
-| 4.2 | Patchouli book "c0de net handbook" generated from the handbook (1.21.1), with its recipe. |  |
-| 4.3 | README, CHANGELOG, `docs/modrinth.md`, logo. |  |
+| 4.1 | Handbook `docs/reference/net.md`: type, functions, results, errors, examples. | ✅ |
+| 4.1.1 | GameTest: the complete programs of the handbook are valid with the real library. | ✅ |
+| 4.2 | Patchouli book "c0de net handbook" generated from the handbook (1.21.1), with its recipe. | ✅ |
+| 4.3 | README, CHANGELOG, `docs/modrinth.md`, logo. | ✅ |
 
 ## Sprint 5: Release 0.1.0
 
