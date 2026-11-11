@@ -40,7 +40,7 @@ A task is done when
 | 3 | Requests on the client | The functions send requests through the client of the player who runs the process and wait for the answer | ✅ |
 | 4 | Documentation and handbook | Handbook, Patchouli book, README, Modrinth page | ✅ |
 | 5 | Release 0.1.0 | c0de net on Modrinth and GitHub for all nodes | ✅ |
-| 6 | Documentation | The handbook in German, and the programs of the c0de net tutorials on c0de.at are tested with every release |  |
+| 6 | Documentation (0.2.0) | The handbook in German, and the programs of the c0de net tutorials on c0de.at are tested with every release |  |
 
 ## Sprint 0: Concept and plan
 

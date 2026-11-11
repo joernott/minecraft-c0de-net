@@ -71,3 +71,7 @@ The workflow is stuck on two tasks, I've tried to cancel it now
 ## 2026-11-11 – GitHub problems
 
 The CI didn't even initialize the jobs, so it is most likely due to Github problems.
+
+## 2026-11-11 – Releases
+
+yes, please do (VM review and release 0.3.0 of the website, release 0.2.0 of c0de net)

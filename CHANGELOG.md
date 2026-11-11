@@ -2,7 +2,7 @@
 
 All notable changes of c0de net. The section of a version is also its changelog on Modrinth.
 
-## Unreleased
+## 0.2.0
 
 Documentation and tests, for c0de 0.4.0.
 
