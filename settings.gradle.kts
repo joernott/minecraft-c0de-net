@@ -26,6 +26,9 @@ rootProject.name = "c0de_net"
 // Requests and answers: plain Java, no dependency on Minecraft, a mod loader or c0de
 include("core")
 
+// c0de_net/http for the program runner of c0de (task 6.1): the library without Minecraft, c0de-net-runner-<version>.jar
+include("runner")
+
 stonecutter {
     create(rootProject) {
         // Creates the nodes `versions/{version}-{loader}`, built with `build.{loader}.gradle.kts`.

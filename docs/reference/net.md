@@ -6,6 +6,8 @@ c0de net adds the library c0de_net/http to c0de. With it, programs send HTTP req
 
 Programs that use the library include it with INCLUDE c0de_net/http. Its type and functions start with the library name, like c0de_net/http/HTTP_GET.
 
+Every program, also without the INCLUDE, has the constant `C0DE_NET_VERSION` with the version of c0de net as text, like "0.2.0".
+
 ### How requests are sent
 
 The Minecraft server does not send the requests. The game client of the player who runs the process sends them, from that player's computer.

@@ -1,7 +1,8 @@
 name: Release
 
 # Publishes a version (task 5.1): pushing a tag v<mod.version> builds and tests every node, publishes the jars
-# to Modrinth and creates a GitHub release with the jars and the section of the version in CHANGELOG.md.
+# to Modrinth and creates a GitHub release with the jars, the runner library c0de-net-runner-<version>.jar (task
+# 6.1) and the section of the version in CHANGELOG.md.
 #
 # Needs the repository secret MODRINTH_TOKEN (a Modrinth personal access token with the scopes to create
 # versions) and publish.modrinth_id in stonecutter.properties.toml.
@@ -94,9 +95,31 @@ jobs:
           path: versions/${{ matrix.node }}/build/libs/*.jar
           if-no-files-found: error
 
+  runner:
+    name: Runner library
+    needs: version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: |
+            21
+            25
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Build
+        run: ./gradlew :runner:check :runner:jar --console=plain
+      - name: Upload the runner library
+        uses: actions/upload-artifact@v7
+        with:
+          name: c0de_net-runner
+          path: runner/build/libs/c0de-net-runner-${{ needs.version.outputs.version }}.jar
+          if-no-files-found: error
+
   publish:
     name: Publish ${{ needs.version.outputs.version }}
-    needs: [version, node]
+    needs: [version, node, runner]
     runs-on: ubuntu-latest
     permissions:
       contents: write

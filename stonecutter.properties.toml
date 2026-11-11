@@ -13,7 +13,7 @@ mod.issues_url = "https://github.com/joernott/minecraft-c0de-net/issues"
 publish.modrinth_id = "P2irzbnD"
 
 # The version of c0de the mod is built and tested against; the mod requires it or a newer one
-deps.c0de = "0.3.0"
+deps.c0de = "0.4.0"
 deps.fabric_loader = "0.19.5"
 loomx.loom_version = "1.18-SNAPSHOT"
 

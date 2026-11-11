@@ -1,0 +1,24 @@
+{
+  "name": "HTTP_PUT",
+  "icon": "c0de:call_block",
+  "category": "c0de_net:c0de_net_http",
+  "sortnum": 8,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Sendet eine PUT-Anfrage: speichert etwas auf dem Server und ersetzt, was vorher da war.$(br2)Die Daten werden als UTF-8 gesendet. Setze ihren Typ im Header $(1)Content-Type$() der Verbindung."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(li)$(1)connection$() STRUCT c0de_net/http/HTTP_CONNECTION: der Server$(li)$(1)endpoint$() STRING: der Pfad hinter dem Basis-Endpunkt (optional, Standard leer)$(li)$(1)data$() STRING: die Daten, die mit der Anfrage gesendet werden (optional, Standard leer)$(li)Ergebnis $(1)result$() STRING: die Rohdaten der Antwort"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(li)Ergebnis $(1)status$() INTEGER: der HTTP-Status$(li)Ergebnis $(1)headers$() HASH STRING: die Header der Antwort"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(1)CALL c0de_net/http/HTTP_PUT$(br)  PARAMETER connection api ;$(br)  PARAMETER endpoint \"/lamps/kitchen\" ;$(br)  PARAMETER data state ;$(br)  RESULT status status$()"
+    }
+  ]
+}

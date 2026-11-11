@@ -1,0 +1,6 @@
+{
+  "name": "Erste Schritte",
+  "description": "Programme, die die Bibliothek verwenden, binden sie mit INCLUDE c0de_net/http ein. Ihr Typ und ihre Funktionen beginnen mit dem Namen der Bibliothek, z. B. c0de_net/http/HTTP_GET. Jedes Programm hat, auch ohne das INCLUDE, die Konstante $(1)C0DE_NET_VERSION$() mit der Version von c0de net als Text, z. B. \"0.2.0\".",
+  "icon": "c0de:include_block",
+  "sortnum": 0
+}

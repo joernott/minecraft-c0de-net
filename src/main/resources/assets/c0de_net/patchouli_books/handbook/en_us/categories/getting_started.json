@@ -1,6 +1,6 @@
 {
   "name": "Getting started",
-  "description": "Programs that use the library include it with INCLUDE c0de_net/http. Its type and functions start with the library name, like c0de_net/http/HTTP_GET.",
+  "description": "Programs that use the library include it with INCLUDE c0de_net/http. Its type and functions start with the library name, like c0de_net/http/HTTP_GET. Every program, also without the INCLUDE, has the constant $(1)C0DE_NET_VERSION$() with the version of c0de net as text, like \"0.2.0\".",
   "icon": "c0de:include_block",
   "sortnum": 0
 }

@@ -1,7 +1,9 @@
 package de.joernott.c0denet.library;
 
 import de.joernott.c0de.core.library.Library;
+import de.joernott.c0de.core.library.NativeCall;
 import de.joernott.c0de.core.library.NativeFunction;
+import de.joernott.c0de.core.library.NativeResult;
 import de.joernott.c0de.core.value.BooleanValue;
 import de.joernott.c0de.core.value.HashValue;
 import de.joernott.c0de.core.value.IntegerValue;
@@ -12,20 +14,32 @@ import de.joernott.c0de.core.value.Type;
 import de.joernott.c0de.core.value.Value;
 import de.joernott.c0denet.core.http.HttpConnection;
 import de.joernott.c0denet.core.http.HttpMethod;
+import de.joernott.c0denet.core.http.NetError;
+import de.joernott.c0denet.core.http.NetException;
 import de.joernott.c0denet.core.http.NetResponse;
-import de.joernott.c0denet.http.PendingRequests;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 /**
  * The library {@code c0de_net/http} (docs/concept.md): the struct type HTTP_CONNECTION and a function per HTTP
- * method, HTTP_GET to HTTP_PUT. The functions send their request through the client of the player who runs the
- * process ({@link PendingRequests}) and wait for the answer.
+ * method, HTTP_GET to HTTP_PUT. How the requests are sent is given to it: in the game through the client of the
+ * player who runs the process (PendingRequests), in the program runner of c0de directly (task 6.1). This class
+ * doesn't use Minecraft, so the runner library compiles it too.
  */
 public final class HttpLibrary implements Library {
     public static final String NAME = "c0de_net/http";
+
+    /** Sends the request of a call of a function and returns its result, or waits for it. */
+    public interface Sender extends BiFunction<NativeCall, HttpMethod, NativeResult> {}
+
+    private final Sender sender;
+
+    public HttpLibrary(Sender sender) {
+        this.sender = sender;
+    }
 
     private static final Type HASH_OF_STRINGS = new Type.Hash(Type.Str.UNLIMITED);
 
@@ -73,7 +87,7 @@ public final class HttpLibrary implements Library {
             List<NativeFunction.Parameter> parameters = method.sendsData()
                     ? List.of(connection(), endpoint(), data())
                     : List.of(connection(), endpoint());
-            functions.put(name, new NativeFunction(name, parameters, RESULTS, call -> PendingRequests.call(call, method)));
+            functions.put(name, new NativeFunction(name, parameters, RESULTS, call -> sender.apply(call, method)));
         }
         return functions;
     }
@@ -117,6 +131,19 @@ public final class HttpLibrary implements Library {
                 "result", new StringValue(response.result()),
                 "status", new IntegerValue(response.status()),
                 "headers", new HashValue(Type.Str.UNLIMITED, headers));
+    }
+
+    /** The results of an answer; with HTTP_STATUS for a status of 400 or higher, whose results are delivered too. */
+    public static NativeResult result(NetResponse response) {
+        if (response.isError()) {
+            return new NativeResult(results(response), NetError.HTTP_STATUS.code(), response.statusLine(), 0, false);
+        }
+        return NativeResult.of(results(response));
+    }
+
+    /** An error of c0de net as the error of a call. */
+    public static NativeResult error(NetException e) {
+        return NativeResult.error(e.error().code(), e.getMessage());
     }
 
     private static boolean bool(StructValue struct, String element) {

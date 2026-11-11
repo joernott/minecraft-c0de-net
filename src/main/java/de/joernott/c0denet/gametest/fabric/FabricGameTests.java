@@ -18,6 +18,11 @@ public class FabricGameTests {
     }
 
     @GameTest(template = SmokeTests.EMPTY_STRUCTURE, timeoutTicks = 100)
+    public void versionConstantIsRegistered(GameTestHelper helper) {
+        SmokeTests.versionConstantIsRegistered(helper);
+    }
+
+    @GameTest(template = SmokeTests.EMPTY_STRUCTURE, timeoutTicks = 100)
     public void programsIncludeTheLibrary(GameTestHelper helper) {
         SmokeTests.programsIncludeTheLibrary(helper);
     }

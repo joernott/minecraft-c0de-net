@@ -1,0 +1,24 @@
+{
+  "name": "HTTP_OPTIONS",
+  "icon": "c0de:call_block",
+  "category": "c0de_net:c0de_net_http",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Sendet eine OPTIONS-Anfrage: fragt den Server, welche Methoden ein Endpunkt unterstützt.$(br2)Viele Server antworten im Header $(1)allow$()."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(li)$(1)connection$() STRUCT c0de_net/http/HTTP_CONNECTION: der Server$(li)$(1)endpoint$() STRING: der Pfad hinter dem Basis-Endpunkt (optional, Standard leer)$(li)Ergebnis $(1)result$() STRING: die Rohdaten der Antwort$(li)Ergebnis $(1)status$() INTEGER: der HTTP-Status"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(li)Ergebnis $(1)headers$() HASH STRING: die Header der Antwort"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(1)CALL c0de_net/http/HTTP_OPTIONS$(br)  PARAMETER connection api ;$(br)  PARAMETER endpoint \"/lamps\" ;$(br)  RESULT headers answerHeaders$()"
+    }
+  ]
+}

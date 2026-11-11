@@ -113,11 +113,11 @@ A task is done when
 
 | Task | Description | Done |
 |---|---|:---:|
-| 6.1 | The program runner of c0de (c0de task 14.1) runs programs that include `c0de_net/http`: the release attaches the library of `core` as `c0de-net-runner-<version>.jar`, which the runner takes on its class path; requests are sent directly from the runner, like in the unit tests. The CI of www-c0de runs its c0de net tutorials with it against its own test service. Unit tests. |  |
-| 6.2 | German translation of the handbook: `docs/de/reference/net.md`, with the same `##` and `###` headings in the same order as the English file (the import of c0de.at matches sections by position). Names in programs stay English, comments and texts are translated. |  |
-| 6.3 | Tests of the translation: the GameTest of task 4.1.1 also validates the programs of `docs/de`, and a test checks that the headings match the English file. |  |
-| 6.4 | The Patchouli book in German (`de_de`), generated from `docs/de/reference/net.md`. |  |
-| 6.5 | Built-in STRING constant C0DE_NET_VERSION with the version of the installed c0de net, registered through the library API of c0de (c0de task 14.9), also in the program runner. Concept and handbook; unit tests and GameTest. Needed by the tutorial recipe "Is my c0de up to date?" of c0de.at. |  |
+| 6.1 | The program runner of c0de (c0de task 14.1) runs programs that include `c0de_net/http`: the release attaches the library of `core` as `c0de-net-runner-<version>.jar`, which the runner takes on its class path; requests are sent directly from the runner, like in the unit tests. The CI of www-c0de runs its c0de net tutorials with it against its own test service. Unit tests. | ✅ |
+| 6.2 | German translation of the handbook: `docs/de/reference/net.md`, with the same `##` and `###` headings in the same order as the English file (the import of c0de.at matches sections by position). Names in programs stay English, comments and texts are translated. | ✅ |
+| 6.3 | Tests of the translation: the GameTest of task 4.1.1 also validates the programs of `docs/de`, and a test checks that the headings match the English file. | ✅ |
+| 6.4 | The Patchouli book in German (`de_de`), generated from `docs/de/reference/net.md`. | ✅ |
+| 6.5 | Built-in STRING constant C0DE_NET_VERSION with the version of the installed c0de net, registered through the library API of c0de (c0de task 14.9), also in the program runner. Concept and handbook; unit tests and GameTest. Needed by the tutorial recipe "Is my c0de up to date?" of c0de.at. | ✅ |
 | 6.6 | Release with the translation, the runner library and C0DE_NET_VERSION for all nodes. |  |
 
 ## Risks

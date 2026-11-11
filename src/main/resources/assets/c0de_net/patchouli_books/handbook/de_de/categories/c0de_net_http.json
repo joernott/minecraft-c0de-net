@@ -1,0 +1,6 @@
+{
+  "name": "c0de_net/http",
+  "description": "Die HTTP-Bibliothek hat einen Typ für die Verbindung zu einem Server und eine Funktion für jede HTTP-Methode. Alle Funktionen geben die Rohdaten der Antwort, ihren Status und ihre Header zurück.",
+  "icon": "c0de:call_block",
+  "sortnum": 1
+}

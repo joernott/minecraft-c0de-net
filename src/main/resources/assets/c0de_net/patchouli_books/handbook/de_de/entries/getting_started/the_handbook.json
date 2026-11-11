@@ -1,0 +1,17 @@
+{
+  "name": "Das Handbuch",
+  "icon": "c0de:include_block",
+  "category": "c0de_net:getting_started",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Dieses Buch wird mit Patchouli auf Minecraft 1.21.1 hergestellt."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "c0de_net:handbook",
+      "text": "Umgib einen INCLUDE-Block mit acht Fäden. Schließlich geht es um das World Wide Web."
+    }
+  ]
+}

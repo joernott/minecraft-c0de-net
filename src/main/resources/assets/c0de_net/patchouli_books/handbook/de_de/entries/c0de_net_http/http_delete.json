@@ -1,0 +1,24 @@
+{
+  "name": "HTTP_DELETE",
+  "icon": "c0de:call_block",
+  "category": "c0de_net:c0de_net_http",
+  "sortnum": 5,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Sendet eine DELETE-Anfrage: entfernt etwas auf dem Server.$(br2)Manche APIs erwarten dabei Daten, die meisten nicht."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(li)$(1)connection$() STRUCT c0de_net/http/HTTP_CONNECTION: der Server$(li)$(1)endpoint$() STRING: der Pfad hinter dem Basis-Endpunkt (optional, Standard leer)$(li)$(1)data$() STRING: die Daten, die mit der Anfrage gesendet werden, in UTF-8 (optional, Standard leer)"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(li)Ergebnis $(1)result$() STRING: die Rohdaten der Antwort$(li)Ergebnis $(1)status$() INTEGER: der HTTP-Status$(li)Ergebnis $(1)headers$() HASH STRING: die Header der Antwort"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(1)CALL c0de_net/http/HTTP_DELETE$(br)  PARAMETER connection api ;$(br)  PARAMETER endpoint \"/timers/3\" ;$(br)  RESULT status status$()"
+    }
+  ]
+}

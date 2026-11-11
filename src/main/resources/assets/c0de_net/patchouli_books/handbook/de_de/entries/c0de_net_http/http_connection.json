@@ -1,0 +1,48 @@
+{
+  "name": "HTTP_CONNECTION",
+  "icon": "c0de:type_struct_block",
+  "category": "c0de_net:c0de_net_http",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Ein Strukturtyp mit den Grundangaben der Anfragen an einen Server."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Deklariere ihn mit $(1)VARIABLE api STRUCT c0de_net/http/HTTP_CONNECTION$() und setze seine Elemente mit ASSIGN. Nur $(1)server$() ist nötig, alle anderen Elemente beginnen mit Standardwerten, die zu den meisten Servern passen.$(br2)$(li)$(1)use_ssl$() BOOLEAN: wahr für https, falsch für http (Standard falsch)"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(li)$(1)server$() STRING: der Servername oder die IP-Adresse, darf nicht leer sein$(li)$(1)port$() INTEGER: 1 bis 65535, oder 0 für 80 bzw. 443 (Standard 0)$(li)$(1)base_endpoint$() STRING: ein Pfad vor jedem Endpunkt, z. B. /api/v2"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(li)$(1)user$() STRING: der Benutzername für die Basic-Authentifizierung, leer für keine$(li)$(1)password$() STRING: das Passwort für die Basic-Authentifizierung$(li)$(1)skip_ssl_validation$() BOOLEAN: wahr, um jedes Zertifikat zu akzeptieren, z. B. ein selbstsigniertes (Standard falsch)"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(li)$(1)proxy$() STRING: ein HTTP-Proxy wie http://proxy:3128, leer für keinen$(li)$(1)headers$() HASH STRING: Header, die mit jeder Anfrage gesendet werden, z. B. Content-Type$(li)$(1)timeout$() INTEGER: Sekunden, die eine Anfrage dauern darf, 1 bis 300, oder 0 für 60 (Standard 0)"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Die URL einer Anfrage besteht aus dem Protokoll, dem Server, dem Port, dem Basis-Endpunkt und dem Endpunkt, z. B. $(1)https://api.example.com/v2/users/7$(). Der Endpunkt wird so verwendet, wie er ist, mit seiner Query, z. B. $(1)/search?q=stone$()."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Ein $(1)Authorization$()-Header in $(1)headers$() ersetzt die Basic-Authentifizierung. Die Header Host, Content-Length, Connection, Expect und Upgrade können nicht gesetzt werden."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Das Passwort wird im Programm wie jeder andere Wert gespeichert, und jeder, der das Blatt lesen kann, kann es lesen. Übergib Geheimnisse als Parameter, aus einer Konstantenkarte im Auslöserblock."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(1)PROGRAM connect$(br)NOOP$(br)INCLUDE c0de_net/http$(br)NOOP$(br)FUNCTION run$(br)  PARAMETER token STRING$(br)BEGIN$(br)  VARIABLE api STRUCT c0de_net/http/HTTP_CONNECTION$(br)  ASSIGN api.use_ssl TRUE ;$(br)  ASSIGN api.server \"api.example.com\" ;$(br)  ASSIGN api.base_endpoint \"/v2\" ;$(br)  ASSIGN api.headers[\"Authorization\"] \"Bearer \" ⊕ token ;$()"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(1)  ASSIGN api.headers[\"Content-Type\"] \"application/json\" ;$(br)  ASSIGN api.timeout 10 ;$(br)END FUNCTION$()"
+    }
+  ]
+}

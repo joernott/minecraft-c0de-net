@@ -1,0 +1,16 @@
+{
+  "name": "REQUEST_FAILED",
+  "icon": "c0de:type_error_block",
+  "category": "c0de_net:errors",
+  "sortnum": 4,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Code 1003: Die Anfrage konnte nicht gesendet werden, oder es kam keine Antwort."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Die Meldung nennt den Grund, z. B. einen unbekannten Host, eine abgelehnte Verbindung, einen fehlgeschlagenen SSL-Handshake oder einen Proxy-Fehler. Ein selbstsigniertes Zertifikat braucht $(1)skip_ssl_validation$()."
+    }
+  ]
+}

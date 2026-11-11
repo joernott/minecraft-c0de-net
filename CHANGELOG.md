@@ -2,6 +2,15 @@
 
 All notable changes of c0de net. The section of a version is also its changelog on Modrinth.
 
+## Unreleased
+
+Documentation and tests, for c0de 0.4.0.
+
+- **C0DE_NET_VERSION**: a built-in constant with the version of c0de net, which every program can read.
+- **German**: the handbook is translated into German, and the Patchouli book shows it in German when the game is set to German.
+- **Program runner**: `c0de-net-runner-<version>.jar`, attached to the GitHub release, brings c0de_net/http to the program runner of c0de, which runs programs without Minecraft.
+- **c0de 0.4.0** or newer is required.
+
 ## 0.1.0
 
 The first alpha of c0de net, for c0de 0.3.0 on Minecraft 1.21.1, 1.21.11, 26.1.2, 26.2 and 26.3, each for Fabric and NeoForge.

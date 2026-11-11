@@ -6,6 +6,11 @@ paragraphs and list items are distributed over text pages; programs get pages of
 (only loaded if Patchouli is installed; in the formats of Minecraft 1.21.1 and of 1.21.2 and later) and the pages
 are generated files: the CI runs this script and fails if they differ from the committed files.
 
+The German translation docs/de/reference/net.md (task 6.4) becomes the de_de pages of the book; Patchouli shows the
+pages in the language of the game and falls back to English. The translation has the same headings in the same
+order, and its pages get the IDs of the English headings at the same position. The name and the landing text of
+the book are translation keys, written into the language files of the mod.
+
 Usage: python scripts/generate_book.py
 """
 
@@ -19,8 +24,12 @@ HANDBOOK = ROOT / "docs" / "reference" / "net.md"
 RESOURCES = ROOT / "src" / "main" / "resources"
 VERSIONED = ROOT / "src" / "main" / "versioned" / "recipes"
 BOOK = "handbook"
-CONTENT = RESOURCES / "assets" / "c0de_net" / "patchouli_books" / BOOK / "en_us"
-IMAGE = re.compile(r"!\[[^\]]*\]\(images/([a-z0-9_]+)\.png\)")
+BOOKS = RESOURCES / "assets" / "c0de_net" / "patchouli_books" / BOOK
+LANG = RESOURCES / "assets" / "c0de_net" / "lang"
+# The handbook in every language of the book
+LANGUAGES = {"en_us": HANDBOOK, "de_de": ROOT / "docs" / "de" / "reference" / "net.md"}
+# Images of recipes; the translations use the images of the English folder
+IMAGE = re.compile(r"!\[[^\]]*\]\((?:\.\./\.\./reference/)?images/([a-z0-9_]+)\.png\)")
 
 # The number of characters that fit on a text page; the first page of an entry also shows its title
 PAGE_CHARACTERS = 320
@@ -136,7 +145,11 @@ def parts(lines: list[str]) -> dict[str, list[str]]:
     """The parts of an element: description, recipe, parameters, example."""
     result: dict[str, list[str]] = {"description": []}
     current = "description"
-    markers = {"**Recipe**": "recipe", "**Parameters and results**": "parameters", "**Example**": "example"}
+    markers = {
+        "**Recipe**": "recipe", "**Rezept**": "recipe",
+        "**Parameters and results**": "parameters", "**Parameter und Ergebnisse**": "parameters",
+        "**Example**": "example", "**Beispiel**": "example",
+    }
     for line in lines:
         if line.strip() in markers:
             current = markers[line.strip()]
@@ -180,11 +193,9 @@ def recipe(modern: bool) -> dict:
     }
 
 
-def main() -> None:
-    # The pages are generated anew, so that pages of removed sections don't stay
-    if CONTENT.exists():
-        shutil.rmtree(CONTENT)
-    lines = HANDBOOK.read_text(encoding="utf-8").splitlines()
+def structure(path: Path) -> tuple[str, list[str], list[tuple[str, list[str], list[tuple[str, list[str]]]]]]:
+    """The title, the introduction and the categories ("## ") with their elements ("### ") of a handbook."""
+    lines = path.read_text(encoding="utf-8").splitlines()
     title = next(line[2:].strip() for line in lines if line.startswith("# "))
     intro: list[str] = []
     categories: list[tuple[str, list[str], list[tuple[str, list[str]]]]] = []
@@ -201,10 +212,13 @@ def main() -> None:
             categories[-1][1].append(line)
         else:
             intro.append(line)
+    return title, intro, categories
 
+
+def main() -> None:
     write(RESOURCES / "data" / "c0de_net" / "patchouli_books" / BOOK / "book.json", {
-        "name": title,
-        "landing_text": " ".join(text for kind, text in blocks(intro) if kind == "text"),
+        "name": "book.c0de_net." + BOOK + ".name",
+        "landing_text": "book.c0de_net." + BOOK + ".landing_text",
         "version": 1,
         "use_resource_pack": True,
         "model": "patchouli:book_green",
@@ -215,22 +229,46 @@ def main() -> None:
     write(VERSIONED / "1.21.1" / "data" / "c0de_net" / "recipe" / (BOOK + ".json"), recipe(False))
     write(VERSIONED / "1.21.2" / "data" / "c0de_net" / "recipe" / (BOOK + ".json"), recipe(True))
 
-    for number, (category_title, description, elements) in enumerate(categories):
-        category = slug(category_title)
-        write(CONTENT / "categories" / (category + ".json"), {
-            "name": category_title,
-            "description": " ".join(text for kind, text in blocks(description) if kind == "text"),
-            "icon": ICONS[category],
-            "sortnum": number,
-        })
-        for position, (name, element) in enumerate(elements):
-            write(CONTENT / "entries" / category / (slug(name) + ".json"), {
-                "name": name,
-                "icon": ICONS.get(slug(name), ICONS[category]),
-                "category": "c0de_net:" + category,
-                "sortnum": position,
-                "pages": element_pages(element),
+    _, _, english = structure(HANDBOOK)
+    texts = {}
+    for language, handbook in LANGUAGES.items():
+        # The pages are generated anew, so that pages of removed sections don't stay
+        content = BOOKS / language
+        if content.exists():
+            shutil.rmtree(content)
+        if not handbook.exists():
+            continue
+        title, intro, categories = structure(handbook)
+        if len(categories) != len(english):
+            raise ValueError(f"{handbook}: {len(categories)} sections, the English handbook has {len(english)}")
+        texts[language] = {
+            "book.c0de_net." + BOOK + ".name": title,
+            "book.c0de_net." + BOOK + ".landing_text": " ".join(text for kind, text in blocks(intro) if kind == "text"),
+        }
+        for number, (category_title, description, elements) in enumerate(categories):
+            english_title, _, english_elements = english[number]
+            if len(elements) != len(english_elements):
+                raise ValueError(f"{handbook}, {category_title}: {len(elements)} elements, the English handbook has "
+                                 f"{len(english_elements)}")
+            category = slug(english_title)
+            write(content / "categories" / (category + ".json"), {
+                "name": category_title,
+                "description": " ".join(text for kind, text in blocks(description) if kind == "text"),
+                "icon": ICONS[category],
+                "sortnum": number,
             })
+            for position, (name, element) in enumerate(elements):
+                entry = slug(english_elements[position][0])
+                write(content / "entries" / category / (entry + ".json"), {
+                    "name": name,
+                    "icon": ICONS.get(entry, ICONS[category]),
+                    "category": "c0de_net:" + category,
+                    "sortnum": position,
+                    "pages": element_pages(element),
+                })
+    # The language files; a language without a translation of the handbook gets the English texts
+    for language in LANGUAGES:
+        write(LANG / (language + ".json"), texts.get(language, texts["en_us"]))
 
 
 if __name__ == "__main__":

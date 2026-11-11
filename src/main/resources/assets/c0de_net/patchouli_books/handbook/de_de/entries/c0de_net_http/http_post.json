@@ -1,0 +1,24 @@
+{
+  "name": "HTTP_POST",
+  "icon": "c0de:call_block",
+  "category": "c0de_net:c0de_net_http",
+  "sortnum": 7,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Sendet eine POST-Anfrage: sendet Daten an den Server, z. B. um etwas anzulegen.$(br2)Die Daten werden als UTF-8 gesendet. Setze ihren Typ im Header $(1)Content-Type$() der Verbindung. Erzeuge die Daten mit TO_JSON aus c0de/strings."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(li)$(1)connection$() STRUCT c0de_net/http/HTTP_CONNECTION: der Server$(li)$(1)endpoint$() STRING: der Pfad hinter dem Basis-Endpunkt (optional, Standard leer)$(li)$(1)data$() STRING: die Daten, die mit der Anfrage gesendet werden (optional, Standard leer)$(li)Ergebnis $(1)result$() STRING: die Rohdaten der Antwort"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(li)Ergebnis $(1)status$() INTEGER: der HTTP-Status$(li)Ergebnis $(1)headers$() HASH STRING: die Header der Antwort"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(1)CALL c0de_net/http/HTTP_POST$(br)  PARAMETER connection api ;$(br)  PARAMETER endpoint \"/messages\" ;$(br)  PARAMETER data message ;$(br)  RESULT result answer$()"
+    }
+  ]
+}

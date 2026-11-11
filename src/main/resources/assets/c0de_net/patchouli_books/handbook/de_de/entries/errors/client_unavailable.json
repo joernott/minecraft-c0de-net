@@ -1,0 +1,16 @@
+{
+  "name": "CLIENT_UNAVAILABLE",
+  "icon": "c0de:type_error_block",
+  "category": "c0de_net:errors",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Code 1001: Es gibt keinen Client, der die Anfrage sendet."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Der Spieler, der den Prozess ausführt, ist nicht online, oder in seinem Spiel ist c0de net nicht installiert. Ein Prozess, den niemand gestartet hat und dessen Auslöserblock keinen Besitzer hat, kann ebenfalls keine Anfragen senden."
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+{
+  "book.c0de_net.handbook.name": "c0de-net-Handbuch",
+  "book.c0de_net.handbook.landing_text": "c0de net ergänzt c0de um die Bibliothek c0de_net/http. Mit ihr senden Programme HTTP-Anfragen an Webserver und REST-APIs und lesen die Antworten. Dieses Handbuch beschreibt den Verbindungstyp, die Funktionen, die Fehler und die Einstellungen, mit Beispielen."
+}

@@ -1,0 +1,16 @@
+{
+  "name": "INVALID_ARGUMENT",
+  "icon": "c0de:type_error_block",
+  "category": "c0de_net:errors",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Code 309: Die Verbindung ist ungültig."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Der Server ist leer, der Port liegt nicht zwischen 0 und 65535, das Zeitlimit liegt nicht zwischen 0 und 300, der Proxy ist keine http://-URL, oder ein Header kann nicht gesendet werden. Der Fehler wird auch ausgelöst, wenn die Anfrage größer als 1.000.000 Bytes ist."
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Eine Lampe schalten",
+  "icon": "c0de:program_block",
+  "category": "c0de_net:examples",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Schaltet eine Lampe einer Hausautomation ein oder aus."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Stell den Auslöserblock neben einen Hebel und gib ihm eine Konstantenkarte $(1)token$() mit dem Token deiner Hausautomation. Die Anfrage wird vom Computer des Spielers gesendet, der den Hebel umlegt, also können nur Spieler in deinem Heimnetz die Lampe schalten."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(1)PROGRAM lamp$(br)NOOP$(br)INCLUDE c0de_net/http$(br)NOOP$(br)FUNCTION switch$(br)  PARAMETER token STRING$(br)  PARAMETER on BOOLEAN TRUE$(br)  RESULT status INTEGER$(br)BEGIN$(br)  VARIABLE api STRUCT c0de_net/http/HTTP_CONNECTION$(br)  VARIABLE state STRING \"{\\\"on\\\": false}\"$(br)  ASSIGN api.server \"192.168.1.20\" ;$()"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(1)  ASSIGN api.port 8123 ;$(br)  ASSIGN api.base_endpoint \"/api\" ;$(br)  ASSIGN api.headers[\"Authorization\"] \"Bearer \" ⊕ token ;$(br)  ASSIGN api.headers[\"Content-Type\"] \"application/json\" ;$(br)  IF on ;$(br)  BEGIN$(br)    ASSIGN state \"{\\\"on\\\": true}\" ;$(br)  END IF$(br)  CALL c0de_net/http/HTTP_PUT$(br)    PARAMETER connection api ;$(br)    PARAMETER endpoint \"/lamps/kitchen\" ;$(br)    PARAMETER data state ;$()"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(1)    RESULT status status$(br)END FUNCTION$()"
+    }
+  ]
+}

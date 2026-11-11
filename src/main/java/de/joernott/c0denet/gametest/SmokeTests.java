@@ -3,6 +3,8 @@ package de.joernott.c0denet.gametest;
 import de.joernott.c0de.core.line.Notation;
 import de.joernott.c0de.core.validation.Validation;
 import de.joernott.c0de.core.validation.Validator;
+import de.joernott.c0de.core.value.StringValue;
+import de.joernott.c0de.core.value.Value;
 import de.joernott.c0de.library.ModLibraries;
 import de.joernott.c0denet.C0deNet;
 import de.joernott.c0denet.library.HttpLibrary;
@@ -63,24 +65,37 @@ public final class SmokeTests {
         helper.succeed();
     }
 
+    /** The built-in constant C0DE_NET_VERSION has the version of the mod (task 6.5). */
+    public static void versionConstantIsRegistered(GameTestHelper helper) {
+        Value version = ModLibraries.registry().constants().get(C0deNet.VERSION_CONSTANT);
+        helper.assertTrue(
+                version instanceof StringValue text && text.value().equals(C0deNet.VERSION),
+                C0deNet.VERSION_CONSTANT + " is " + version + ", not " + C0deNet.VERSION);
+        helper.succeed();
+    }
+
     /**
-     * The complete programs of the handbook (docs/reference/net.md: the code blocks that start with PROGRAM) are
-     * valid.
+     * The complete programs of the handbook (docs/reference/net.md: the code blocks that start with PROGRAM) and of
+     * its German translation (docs/de/reference/net.md, task 6.3) are valid.
      */
     public static void handbookProgramsAreValid(GameTestHelper helper) {
         String path = System.getProperty(HANDBOOK);
         helper.assertTrue(path != null, "The system property " + HANDBOOK + " is not set");
-        String handbook;
-        try {
-            handbook = Files.readString(Path.of(path), StandardCharsets.UTF_8).replace("\r\n", "\n");
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+        Path english = Path.of(path);
+        Path german = english.getParent().getParent().resolve("de").resolve("reference").resolve(english.getFileName());
         List<String> programs = new ArrayList<>();
-        Matcher matcher = CODE.matcher(handbook);
-        while (matcher.find()) {
-            if (matcher.group(1).startsWith("PROGRAM")) {
-                programs.add(matcher.group(1));
+        for (Path file : List.of(english, german)) {
+            String handbook;
+            try {
+                handbook = Files.readString(file, StandardCharsets.UTF_8).replace("\r\n", "\n");
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+            Matcher matcher = CODE.matcher(handbook);
+            while (matcher.find()) {
+                if (matcher.group(1).startsWith("PROGRAM")) {
+                    programs.add(matcher.group(1));
+                }
             }
         }
         helper.assertTrue(!programs.isEmpty(), "The handbook has no complete programs");

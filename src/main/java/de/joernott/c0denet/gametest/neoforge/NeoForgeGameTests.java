@@ -19,6 +19,11 @@ public class NeoForgeGameTests {
     }
 
     @GameTest(template = "empty")
+    public static void versionConstantIsRegistered(GameTestHelper helper) {
+        SmokeTests.versionConstantIsRegistered(helper);
+    }
+
+    @GameTest(template = "empty")
     public static void programsIncludeTheLibrary(GameTestHelper helper) {
         SmokeTests.programsIncludeTheLibrary(helper);
     }

@@ -18,6 +18,9 @@ stonecutter parameters {
         match(loader, "fabric", "neoforge")
     }
 
+    // The version of the mod for C0DE_NET_VERSION (C0deNet.VERSION)
+    swaps["mod_version"] = "\"${properties.get<String>("mod.version")}\";"
+
     replacements {
         // Replacements work in both directions (when the active node changes), so they must be unambiguous
         string(current.parsed >= "1.21.11") {

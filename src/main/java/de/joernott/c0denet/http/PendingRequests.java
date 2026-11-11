@@ -256,16 +256,11 @@ public final class PendingRequests {
         BY_PROCESS.remove(pending.process);
     }
 
-    /** The results of an answer; with HTTP_STATUS for a status of 400 or higher, whose results are delivered too. */
     private static NativeResult result(NetResponse response) {
-        if (response.isError()) {
-            return new NativeResult(
-                    HttpLibrary.results(response), NetError.HTTP_STATUS.code(), response.statusLine(), 0, false);
-        }
-        return NativeResult.of(HttpLibrary.results(response));
+        return HttpLibrary.result(response);
     }
 
     private static NativeResult error(NetException e) {
-        return NativeResult.error(e.error().code(), e.getMessage());
+        return HttpLibrary.error(e);
     }
 }

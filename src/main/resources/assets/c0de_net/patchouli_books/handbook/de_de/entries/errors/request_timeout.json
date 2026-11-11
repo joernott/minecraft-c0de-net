@@ -1,0 +1,12 @@
+{
+  "name": "REQUEST_TIMEOUT",
+  "icon": "c0de:type_error_block",
+  "category": "c0de_net:errors",
+  "sortnum": 5,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Code 1004: Innerhalb des Zeitlimits der Verbindung kam keine vollständige Antwort.$(br2)Das Zeitlimit gilt für die ganze Anfrage, bis zum letzten Byte der Antwort. Erhöhe $(1)timeout$() für langsame Server, bis zu 300 Sekunden."
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 package de.joernott.c0denet;
 
 import de.joernott.c0de.library.ModLibraries;
+import de.joernott.c0de.core.value.StringValue;
 import de.joernott.c0de.platform.Platform;
 import de.joernott.c0denet.core.config.NetConfig;
 import de.joernott.c0denet.http.PendingRequests;
@@ -15,12 +16,16 @@ import org.slf4j.LoggerFactory;
 public final class C0deNet {
     public static final String MOD_ID = "c0de_net";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+    /** The version of the mod (mod.version in stonecutter.properties.toml). */
+    public static final String VERSION = /*$ mod_version*/ "0.1.0";
+    /** The built-in constant with the version of the mod (task 6.5). */
+    public static final String VERSION_CONSTANT = "C0DE_NET_VERSION";
 
     private C0deNet() {}
 
     /**
-     * Loads the server settings, registers the payloads and the library c0de_net/http with c0de, which is a required
-     * dependency and always loaded.
+     * Loads the server settings, registers the payloads, the library c0de_net/http and the built-in constant
+     * C0DE_NET_VERSION with c0de, which is a required dependency and always loaded.
      */
     public static void init() {
         try {
@@ -34,7 +39,8 @@ public final class C0deNet {
         NetworkChannel.register();
         PendingRequests.channel(new NetworkChannel());
         Platform.INSTANCE.onServerTickEnd(PendingRequests::tick);
-        ModLibraries.register(new HttpLibrary());
+        ModLibraries.register(new HttpLibrary(PendingRequests::call));
+        ModLibraries.registerConstant(VERSION_CONSTANT, new StringValue(VERSION));
     }
 
     /** An identifier in the namespace of the mod. */

@@ -1,0 +1,20 @@
+{
+  "name": "Einstellungen",
+  "icon": "minecraft:writable_book",
+  "category": "c0de_net:getting_started",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Der Server hat die Datei $(1)config/c0de_net.properties$(). $(1)maxResponseSize$() begrenzt die Größe einer Antwort in Bytes (1 KiB bis 16 MiB, Standard 1 MiB). $(1)maxRequestsPerPlayer$() begrenzt, wie viele Anfragen gleichzeitig auf dem Client eines Spielers laufen (1 bis 64, Standard 8); weitere Anfragen warten."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Jeder Spieler hat die Datei $(1)config/c0de_net-client.properties$(). Mit $(1)allowRequests=false$() sendet sein Client keine Anfragen, und die Anfragen seiner Prozesse lösen REQUESTS_DISABLED aus."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Beide Dateien werden mit den Standardwerten angelegt. Ungültige Einträge werden im Log gemeldet und durch die Standardwerte ersetzt."
+    }
+  ]
+}
