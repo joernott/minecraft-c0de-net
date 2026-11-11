@@ -40,6 +40,7 @@ A task is done when
 | 3 | Requests on the client | The functions send requests through the client of the player who runs the process and wait for the answer | ✅ |
 | 4 | Documentation and handbook | Handbook, Patchouli book, README, Modrinth page | ✅ |
 | 5 | Release 0.1.0 | c0de net on Modrinth and GitHub for all nodes | ✅ |
+| 6 | Documentation | The handbook in German, and the programs of the c0de net tutorials on c0de.at are tested with every release |  |
 
 ## Sprint 0: Concept and plan
 
@@ -105,6 +106,18 @@ A task is done when
 | 5.1 | Modrinth project (created by the user: `P2irzbnD`, secret `MODRINTH_TOKEN` set; environment "client and server", c0de as required dependency) and release workflow as in c0de. | ✅ |
 | 5.2 | Release 0.1.0 for all nodes. | ✅ |
 | 5.3 | Alternative logo: the slashes on black, almost covered by the cobweb of Minecraft, which fills the picture (`docs/images/logo_cobweb.png`); it is the icon of the mod (user decision). | ✅ |
+
+## Sprint 6: Documentation
+
+**Goal:** the handbook reaches players who don't read English, and the programs of the c0de net tutorials on c0de.at are tested with every release. Planned on 2026-11-11 from the tutorial plan of www-c0de (`docs/tutorials.md` there), together with sprint 14 of c0de.
+
+| Task | Description | Done |
+|---|---|:---:|
+| 6.1 | The program runner of c0de (c0de task 14.1) runs programs that include `c0de_net/http`: the release attaches the library of `core` as `c0de-net-runner-<version>.jar`, which the runner takes on its class path; requests are sent directly from the runner, like in the unit tests. The CI of www-c0de runs its c0de net tutorials with it against its own test service. Unit tests. |  |
+| 6.2 | German translation of the handbook: `docs/de/reference/net.md`, with the same `##` and `###` headings in the same order as the English file (the import of c0de.at matches sections by position). Names in programs stay English, comments and texts are translated. |  |
+| 6.3 | Tests of the translation: the GameTest of task 4.1.1 also validates the programs of `docs/de`, and a test checks that the headings match the English file. |  |
+| 6.4 | The Patchouli book in German (`de_de`), generated from `docs/de/reference/net.md`. |  |
+| 6.5 | Release with the translation and the runner library for all nodes. |  |
 
 ## Risks
 
