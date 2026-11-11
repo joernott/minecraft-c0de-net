@@ -55,3 +55,7 @@ T4: Add another step to the documentation sprint of minecraft-c0de to extract ev
 T5: The proposal is fine, maybe also implement a version checker for c0de by checking the latest release version on github for the minecraft-c0de project.
 T6: Yes, this should be stated somewhere explicitly.
 T7: The proposal makes sense
+
+## 2026-11-11 – Version constants
+
+Add a task to the sprints on c0de and c0de-net to provide a constant C0DE_VERSION respective C0DE_NET_VERSION that will always contain the mod version. That should close the gap. After that, please push the three branches
