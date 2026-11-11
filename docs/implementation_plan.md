@@ -40,7 +40,7 @@ A task is done when
 | 3 | Requests on the client | The functions send requests through the client of the player who runs the process and wait for the answer | ✅ |
 | 4 | Documentation and handbook | Handbook, Patchouli book, README, Modrinth page | ✅ |
 | 5 | Release 0.1.0 | c0de net on Modrinth and GitHub for all nodes | ✅ |
-| 6 | Documentation (0.2.0) | The handbook in German, and the programs of the c0de net tutorials on c0de.at are tested with every release |  |
+| 6 | Documentation (0.2.0) | The handbook in German, and the programs of the c0de net tutorials on c0de.at are tested with every release | ✅ |
 
 ## Sprint 0: Concept and plan
 
@@ -118,7 +118,7 @@ A task is done when
 | 6.3 | Tests of the translation: the GameTest of task 4.1.1 also validates the programs of `docs/de`, and a test checks that the headings match the English file. | ✅ |
 | 6.4 | The Patchouli book in German (`de_de`), generated from `docs/de/reference/net.md`. | ✅ |
 | 6.5 | Built-in STRING constant C0DE_NET_VERSION with the version of the installed c0de net, registered through the library API of c0de (c0de task 14.9), also in the program runner. Concept and handbook; unit tests and GameTest. Needed by the tutorial recipe "Is my c0de up to date?" of c0de.at. | ✅ |
-| 6.6 | Release with the translation, the runner library and C0DE_NET_VERSION for all nodes. |  |
+| 6.6 | Release with the translation, the runner library and C0DE_NET_VERSION for all nodes, released on 2026-11-11 as 0.2.0 (GitHub pre-release with c0de-net-runner-0.2.0.jar, Modrinth). | ✅ |
 
 ## Risks
 
