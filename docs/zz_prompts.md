@@ -63,3 +63,11 @@ Add a task to the sprints on c0de and c0de-net to provide a constant C0DE_VERSIO
 ## 2026-11-11 – Sprint 6
 
 please continue with c0de-net. It also has a PR open from Dependabot, so please integrate it at the beginning of Sprint 6
+
+## 2026-11-11 – Stuck workflow
+
+The workflow is stuck on two tasks, I've tried to cancel it now
+
+## 2026-11-11 – GitHub problems
+
+The CI didn't even initialize the jobs, so it is most likely due to Github problems.
