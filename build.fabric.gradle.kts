@@ -161,19 +161,29 @@ tasks {
     }
 }
 
-// Publishing to Modrinth: `publishMods` is a dry run unless MODRINTH_TOKEN and the project ID are set
+// Publishing to Modrinth and CurseForge (task 7.4): `publishMods` is a dry run unless MODRINTH_TOKEN, CURSEFORGE_TOKEN
+// and both project IDs are set
 publishMods {
     val modVersion = property("mod.version") as String
     val projectId = sc.properties.get<String>("publish.modrinth_id")
     val token = providers.environmentVariable("MODRINTH_TOKEN")
-    file = loomx.modJar.flatMap { it.archiveFile }
+    val curseforgeId = sc.properties.get<String>("publish.curseforge_id")
+    val curseforgeToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+    // A version that is already released on GitHub is published from the jars of its release
+    // (-Ppublish.released_jars=<folder>, .github/workflows/curseforge.yml, task 7.4)
+    val releasedJars = providers.gradleProperty("publish.released_jars")
+    val root = rootProject.layout.projectDirectory
+    val releasedJar = "${base.archivesName.get()}-${project.version}.jar"
+    file = releasedJars.map { root.file("$it/$releasedJar") }
+        .orElse(loomx.modJar.flatMap { it.archiveFile })
     version = "${modVersion}+${sc.current.version}-fabric"
     displayName = "c0de net $modVersion for Fabric ${sc.current.version}"
     changelog = providers.fileContents(rootProject.layout.projectDirectory.file("CHANGELOG.md")).asText
         .map { changelogSection(it, modVersion) }
     type = if (modVersion.startsWith("0.")) ALPHA else STABLE
     modLoaders.add("fabric")
-    dryRun = token.map { it.isBlank() || projectId.isBlank() }.orElse(true)
+    dryRun = token.zip(curseforgeToken) { modrinth, curseforge -> modrinth.isBlank() || curseforge.isBlank() }
+        .map { it || projectId.isBlank() || curseforgeId.isBlank() }.orElse(true)
     modrinth {
         this.projectId = projectId
         accessToken = token
@@ -182,6 +192,15 @@ publishMods {
         minecraftVersions.addAll(sc.properties.get<String>("mod.mc_releases").split(",").map { it.trim() })
         requires("fabric-api", "c0de")
         // Patchouli only where the mod was tested with it (deps.patchouli)
+        if (sc.properties.getOrNull<String>("deps.patchouli") != null) optional("patchouli")
+    }
+    curseforge {
+        this.projectId = curseforgeId
+        accessToken = curseforgeToken
+        clientRequired = true
+        serverRequired = true
+        minecraftVersions.addAll(sc.properties.get<String>("mod.mc_releases").split(",").map { it.trim() })
+        requires("fabric-api", "c0de")
         if (sc.properties.getOrNull<String>("deps.patchouli") != null) optional("patchouli")
     }
 }

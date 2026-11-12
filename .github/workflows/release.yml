@@ -1,11 +1,12 @@
 name: Release
 
 # Publishes a version (task 5.1): pushing a tag v<mod.version> builds and tests every node, publishes the jars
-# to Modrinth and creates a GitHub release with the jars, the runner library c0de-net-runner-<version>.jar (task
+# to Modrinth and CurseForge (task 7.4) and creates a GitHub release with the jars, the runner library c0de-net-runner-<version>.jar (task
 # 6.1) and the section of the version in CHANGELOG.md.
 #
-# Needs the repository secret MODRINTH_TOKEN (a Modrinth personal access token with the scopes to create
-# versions) and publish.modrinth_id in stonecutter.properties.toml.
+# Needs the repository secrets MODRINTH_TOKEN (a Modrinth personal access token with the scopes to create
+# versions) and CURSEFORGE_TOKEN (a CurseForge API token), publish.modrinth_id and publish.curseforge_id in
+# stonecutter.properties.toml.
 on:
   push:
     tags: ["v*"]
@@ -39,6 +40,10 @@ jobs:
           fi
           if grep -qE '^publish.modrinth_id = ""' stonecutter.properties.toml; then
             echo "::error title=Modrinth::publish.modrinth_id is not set in stonecutter.properties.toml"
+            exit 1
+          fi
+          if grep -qE '^publish.curseforge_id = ""' stonecutter.properties.toml; then
+            echo "::error title=CurseForge::publish.curseforge_id is not set in stonecutter.properties.toml"
             exit 1
           fi
           echo "version=$version" >> "$GITHUB_OUTPUT"
@@ -132,15 +137,20 @@ jobs:
             21
             25
       - uses: gradle/actions/setup-gradle@v6
-      - name: Modrinth
+      - name: Modrinth and CurseForge
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
         run: |
           if [ -z "$MODRINTH_TOKEN" ]; then
             echo "::error title=Modrinth::The secret MODRINTH_TOKEN is missing"
             exit 1
           fi
-          # Every node publishes its jars (one Modrinth version per node)
+          if [ -z "$CURSEFORGE_TOKEN" ]; then
+            echo "::error title=CurseForge::The secret CURSEFORGE_TOKEN is missing"
+            exit 1
+          fi
+          # Every node publishes its jars (one Modrinth version and one CurseForge file per node)
           ./gradlew publishMods --console=plain
       - uses: actions/download-artifact@v8
         with:

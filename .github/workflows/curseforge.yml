@@ -1,0 +1,65 @@
+name: CurseForge
+
+# Publishes a version that is already released on GitHub to CurseForge (task 7.4), with the jars of its GitHub
+# release: the versions released before release.yml published to CurseForge too. Started by hand:
+#
+#   gh workflow run curseforge.yml -f version=0.2.0
+#
+# mod.version on the branch it runs on must be that version, so the build scripts look for the same jars, and
+# CHANGELOG.md gives the changelog. Needs the repository secrets CURSEFORGE_TOKEN and MODRINTH_TOKEN (publishMods is
+# a dry run without both; this workflow publishes nothing to Modrinth) and publish.curseforge_id in
+# stonecutter.properties.toml.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: The released version, e.g. 0.2.0
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: curseforge
+  cancel-in-progress: false
+
+jobs:
+  curseforge:
+    name: CurseForge
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ inputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: The version matches mod.version
+        run: |
+          version=$(sed -n 's/^mod.version = "\(.*\)"$/\1/p' stonecutter.properties.toml)
+          if [ "$version" != "$VERSION" ]; then
+            echo "::error title=Version::mod.version is $version on $GITHUB_REF_NAME, not $VERSION"
+            exit 1
+          fi
+      - name: The jars of the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download "v$VERSION" --pattern '*.jar' --dir build/released
+          rm -f build/released/*-sources.jar
+          ls build/released
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: |
+            21
+            25
+      - uses: gradle/actions/setup-gradle@v6
+      - name: CurseForge
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+        run: |
+          if [ -z "$CURSEFORGE_TOKEN" ] || [ -z "$MODRINTH_TOKEN" ]; then
+            echo "::error title=CurseForge::The secrets CURSEFORGE_TOKEN and MODRINTH_TOKEN are needed"
+            exit 1
+          fi
+          # Every node publishes the jar of its release (one CurseForge file per node)
+          ./gradlew publishCurseforge -Ppublish.released_jars=build/released --console=plain

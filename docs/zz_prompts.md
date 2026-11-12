@@ -87,3 +87,9 @@ I have pushed the tag cor c0de-net
 ## 2026-11-12 – CurseForge
 
 add another task to both c0de and c0de-net: I have created a curseforge account and want to publish the mods on curseforge as well. This should be included into the release process. Please tell me, what I need to provide for you to achieve that.
+
+## 2026-11-12 – CurseForge project IDs
+
+OK c0de has the ID 1800913 and c0de-net has 1800920. Please add them to the stonecutter config. I have also added the secret CURSEFORGE_TOKEN to both repos.
+
+Curseforge reviews only happen, once files are attached to the project. Please add the current release there as well, so that the review process can start.

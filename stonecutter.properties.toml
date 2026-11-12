@@ -11,6 +11,8 @@ mod.sources_url = "https://github.com/joernott/minecraft-c0de-net"
 mod.issues_url = "https://github.com/joernott/minecraft-c0de-net/issues"
 # The ID of the Modrinth project (task 5.1); publishMods is a dry run without it or without MODRINTH_TOKEN
 publish.modrinth_id = "P2irzbnD"
+# The ID of the CurseForge project (task 7.4); publishMods is a dry run without it or without CURSEFORGE_TOKEN
+publish.curseforge_id = "1800920"
 
 # The version of c0de the mod is built and tested against; the mod requires it or a newer one
 deps.c0de = "0.4.0"
