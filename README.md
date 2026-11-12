@@ -4,7 +4,7 @@
 
 A Minecraft mod that adds network libraries to [c0de](https://github.com/joernott/minecraft-c0de). The first one, `c0de_net/http`, lets c0de programs send HTTP requests to web servers and REST APIs and read the answers. The requests are sent by the game client of the player who runs the program, not by the server.
 
-The mod supports Fabric and NeoForge on Minecraft 1.21.1, 1.21.11, 26.1.2, 26.2 and 26.3, like c0de, and needs c0de 0.4.0 or newer.
+The mod supports Fabric and NeoForge on Minecraft 1.21.1, 1.21.11, 26.1.2, 26.2 and 26.3, like c0de, and needs c0de 0.5.0 or newer.
 
 ## Documentation
 
@@ -20,7 +20,7 @@ The mod supports Fabric and NeoForge on Minecraft 1.21.1, 1.21.11, 26.1.2, 26.2 
 `c0de-net-runner-<version>.jar`, attached to every GitHub release, brings `c0de_net/http` to the [program runner](https://github.com/joernott/minecraft-c0de/blob/main/docs/runner.md) of c0de, which runs programs without Minecraft. Put both jars on the class path (on Windows, separate them with `;`):
 
 ```sh
-java -cp c0de-runner-0.4.0.jar:c0de-net-runner-<version>.jar de.joernott.c0de.core.runner.Main program.c0de
+java -cp c0de-runner-0.5.0.jar:c0de-net-runner-<version>.jar de.joernott.c0de.core.runner.Main program.c0de
 ```
 
 In the runner, the requests are sent by the runner itself.

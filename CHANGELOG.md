@@ -2,6 +2,15 @@
 
 All notable changes of c0de net. The section of a version is also its changelog on Modrinth.
 
+## 0.3.0
+
+Answers to the questions of the recipes on c0de.at, for c0de 0.5.0.
+
+- **Error constants**: `c0de_net/http/HTTP_STATUS`, `c0de_net/http/CLIENT_UNAVAILABLE`, `c0de_net/http/REQUESTS_DISABLED`, `c0de_net/http/REQUEST_FAILED`, `c0de_net/http/REQUEST_TIMEOUT` and `c0de_net/http/RESPONSE_TOO_LARGE` hold the codes of the errors, so programs compare `problem.code` with a name instead of a number. They come with `INCLUDE c0de_net/http`.
+- **Handbook**: the endpoint is used as it is and not encoded; an endpoint with a space raises INVALID_ARGUMENT, and the handbook shows how to encode spaces. The examples build their JSON with TO_JSON of c0de/strings.
+- **CurseForge**: c0de net is also published on CurseForge.
+- **c0de 0.5.0** or newer is required.
+
 ## 0.2.0
 
 Documentation and tests, for c0de 0.4.0.

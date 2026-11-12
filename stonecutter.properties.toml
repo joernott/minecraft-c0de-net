@@ -15,7 +15,7 @@ publish.modrinth_id = "P2irzbnD"
 publish.curseforge_id = "1800920"
 
 # The version of c0de the mod is built and tested against; the mod requires it or a newer one
-deps.c0de = "0.4.0"
+deps.c0de = "0.5.0"
 deps.fabric_loader = "0.19.5"
 loomx.loom_version = "1.18-SNAPSHOT"
 
