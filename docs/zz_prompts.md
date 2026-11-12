@@ -83,3 +83,7 @@ I have pushed the tag cor c0de-net
 ## 2026-11-12 – Feedback from the recipes
 
 (No prompt of its own: the recipes of c0de.at (www-c0de sprint 9) found gaps in the handbook; sprint 7.)
+
+## 2026-11-12 – CurseForge
+
+add another task to both c0de and c0de-net: I have created a curseforge account and want to publish the mods on curseforge as well. This should be included into the release process. Please tell me, what I need to provide for you to achieve that.

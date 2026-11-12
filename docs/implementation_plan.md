@@ -129,6 +129,7 @@ A task is done when
 | 7.1 | INVALID_ARGUMENT is also raised for an endpoint that isn't a valid URL, e.g. with a space in its query (`?name=New York`); the handbook says so, says that the endpoint is used as it is and not encoded, and shows how to encode it (REPLACE of c0de/strings). |  |
 | 7.2 | The examples of the handbook build their JSON with TO_JSON instead of string literals with `\"`, which the guide of c0de doesn't document (c0de task 15.9). |  |
 | 7.3 | The handbook says whether the names of the errors (HTTP_STATUS, REQUEST_FAILED, …) can be used in programs like DIVISION_BY_ZERO; if not, c0de net registers them as constants through the library API of c0de. |  |
+| 7.4 | The release publishes the mod on CurseForge as well as on Modrinth (like c0de task 15.11): the `curseforge {}` block of the mod-publish-plugin in both builds, `publish.curseforge_id` in `stonecutter.properties.toml`, the same files, versions, changelog and release type, required on client and server, Fabric API and c0de required and Patchouli optional; `release.yml` needs the repository secret `CURSEFORGE_TOKEN`; `development_environment.md` describes it. Needs the CurseForge project of c0de first, because c0de net depends on it there. Checked with a dry run before the next release. |  |
 
 ## Risks
 
