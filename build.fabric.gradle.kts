@@ -199,8 +199,12 @@ publishMods {
         accessToken = curseforgeToken
         clientRequired = true
         serverRequired = true
+        // -Ppublish.curseforge_without_c0de leaves c0de out: CurseForge refuses it as a dependency until its project is
+        // approved (task 7.4); add it to the files on curseforge.com afterwards
+        val c0de = !providers.gradleProperty("publish.curseforge_without_c0de").isPresent
         minecraftVersions.addAll(sc.properties.get<String>("mod.mc_releases").split(",").map { it.trim() })
-        requires("fabric-api", "c0de")
+        requires("fabric-api")
+        if (c0de) requires("c0de")
         if (sc.properties.getOrNull<String>("deps.patchouli") != null) optional("patchouli")
     }
 }

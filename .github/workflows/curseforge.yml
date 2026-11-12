@@ -3,7 +3,7 @@ name: CurseForge
 # Publishes a version that is already released on GitHub to CurseForge (task 7.4), with the jars of its GitHub
 # release: the versions released before release.yml published to CurseForge too. Started by hand:
 #
-#   gh workflow run curseforge.yml -f version=0.2.0
+#   gh workflow run curseforge.yml -f version=0.2.0 [-f without_c0de=true]
 #
 # mod.version on the branch it runs on must be that version, so the build scripts look for the same jars, and
 # CHANGELOG.md gives the changelog. Needs the repository secrets CURSEFORGE_TOKEN and MODRINTH_TOKEN (publishMods is
@@ -15,6 +15,10 @@ on:
       version:
         description: The released version, e.g. 0.2.0
         required: true
+      without_c0de:
+        description: Leave out the dependency on c0de (CurseForge refuses it while the project of c0de is under review)
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -29,6 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       VERSION: ${{ inputs.version }}
+      WITHOUT_C0DE: ${{ inputs.without_c0de }}
     steps:
       - uses: actions/checkout@v7
       - name: The version matches mod.version
@@ -62,4 +67,6 @@ jobs:
             exit 1
           fi
           # Every node publishes the jar of its release (one CurseForge file per node)
-          ./gradlew publishCurseforge -Ppublish.released_jars=build/released --console=plain
+          without=""
+          if [ "$WITHOUT_C0DE" = "true" ]; then without="-Ppublish.curseforge_without_c0de"; fi
+          ./gradlew publishCurseforge -Ppublish.released_jars=build/released $without --console=plain
