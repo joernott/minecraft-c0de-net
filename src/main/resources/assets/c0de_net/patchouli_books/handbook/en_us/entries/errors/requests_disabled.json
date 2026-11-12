@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Code 1002: the client of the player who runs the process doesn't send requests.$(br2)That player has set $(1)allowRequests=false$() in $(1)config/c0de_net-client.properties$()."
+      "text": "Code 1002, $(1)c0de_net/http/REQUESTS_DISABLED$(): the client of the player who runs the process doesn't send requests.$(br2)That player has set $(1)allowRequests=false$() in $(1)config/c0de_net-client.properties$()."
     }
   ]
 }

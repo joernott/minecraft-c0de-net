@@ -1,6 +1,6 @@
 {
   "name": "Errors",
-  "description": "The functions raise these errors. Catch them with a variable of type ERROR on the CALL line, and check its $(1)code$().",
+  "description": "The functions raise these errors. Catch them with a variable of type ERROR on the CALL line, and compare its $(1)code$() with the constants of the library, like $(1)c0de_net/http/HTTP_STATUS$(). They hold the codes and come with INCLUDE c0de_net/http, like the functions. INVALID_ARGUMENT is a constant of c0de.",
   "icon": "c0de:type_error_block",
   "sortnum": 2
 }

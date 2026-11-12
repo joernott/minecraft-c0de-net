@@ -97,3 +97,7 @@ Curseforge reviews only happen, once files are attached to the project. Please a
 ## 2026-11-12 – CurseForge without the dependency on c0de
 
 The slug seems to be c0de, so please upload without the dependency for now
+
+## 2026-11-13 – Sprint 7
+
+yes, please, then continue with sprint 7 of c0de-net without waiting for my confirmation

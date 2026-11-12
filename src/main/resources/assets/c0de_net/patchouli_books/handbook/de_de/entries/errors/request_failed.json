@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Code 1003: Die Anfrage konnte nicht gesendet werden, oder es kam keine Antwort."
+      "text": "Code 1003, $(1)c0de_net/http/REQUEST_FAILED$(): Die Anfrage konnte nicht gesendet werden, oder es kam keine Antwort."
     },
     {
       "type": "patchouli:text",

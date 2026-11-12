@@ -61,7 +61,26 @@ Deklariere ihn mit `VARIABLE api STRUCT c0de_net/http/HTTP_CONNECTION` und setze
 - `headers` HASH STRING: Header, die mit jeder Anfrage gesendet werden, z. B. Content-Type
 - `timeout` INTEGER: Sekunden, die eine Anfrage dauern darf, 1 bis 300, oder 0 für 60 (Standard 0)
 
-Die URL einer Anfrage besteht aus dem Protokoll, dem Server, dem Port, dem Basis-Endpunkt und dem Endpunkt, z. B. `https://api.example.com/v2/users/7`. Der Endpunkt wird so verwendet, wie er ist, mit seiner Query, z. B. `/search?q=stone`.
+Die URL einer Anfrage besteht aus dem Protokoll, dem Server, dem Port, dem Basis-Endpunkt und dem Endpunkt, z. B. `https://api.example.com/v2/users/7`. Der Endpunkt wird so verwendet, wie er ist, mit seiner Query, z. B. `/search?q=stone`. Er wird nicht codiert: Ein Leerzeichen oder ein anderes Zeichen, das in einer URL nicht stehen darf, löst INVALID_ARGUMENT aus, z. B. `/search?city=New York`. Codiere solche Zeichen selbst, ein Leerzeichen als `%20` oder, in einer Query, als `+`. REPLACE aus c0de/strings überschreibt Zeichen, ohne die Länge des Textes zu ändern, und kann so jedes Leerzeichen von `city` in `+` verwandeln:
+
+```c0de
+CALL c0de/strings/INSTR
+    PARAMETER text city ;
+    PARAMETER search " " ;
+    RESULT result gap
+WHILE gap ≥ 0 ;
+BEGIN
+    CALL c0de/strings/REPLACE
+        PARAMETER text city ;
+        PARAMETER start gap ;
+        PARAMETER insert "+" ;
+        RESULT result city
+    CALL c0de/strings/INSTR
+        PARAMETER text city ;
+        PARAMETER search " " ;
+        RESULT result gap
+END WHILE
+```
 
 Ein `Authorization`-Header in `headers` ersetzt die Basic-Authentifizierung. Die Header Host, Content-Length, Connection, Expect und Upgrade können nicht gesetzt werden.
 
@@ -219,11 +238,16 @@ Die Daten werden als UTF-8 gesendet. Setze ihren Typ im Header `Content-Type` de
 
 **Beispiel**
 
+`state` ist eine BOOLEAN-Variable mit dem Tag `json: "on"`, darum schreibt TO_JSON aus c0de/strings `{"on":false}` (siehe das Beispiel Eine Lampe schalten).
+
 ```c0de
+CALL c0de/strings/TO_JSON
+    PARAMETER value state ;
+    RESULT result data
 CALL c0de_net/http/HTTP_PATCH
     PARAMETER connection api ;
     PARAMETER endpoint "/lamps/kitchen" ;
-    PARAMETER data "{\"on\": false}" ;
+    PARAMETER data data ;
     RESULT status status
 ```
 
@@ -279,17 +303,17 @@ CALL c0de_net/http/HTTP_PUT
 
 ## Fehler
 
-Die Funktionen lösen diese Fehler aus. Fang sie mit einer Variable vom Typ ERROR in der CALL-Zeile ab und prüfe ihren `code`.
+Die Funktionen lösen diese Fehler aus. Fang sie mit einer Variable vom Typ ERROR in der CALL-Zeile ab und vergleiche ihren `code` mit den Konstanten der Bibliothek, z. B. `c0de_net/http/HTTP_STATUS`. Sie enthalten die Codes und kommen wie die Funktionen mit INCLUDE c0de_net/http. INVALID_ARGUMENT ist eine Konstante von c0de.
 
 ### INVALID_ARGUMENT
 
-Code 309: Die Verbindung ist ungültig.
+Code 309: Die Verbindung oder der Endpunkt ist ungültig.
 
-Der Server ist leer, der Port liegt nicht zwischen 0 und 65535, das Zeitlimit liegt nicht zwischen 0 und 300, der Proxy ist keine http://-URL, oder ein Header kann nicht gesendet werden. Der Fehler wird auch ausgelöst, wenn die Anfrage größer als 1.000.000 Bytes ist.
+Der Server ist leer, der Port liegt nicht zwischen 0 und 65535, das Zeitlimit liegt nicht zwischen 0 und 300, der Proxy ist keine http://-URL, oder ein Header kann nicht gesendet werden. Der Endpunkt macht die URL ungültig, z. B. mit einem Leerzeichen (siehe HTTP_CONNECTION). Der Fehler wird auch ausgelöst, wenn die Anfrage größer als 1.000.000 Bytes ist.
 
 ### HTTP_STATUS
 
-Code 1000: Der Server hat mit einem Status von 400 oder höher geantwortet.
+Code 1000, `c0de_net/http/HTTP_STATUS`: Der Server hat mit einem Status von 400 oder höher geantwortet.
 
 Die Meldung ist die Statuszeile, z. B. `404 Not Found`. Die Ergebnisse `result`, `status` und `headers` werden trotzdem geliefert, so kann ein Programm, das den Fehler abfängt, die Antwort lesen.
 
@@ -300,7 +324,7 @@ CALL c0de_net/http/HTTP_GET problem
     PARAMETER connection api ;
     PARAMETER endpoint "/lamps/attic" ;
     RESULT status status
-IF problem.code = 1000 AND status = 404 ;
+IF problem.code = c0de_net/http/HTTP_STATUS AND status = 404 ;
 BEGIN
     CALL PRINT
         PARAMETER value "There is no lamp in the attic" ;
@@ -309,31 +333,31 @@ END IF
 
 ### CLIENT_UNAVAILABLE
 
-Code 1001: Es gibt keinen Client, der die Anfrage sendet.
+Code 1001, `c0de_net/http/CLIENT_UNAVAILABLE`: Es gibt keinen Client, der die Anfrage sendet.
 
 Der Spieler, der den Prozess ausführt, ist nicht online, oder in seinem Spiel ist c0de net nicht installiert. Ein Prozess, den niemand gestartet hat und dessen Auslöserblock keinen Besitzer hat, kann ebenfalls keine Anfragen senden.
 
 ### REQUESTS_DISABLED
 
-Code 1002: Der Client des Spielers, der den Prozess ausführt, sendet keine Anfragen.
+Code 1002, `c0de_net/http/REQUESTS_DISABLED`: Der Client des Spielers, der den Prozess ausführt, sendet keine Anfragen.
 
 Dieser Spieler hat `allowRequests=false` in `config/c0de_net-client.properties` gesetzt.
 
 ### REQUEST_FAILED
 
-Code 1003: Die Anfrage konnte nicht gesendet werden, oder es kam keine Antwort.
+Code 1003, `c0de_net/http/REQUEST_FAILED`: Die Anfrage konnte nicht gesendet werden, oder es kam keine Antwort.
 
 Die Meldung nennt den Grund, z. B. einen unbekannten Host, eine abgelehnte Verbindung, einen fehlgeschlagenen SSL-Handshake oder einen Proxy-Fehler. Ein selbstsigniertes Zertifikat braucht `skip_ssl_validation`.
 
 ### REQUEST_TIMEOUT
 
-Code 1004: Innerhalb des Zeitlimits der Verbindung kam keine vollständige Antwort.
+Code 1004, `c0de_net/http/REQUEST_TIMEOUT`: Innerhalb des Zeitlimits der Verbindung kam keine vollständige Antwort.
 
 Das Zeitlimit gilt für die ganze Anfrage, bis zum letzten Byte der Antwort. Erhöhe `timeout` für langsame Server, bis zu 300 Sekunden.
 
 ### RESPONSE_TOO_LARGE
 
-Code 1005: Die Antwort ist größer, als der Server erlaubt.
+Code 1005, `c0de_net/http/RESPONSE_TOO_LARGE`: Die Antwort ist größer, als der Server erlaubt.
 
 Die Grenze ist `maxResponseSize` in `config/c0de_net.properties`, standardmäßig 1 MiB. Frag bei der API weniger Daten an, z. B. eine Seite einer Liste.
 
@@ -388,6 +412,7 @@ Stell den Auslöserblock neben einen Hebel und gib ihm eine Konstantenkarte `tok
 PROGRAM lamp
 NOOP
 INCLUDE c0de_net/http
+INCLUDE c0de/strings
 NOOP
 FUNCTION switch
     PARAMETER token STRING
@@ -395,20 +420,21 @@ FUNCTION switch
     RESULT status INTEGER
 BEGIN
     VARIABLE api STRUCT c0de_net/http/HTTP_CONNECTION
-    VARIABLE state STRING "{\"on\": false}"
+    VARIABLE state BOOLEAN TAG(json: "on")
+    VARIABLE data STRING
     ASSIGN api.server "192.168.1.20" ;
     ASSIGN api.port 8123 ;
     ASSIGN api.base_endpoint "/api" ;
     ASSIGN api.headers["Authorization"] "Bearer " ⊕ token ;
     ASSIGN api.headers["Content-Type"] "application/json" ;
-    IF on ;
-    BEGIN
-        ASSIGN state "{\"on\": true}" ;
-    END IF
+    ASSIGN state on ;
+    CALL c0de/strings/TO_JSON
+        PARAMETER value state ;
+        RESULT result data
     CALL c0de_net/http/HTTP_PUT
         PARAMETER connection api ;
         PARAMETER endpoint "/lamps/kitchen" ;
-        PARAMETER data state ;
+        PARAMETER data data ;
         RESULT status status
 END FUNCTION
 ```
@@ -434,7 +460,7 @@ BEGIN
     ASSIGN api.timeout 5 ;
     CALL c0de_net/http/HTTP_HEAD problem
         PARAMETER connection api ;
-    IF problem.code = 1000 ;
+    IF problem.code = c0de_net/http/HTTP_STATUS ;
     BEGIN
         EXIT 1 ;
     END IF

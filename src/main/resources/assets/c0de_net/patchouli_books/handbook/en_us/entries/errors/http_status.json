@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Code 1000: the server answered with a status of 400 or higher."
+      "text": "Code 1000, $(1)c0de_net/http/HTTP_STATUS$(): the server answered with a status of 400 or higher."
     },
     {
       "type": "patchouli:text",
@@ -14,7 +14,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(1)CALL c0de_net/http/HTTP_GET problem$(br)  PARAMETER connection api ;$(br)  PARAMETER endpoint \"/lamps/attic\" ;$(br)  RESULT status status$(br)IF problem.code = 1000 AND status = 404 ;$(br)BEGIN$(br)  CALL PRINT$(br)    PARAMETER value \"There is no lamp in the attic\" ;$(br)END IF$()"
+      "text": "$(1)CALL c0de_net/http/HTTP_GET problem$(br)  PARAMETER connection api ;$(br)  PARAMETER endpoint \"/lamps/attic\" ;$(br)  RESULT status status$(br)IF problem.code = c0de_net/http/HTTP_STATUS AND status = 404 ;$(br)BEGIN$(br)  CALL PRINT$(br)    PARAMETER value \"There is no lamp in the attic\" ;$(br)END IF$()"
     }
   ]
 }

@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Code 1005: the answer is larger than the server allows.$(br2)The limit is $(1)maxResponseSize$() in $(1)config/c0de_net.properties$(), 1 MiB by default. Ask the API for less data, e.g. one page of a list."
+      "text": "Code 1005, $(1)c0de_net/http/RESPONSE_TOO_LARGE$(): the answer is larger than the server allows.$(br2)The limit is $(1)maxResponseSize$() in $(1)config/c0de_net.properties$(), 1 MiB by default. Ask the API for less data, e.g. one page of a list."
     }
   ]
 }

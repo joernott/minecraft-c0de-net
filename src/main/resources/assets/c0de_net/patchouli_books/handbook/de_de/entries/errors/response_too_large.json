@@ -6,7 +6,11 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Code 1005: Die Antwort ist größer, als der Server erlaubt.$(br2)Die Grenze ist $(1)maxResponseSize$() in $(1)config/c0de_net.properties$(), standardmäßig 1 MiB. Frag bei der API weniger Daten an, z. B. eine Seite einer Liste."
+      "text": "Code 1005, $(1)c0de_net/http/RESPONSE_TOO_LARGE$(): Die Antwort ist größer, als der Server erlaubt."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Die Grenze ist $(1)maxResponseSize$() in $(1)config/c0de_net.properties$(), standardmäßig 1 MiB. Frag bei der API weniger Daten an, z. B. eine Seite einer Liste."
     }
   ]
 }

@@ -6,7 +6,11 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Code 1003: the request could not be sent, or there was no answer.$(br2)The message names the reason, like an unknown host, a refused connection, a failed SSL handshake or a proxy error. A self-signed certificate needs $(1)skip_ssl_validation$()."
+      "text": "Code 1003, $(1)c0de_net/http/REQUEST_FAILED$(): the request could not be sent, or there was no answer."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "The message names the reason, like an unknown host, a refused connection, a failed SSL handshake or a proxy error. A self-signed certificate needs $(1)skip_ssl_validation$()."
     }
   ]
 }

@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Code 1004: there was no complete answer within the timeout of the connection.$(br2)The timeout covers the whole request, until the last byte of the answer. Raise $(1)timeout$() for slow servers, up to 300 seconds."
+      "text": "Code 1004, $(1)c0de_net/http/REQUEST_TIMEOUT$(): there was no complete answer within the timeout of the connection.$(br2)The timeout covers the whole request, until the last byte of the answer. Raise $(1)timeout$() for slow servers, up to 300 seconds."
     }
   ]
 }

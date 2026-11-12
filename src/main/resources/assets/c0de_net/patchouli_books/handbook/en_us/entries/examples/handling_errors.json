@@ -14,7 +14,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(1)  CALL c0de_net/http/HTTP_HEAD problem$(br)    PARAMETER connection api ;$(br)  IF problem.code = 1000 ;$(br)  BEGIN$(br)    EXIT 1 ;$(br)  END IF$(br)  IF problem.code ≠ 0 ;$(br)  BEGIN$(br)    EXIT 2 ;$(br)  END IF$(br)  EXIT 0 ;$(br)END FUNCTION$()"
+      "text": "$(1)  CALL c0de_net/http/HTTP_HEAD problem$(br)    PARAMETER connection api ;$(br)  IF problem.code = c0de_net/http/HTTP_STATUS ;$(br)  BEGIN$(br)    EXIT 1 ;$(br)  END IF$(br)  IF problem.code ≠ 0 ;$(br)  BEGIN$(br)    EXIT 2 ;$(br)  END IF$(br)  EXIT 0 ;$(br)END FUNCTION$()"
     }
   ]
 }

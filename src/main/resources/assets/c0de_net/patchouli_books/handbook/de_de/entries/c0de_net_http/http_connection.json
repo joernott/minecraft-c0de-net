@@ -26,7 +26,15 @@
     },
     {
       "type": "patchouli:text",
-      "text": "Die URL einer Anfrage besteht aus dem Protokoll, dem Server, dem Port, dem Basis-Endpunkt und dem Endpunkt, z. B. $(1)https://api.example.com/v2/users/7$(). Der Endpunkt wird so verwendet, wie er ist, mit seiner Query, z. B. $(1)/search?q=stone$()."
+      "text": "Die URL einer Anfrage besteht aus dem Protokoll, dem Server, dem Port, dem Basis-Endpunkt und dem Endpunkt, z. B. $(1)https://api.example.com/v2/users/7$(). Der Endpunkt wird so verwendet, wie er ist, mit seiner Query, z. B. $(1)/search?q=stone$(). Er wird nicht codiert: Ein Leerzeichen oder ein anderes Zeichen, das in einer URL nicht stehen darf, löst INVALID_ARGUMENT aus, z. B. $(1)/search?city=New York$(). Codiere solche Zeichen selbst, ein Leerzeichen als $(1)%20$() oder, in einer Query, als $(1)+$(). REPLACE aus c0de/strings überschreibt Zeichen, ohne die Länge des Textes zu ändern, und kann so jedes Leerzeichen von $(1)city$() in $(1)+$() verwandeln:"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(1)CALL c0de/strings/INSTR$(br)  PARAMETER text city ;$(br)  PARAMETER search \" \" ;$(br)  RESULT result gap$(br)WHILE gap ≥ 0 ;$(br)BEGIN$(br)  CALL c0de/strings/REPLACE$(br)    PARAMETER text city ;$(br)    PARAMETER start gap ;$(br)    PARAMETER insert \"+\" ;$(br)    RESULT result city$(br)  CALL c0de/strings/INSTR$()"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(1)    PARAMETER text city ;$(br)    PARAMETER search \" \" ;$(br)    RESULT result gap$(br)END WHILE$()"
     },
     {
       "type": "patchouli:text",

@@ -109,6 +109,43 @@ class NetRunnerLibrariesTest {
         assertEquals((long) NetError.HTTP_STATUS.code(), error.get("code"));
     }
 
+    @Test
+    void theErrorsAreConstantsOfTheLibrary() {
+        String program = """
+                PROGRAM errors
+                NOOP
+                INCLUDE c0de_net/http
+                NOOP
+                FUNCTION main
+                    RESULT status INTEGER
+                    RESULT unavailable INTEGER
+                    RESULT disabled INTEGER
+                    RESULT failed INTEGER
+                    RESULT timeout INTEGER
+                    RESULT large INTEGER
+                BEGIN
+                    ASSIGN status c0de_net/http/HTTP_STATUS ;
+                    ASSIGN unavailable c0de_net/http/CLIENT_UNAVAILABLE ;
+                    ASSIGN disabled c0de_net/http/REQUESTS_DISABLED ;
+                    ASSIGN failed c0de_net/http/REQUEST_FAILED ;
+                    ASSIGN timeout c0de_net/http/REQUEST_TIMEOUT ;
+                    ASSIGN large c0de_net/http/RESPONSE_TOO_LARGE ;
+                END FUNCTION
+                """;
+        Map<String, Object> report =
+                ProgramRunner.run(program, ProgramRunner.Options.DEFAULT, ProgramRunner.libraries());
+        assertEquals("FINISHED", report.get("state"), () -> "report: " + report);
+        assertEquals(
+                Map.of(
+                        "status", 1000L,
+                        "unavailable", 1001L,
+                        "disabled", 1002L,
+                        "failed", 1003L,
+                        "timeout", 1004L,
+                        "large", 1005L),
+                report.get("results"));
+    }
+
     static Stream<String> handbookPrograms() throws IOException {
         Path docs = Path.of(System.getProperty("c0denet.docs"));
         List<String> programs = new ArrayList<>();

@@ -18,7 +18,11 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(1)CALL c0de_net/http/HTTP_PATCH$(br)  PARAMETER connection api ;$(br)  PARAMETER endpoint \"/lamps/kitchen\" ;$(br)  PARAMETER data \"{\\\"on\\\": false}\" ;$(br)  RESULT status status$()"
+      "text": "$(1)state$() is a BOOLEAN variable with the tag $(1)json: \"on\"$(), so TO_JSON of c0de/strings writes $(1){\"on\":false}$() (see the example Switching a lamp)."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(1)CALL c0de/strings/TO_JSON$(br)  PARAMETER value state ;$(br)  RESULT result data$(br)CALL c0de_net/http/HTTP_PATCH$(br)  PARAMETER connection api ;$(br)  PARAMETER endpoint \"/lamps/kitchen\" ;$(br)  PARAMETER data data ;$(br)  RESULT status status$()"
     }
   ]
 }

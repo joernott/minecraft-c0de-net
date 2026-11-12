@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Code 1001: Es gibt keinen Client, der die Anfrage sendet."
+      "text": "Code 1001, $(1)c0de_net/http/CLIENT_UNAVAILABLE$(): Es gibt keinen Client, der die Anfrage sendet."
     },
     {
       "type": "patchouli:text",

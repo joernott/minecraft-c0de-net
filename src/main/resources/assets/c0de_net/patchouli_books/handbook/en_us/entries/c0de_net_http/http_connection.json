@@ -26,7 +26,15 @@
     },
     {
       "type": "patchouli:text",
-      "text": "The URL of a request is the protocol, the server, the port, the base endpoint and the endpoint, like $(1)https://api.example.com/v2/users/7$(). The endpoint is used as it is, with its query, like $(1)/search?q=stone$()."
+      "text": "The URL of a request is the protocol, the server, the port, the base endpoint and the endpoint, like $(1)https://api.example.com/v2/users/7$(). The endpoint is used as it is, with its query, like $(1)/search?q=stone$(). It isn't encoded: a space or another character that a URL can't contain raises INVALID_ARGUMENT, like $(1)/search?city=New York$(). Encode such characters yourself, a space as $(1)%20$() or, in a query, as $(1)+$(). REPLACE of c0de/strings overwrites characters without changing the length of the text, so it can turn every space of $(1)city$() into $(1)+$():"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(1)CALL c0de/strings/INSTR$(br)  PARAMETER text city ;$(br)  PARAMETER search \" \" ;$(br)  RESULT result gap$(br)WHILE gap ≥ 0 ;$(br)BEGIN$(br)  CALL c0de/strings/REPLACE$(br)    PARAMETER text city ;$(br)    PARAMETER start gap ;$(br)    PARAMETER insert \"+\" ;$(br)    RESULT result city$(br)  CALL c0de/strings/INSTR$()"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(1)    PARAMETER text city ;$(br)    PARAMETER search \" \" ;$(br)    RESULT result gap$(br)END WHILE$()"
     },
     {
       "type": "patchouli:text",

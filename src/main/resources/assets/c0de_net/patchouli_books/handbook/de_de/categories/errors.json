@@ -1,6 +1,6 @@
 {
   "name": "Fehler",
-  "description": "Die Funktionen lösen diese Fehler aus. Fang sie mit einer Variable vom Typ ERROR in der CALL-Zeile ab und prüfe ihren $(1)code$().",
+  "description": "Die Funktionen lösen diese Fehler aus. Fang sie mit einer Variable vom Typ ERROR in der CALL-Zeile ab und vergleiche ihren $(1)code$() mit den Konstanten der Bibliothek, z. B. $(1)c0de_net/http/HTTP_STATUS$(). Sie enthalten die Codes und kommen wie die Funktionen mit INCLUDE c0de_net/http. INVALID_ARGUMENT ist eine Konstante von c0de.",
   "icon": "c0de:type_error_block",
   "sortnum": 2
 }

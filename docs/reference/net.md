@@ -61,7 +61,26 @@ Declare it with `VARIABLE api STRUCT c0de_net/http/HTTP_CONNECTION` and set its 
 - `headers` HASH STRING: headers sent with every request, like Content-Type
 - `timeout` INTEGER: seconds a request may take, 1 to 300, or 0 for 60 (default 0)
 
-The URL of a request is the protocol, the server, the port, the base endpoint and the endpoint, like `https://api.example.com/v2/users/7`. The endpoint is used as it is, with its query, like `/search?q=stone`.
+The URL of a request is the protocol, the server, the port, the base endpoint and the endpoint, like `https://api.example.com/v2/users/7`. The endpoint is used as it is, with its query, like `/search?q=stone`. It isn't encoded: a space or another character that a URL can't contain raises INVALID_ARGUMENT, like `/search?city=New York`. Encode such characters yourself, a space as `%20` or, in a query, as `+`. REPLACE of c0de/strings overwrites characters without changing the length of the text, so it can turn every space of `city` into `+`:
+
+```c0de
+CALL c0de/strings/INSTR
+    PARAMETER text city ;
+    PARAMETER search " " ;
+    RESULT result gap
+WHILE gap ≥ 0 ;
+BEGIN
+    CALL c0de/strings/REPLACE
+        PARAMETER text city ;
+        PARAMETER start gap ;
+        PARAMETER insert "+" ;
+        RESULT result city
+    CALL c0de/strings/INSTR
+        PARAMETER text city ;
+        PARAMETER search " " ;
+        RESULT result gap
+END WHILE
+```
 
 An `Authorization` header in `headers` replaces the basic authentication. The headers Host, Content-Length, Connection, Expect and Upgrade can't be set.
 
@@ -219,11 +238,16 @@ The data is sent as UTF-8. Set its type in the `Content-Type` header of the conn
 
 **Example**
 
+`state` is a BOOLEAN variable with the tag `json: "on"`, so TO_JSON of c0de/strings writes `{"on":false}` (see the example Switching a lamp).
+
 ```c0de
+CALL c0de/strings/TO_JSON
+    PARAMETER value state ;
+    RESULT result data
 CALL c0de_net/http/HTTP_PATCH
     PARAMETER connection api ;
     PARAMETER endpoint "/lamps/kitchen" ;
-    PARAMETER data "{\"on\": false}" ;
+    PARAMETER data data ;
     RESULT status status
 ```
 
@@ -279,17 +303,17 @@ CALL c0de_net/http/HTTP_PUT
 
 ## Errors
 
-The functions raise these errors. Catch them with a variable of type ERROR on the CALL line, and check its `code`.
+The functions raise these errors. Catch them with a variable of type ERROR on the CALL line, and compare its `code` with the constants of the library, like `c0de_net/http/HTTP_STATUS`. They hold the codes and come with INCLUDE c0de_net/http, like the functions. INVALID_ARGUMENT is a constant of c0de.
 
 ### INVALID_ARGUMENT
 
-Code 309: the connection is not valid.
+Code 309: the connection or the endpoint is not valid.
 
-The server is empty, the port is not 0 to 65535, the timeout is not 0 to 300, the proxy is not an http:// URL, or a header can't be sent. It is also raised if the request is larger than 1,000,000 bytes.
+The server is empty, the port is not 0 to 65535, the timeout is not 0 to 300, the proxy is not an http:// URL, or a header can't be sent. The endpoint makes the URL invalid, e.g. with a space (see HTTP_CONNECTION). It is also raised if the request is larger than 1,000,000 bytes.
 
 ### HTTP_STATUS
 
-Code 1000: the server answered with a status of 400 or higher.
+Code 1000, `c0de_net/http/HTTP_STATUS`: the server answered with a status of 400 or higher.
 
 The message is the status line, like `404 Not Found`. The results `result`, `status` and `headers` are delivered as well, so a program that catches the error can read the answer.
 
@@ -300,7 +324,7 @@ CALL c0de_net/http/HTTP_GET problem
     PARAMETER connection api ;
     PARAMETER endpoint "/lamps/attic" ;
     RESULT status status
-IF problem.code = 1000 AND status = 404 ;
+IF problem.code = c0de_net/http/HTTP_STATUS AND status = 404 ;
 BEGIN
     CALL PRINT
         PARAMETER value "There is no lamp in the attic" ;
@@ -309,31 +333,31 @@ END IF
 
 ### CLIENT_UNAVAILABLE
 
-Code 1001: there is no client to send the request.
+Code 1001, `c0de_net/http/CLIENT_UNAVAILABLE`: there is no client to send the request.
 
 The player who runs the process is not online, or their game doesn't have c0de net installed. A process that nobody started and whose trigger block has no owner can't send requests either.
 
 ### REQUESTS_DISABLED
 
-Code 1002: the client of the player who runs the process doesn't send requests.
+Code 1002, `c0de_net/http/REQUESTS_DISABLED`: the client of the player who runs the process doesn't send requests.
 
 That player has set `allowRequests=false` in `config/c0de_net-client.properties`.
 
 ### REQUEST_FAILED
 
-Code 1003: the request could not be sent, or there was no answer.
+Code 1003, `c0de_net/http/REQUEST_FAILED`: the request could not be sent, or there was no answer.
 
 The message names the reason, like an unknown host, a refused connection, a failed SSL handshake or a proxy error. A self-signed certificate needs `skip_ssl_validation`.
 
 ### REQUEST_TIMEOUT
 
-Code 1004: there was no complete answer within the timeout of the connection.
+Code 1004, `c0de_net/http/REQUEST_TIMEOUT`: there was no complete answer within the timeout of the connection.
 
 The timeout covers the whole request, until the last byte of the answer. Raise `timeout` for slow servers, up to 300 seconds.
 
 ### RESPONSE_TOO_LARGE
 
-Code 1005: the answer is larger than the server allows.
+Code 1005, `c0de_net/http/RESPONSE_TOO_LARGE`: the answer is larger than the server allows.
 
 The limit is `maxResponseSize` in `config/c0de_net.properties`, 1 MiB by default. Ask the API for less data, e.g. one page of a list.
 
@@ -388,6 +412,7 @@ Put the trigger block next to a lever and give it a constant item `token` with t
 PROGRAM lamp
 NOOP
 INCLUDE c0de_net/http
+INCLUDE c0de/strings
 NOOP
 FUNCTION switch
     PARAMETER token STRING
@@ -395,20 +420,21 @@ FUNCTION switch
     RESULT status INTEGER
 BEGIN
     VARIABLE api STRUCT c0de_net/http/HTTP_CONNECTION
-    VARIABLE state STRING "{\"on\": false}"
+    VARIABLE state BOOLEAN TAG(json: "on")
+    VARIABLE data STRING
     ASSIGN api.server "192.168.1.20" ;
     ASSIGN api.port 8123 ;
     ASSIGN api.base_endpoint "/api" ;
     ASSIGN api.headers["Authorization"] "Bearer " ⊕ token ;
     ASSIGN api.headers["Content-Type"] "application/json" ;
-    IF on ;
-    BEGIN
-        ASSIGN state "{\"on\": true}" ;
-    END IF
+    ASSIGN state on ;
+    CALL c0de/strings/TO_JSON
+        PARAMETER value state ;
+        RESULT result data
     CALL c0de_net/http/HTTP_PUT
         PARAMETER connection api ;
         PARAMETER endpoint "/lamps/kitchen" ;
-        PARAMETER data state ;
+        PARAMETER data data ;
         RESULT status status
 END FUNCTION
 ```
@@ -434,7 +460,7 @@ BEGIN
     ASSIGN api.timeout 5 ;
     CALL c0de_net/http/HTTP_HEAD problem
         PARAMETER connection api ;
-    IF problem.code = 1000 ;
+    IF problem.code = c0de_net/http/HTTP_STATUS ;
     BEGIN
         EXIT 1 ;
     END IF

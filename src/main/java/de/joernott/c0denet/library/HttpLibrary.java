@@ -79,6 +79,21 @@ public final class HttpLibrary implements Library {
         return Map.of("HTTP_CONNECTION", HTTP_CONNECTION);
     }
 
+    /**
+     * The errors of c0de net as INTEGER constants with their codes, like {@code c0de_net/http/HTTP_STATUS} (task
+     * 7.3). INVALID_ARGUMENT is a constant of c0de already.
+     */
+    @Override
+    public Map<String, Value> constants() {
+        Map<String, Value> constants = new LinkedHashMap<>();
+        for (NetError error : NetError.values()) {
+            if (error != NetError.INVALID_ARGUMENT) {
+                constants.put(error.name(), new IntegerValue(error.code()));
+            }
+        }
+        return constants;
+    }
+
     @Override
     public Map<String, NativeFunction> functions() {
         Map<String, NativeFunction> functions = new LinkedHashMap<>();
