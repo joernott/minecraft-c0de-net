@@ -175,11 +175,15 @@ publishMods {
     val curseforgeToken = providers.environmentVariable("CURSEFORGE_TOKEN")
     // A version that is already released on GitHub is published from the jars of its release
     // (-Ppublish.released_jars=<folder>, .github/workflows/curseforge.yml, task 7.4)
-    val releasedJars = providers.gradleProperty("publish.released_jars")
+    // The jar task stays the input of the publishing tasks, so the release builds the jars it publishes
+    val releasedJars = providers.gradleProperty("publish.released_jars").orNull
     val root = rootProject.layout.projectDirectory
     val releasedJar = "${base.archivesName.get()}-${project.version}.jar"
-    file = releasedJars.map { root.file("$it/$releasedJar") }
-        .orElse(tasks.jar.flatMap { it.archiveFile })
+    if (releasedJars == null) {
+        file = tasks.jar.flatMap { it.archiveFile }
+    } else {
+        file = root.file("$releasedJars/$releasedJar")
+    }
     version = "${modVersion}+${sc.current.version}-neoforge"
     displayName = "c0de net $modVersion for NeoForge ${sc.current.version}"
     changelog = providers.fileContents(rootProject.layout.projectDirectory.file("CHANGELOG.md")).asText
