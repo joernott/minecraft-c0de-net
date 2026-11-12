@@ -79,3 +79,7 @@ yes, please do (VM review and release 0.3.0 of the website, release 0.2.0 of c0d
 ## 2026-11-11 – Release 0.2.0
 
 I have pushed the tag cor c0de-net
+
+## 2026-11-12 – Feedback from the recipes
+
+(No prompt of its own: the recipes of c0de.at (www-c0de sprint 9) found gaps in the handbook; sprint 7.)

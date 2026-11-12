@@ -120,6 +120,16 @@ A task is done when
 | 6.5 | Built-in STRING constant C0DE_NET_VERSION with the version of the installed c0de net, registered through the library API of c0de (c0de task 14.9), also in the program runner. Concept and handbook; unit tests and GameTest. Needed by the tutorial recipe "Is my c0de up to date?" of c0de.at. | ✅ |
 | 6.6 | Release with the translation, the runner library and C0DE_NET_VERSION for all nodes, released on 2026-11-11 as 0.2.0 (GitHub pre-release with c0de-net-runner-0.2.0.jar, Modrinth). | ✅ |
 
+## Sprint 7: Feedback from the recipes
+
+**Goal:** the handbook answers the questions that the recipes of c0de.at (www-c0de sprint 9) ran into. Planned on 2026-11-12; the release is planned when the sprint starts.
+
+| Task | Description | Done |
+|---|---|:---:|
+| 7.1 | INVALID_ARGUMENT is also raised for an endpoint that isn't a valid URL, e.g. with a space in its query (`?name=New York`); the handbook says so, says that the endpoint is used as it is and not encoded, and shows how to encode it (REPLACE of c0de/strings). |  |
+| 7.2 | The examples of the handbook build their JSON with TO_JSON instead of string literals with `\"`, which the guide of c0de doesn't document (c0de task 15.9). |  |
+| 7.3 | The handbook says whether the names of the errors (HTTP_STATUS, REQUEST_FAILED, …) can be used in programs like DIVISION_BY_ZERO; if not, c0de net registers them as constants through the library API of c0de. |  |
+
 ## Risks
 
 | Risk | Mitigation |
