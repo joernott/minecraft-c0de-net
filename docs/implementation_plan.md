@@ -41,7 +41,7 @@ A task is done when
 | 4 | Documentation and handbook | Handbook, Patchouli book, README, Modrinth page | ✅ |
 | 5 | Release 0.1.0 | c0de net on Modrinth and GitHub for all nodes | ✅ |
 | 6 | Documentation (0.2.0) | The handbook in German, and the programs of the c0de net tutorials on c0de.at are tested with every release | ✅ |
-| 7 | Feedback from the recipes (0.3.0) | The handbook answers the questions of the recipes of c0de.at, the errors are constants, and c0de net is published on CurseForge |  |
+| 7 | Feedback from the recipes (0.3.0) | The handbook answers the questions of the recipes of c0de.at, the errors are constants, and c0de net is published on CurseForge | ✅ |
 
 ## Sprint 0: Concept and plan
 
@@ -133,7 +133,7 @@ A task is done when
 | 7.4 | The release publishes the mod on CurseForge as well as on Modrinth (like c0de task 15.11): the `curseforge {}` block of the mod-publish-plugin in both builds, `publish.curseforge_id` in `stonecutter.properties.toml`, the same files, versions, changelog and release type, required on client and server, Fabric API and c0de required and Patchouli optional; `release.yml` needs the repository secret `CURSEFORGE_TOKEN`; `development_environment.md` describes it. Needs the CurseForge project of c0de first, because c0de net depends on it there. Checked with a dry run before the next release. Done on 2026-11-12: 0.2.0 is on CurseForge (10 files, curseforge.yml with `without_c0de`, because CurseForge refuses c0de as a dependency while its project is under review). | ✅ |
 | 7.4.1 | When the CurseForge project of c0de is approved: add c0de as a required dependency to the 10 files of 0.2.0 on curseforge.com. The next release has it again by itself. Done by the user on 2026-11-13, after CurseForge approved c0de; c0de is also a default dependency of the project. | ✅ |
 | 7.5 | c0de net is built and tested against c0de 0.5.0 (`deps.c0de`), which validates programs with c0de/minecraft in the program runner and prints BOOLEANs as TRUE and FALSE; 0.3.0 requires it. CI on 2026-11-13: unit tests and the GameTests of all 10 nodes passed with c0de 0.5.0. | ✅ |
-| 7.6 | Release 0.3.0 for all Minecraft versions (GitHub pre-release with the runner library, Modrinth and CurseForge). The CurseForge files require c0de, so the project of c0de must be approved first (7.4.1); otherwise CurseForge refuses the upload. Version 0.3.0 on 2026-11-13. |  |
+| 7.6 | Release 0.3.0 for all Minecraft versions (GitHub pre-release with the runner library, Modrinth and CurseForge). The CurseForge files require c0de, so the project of c0de must be approved first (7.4.1); otherwise CurseForge refuses the upload. Released on 2026-11-13: the release workflow published 10 files on Modrinth and CurseForge, now with c0de as a dependency on CurseForge, and the GitHub pre-release with c0de-net-runner-0.3.0.jar. | ✅ |
 
 ## Risks
 

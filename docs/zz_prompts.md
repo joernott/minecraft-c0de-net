@@ -105,3 +105,7 @@ yes, please, then continue with sprint 7 of c0de-net without waiting for my conf
 ## 2026-11-13 – Release 0.3.0
 
 The projects got approved on curseforge. I have added c0de as a default dependency to c0de-net on curseforge and added it as dependency to every released 0.2.0 mod. You can run the 0.3.0 release for c0de-net now and the remaining steps on www-c0de
+
+## 2026-11-13 – Release 0.3.0 is out
+
+the workflows have finished
