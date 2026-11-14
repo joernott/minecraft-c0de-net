@@ -11,7 +11,7 @@ pluginManagement {
 
 plugins {
     // https://stonecutter.kikugie.dev/
-    id("dev.kikugie.stonecutter") version "0.9.8"
+    id("dev.kikugie.stonecutter") version "0.10"
 
     // Applies the right Loom variant for obfuscated (<26.1) and unobfuscated (>=26.1) versions
     // https://codeberg.org/KikuGie/loom-back-compat
