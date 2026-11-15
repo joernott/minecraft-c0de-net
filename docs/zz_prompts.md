@@ -109,3 +109,20 @@ The projects got approved on curseforge. I have added c0de as a default dependen
 ## 2026-11-13 – Release 0.3.0 is out
 
 the workflows have finished
+
+## 2026-11-15 – The VM is at .103, and a library c0de/security
+
+The VM now got the IP 192.168.178.103. Please update that information in all 3 repos.
+
+I also want to introduce a new library c0de/security indo c0de and a few security features:
+- The input functions get an additional "hide" parameter that is false by default. If set to true, only * are shown when typing in a laptop.
+- Variables, constants and literals get a "hide" option, that is false by default. If set to true, the value is hidden. This can't be turned off again except for clearing the item with the trashcan button.
+- There is a new tag "security: sensitive" that can be attached to variables and constants as well as used in structs. Those elements with that tag will not show their content in the debug information but *** instead.
+- Every player gets a vault that is kept in memory while he is online. The vault vanishes, when he logs off.
+- The vault stores a new language element "SECRET" that is treated like a constant in the code.
+- There is a new library c0de/security with the following functions:
+  - SET_SECRET creates or updates  a secret in the vault. A secret has a unique name, a type and a value. On top of that, it has a new boolean value "persistent" which will ensure that the secret is written to a file store. If the player has not opened their persistent vault, this will result in an error. The default value for this is "false".
+  - Stored secrets will be managed in a <player-uuid>.kdbx file using the Keepass 4.x file format. Handling that file is done by the hudeany/kdbx library on the client only. The server gets a copy but never has access to the files content. A player has only access to their own secrets.
+  - There is a CREATE_VAULT function that creates a keepass store for the player. It has a parameter for the password. If that is empty or not set, the player will be prompted in a GUI dialog to enter a password (+ a verification prompt).
+  - There is a function OPEN_VAULT that opens an existing vault. It has a parameter for the password, if none is provided, the player is asked for their password. If no vault exists, an error is thrown.
+  - There is a DELETE_SECRET function that removes a secret. If the secret was persistent, it is also deleted from the database. If the secret didn't exist, an error is thrown.

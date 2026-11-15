@@ -31,7 +31,7 @@ The repository is not on a shared folder of the VM. The VM has its own clone in 
 
 ```sh
 GIT_SSH_COMMAND="ssh -i ~/.ssh/id_ed25519_claude" \
-  git push ssh://doener@192.168.178.101/home/doener/src/minecraft-c0de-net sprint-1
+  git push ssh://doener@192.168.178.103/home/doener/src/minecraft-c0de-net sprint-1
 ```
 
 The tests then run in that clone, e.g. `./gradlew :1.21.1-neoforge:runGameTestServer`.
