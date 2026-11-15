@@ -136,3 +136,15 @@ please create a new sprint in both and add the tasks for the necessary changes t
 For c0de-net, please make sure, the open PR from Dependabot is included in the current sprint. Also, I want to add another library named MAIL that implement a SMTP_SERVER data type with all the properties needed to connect to a mail server as well as a SMTP_SEND function implementing an SMTP client.
 Another data type would be the IMAP_SERVER and a set of functions that implement an IMAP client:
  - IMAP_CREATE, IMAP_DELETE, IMAP_RENAME, IMAP_LIST, IMAP_STATUS, IMAP_SELECT, IMAP_FETCH, IMAP_SEARCH, IMAP_STORE, IMAP_MOVE and IMAP_EXPUNGE.
+
+## 2026-11-15 – Decisions on the mail library
+
+Regarding the questions in 8.5:
+- mail is sent from the client
+- please clarify what settings/limits you mean
+- passwords are provided as properties with the sensitive tag in the SMTP and IMAP type variables, together with all the other data. The programmer chooses, how he sets those values.
+- The folder you used IMAP_SELECT on will be stored in the variable of the IMAP type. It is the job of the programmer to pass it to the following function
+- I'd prefer to use existing code like Angus Mail unless it adds an unreasonably large amount of dependencies or inflates the mod size drastically
+- For now, mails will be limited to plain text.
+
+Please go ahead with c0de sprint 17 first
