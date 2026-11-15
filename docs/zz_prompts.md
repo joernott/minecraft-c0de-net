@@ -148,3 +148,9 @@ Regarding the questions in 8.5:
 - For now, mails will be limited to plain text.
 
 Please go ahead with c0de sprint 17 first
+
+## 2026-11-15 – Settings and limits of the mail library
+
+the default values in your  proposal look fine, port 25 should be blocked by default unless explicitly enabled in the config. a timeout of 30s for a connection is long, but depending on the amount of spam checks, this is reasonable.
+
+Please go ahead with release 0.6.1 of c0de
