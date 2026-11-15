@@ -126,3 +126,7 @@ I also want to introduce a new library c0de/security indo c0de and a few securit
   - There is a CREATE_VAULT function that creates a keepass store for the player. It has a parameter for the password. If that is empty or not set, the player will be prompted in a GUI dialog to enter a password (+ a verification prompt).
   - There is a function OPEN_VAULT that opens an existing vault. It has a parameter for the password, if none is provided, the player is asked for their password. If no vault exists, an error is thrown.
   - There is a DELETE_SECRET function that removes a secret. If the secret was persistent, it is also deleted from the database. If the secret didn't exist, an error is thrown.
+
+## 2026-11-15 – Sprint 8: c0de 0.6.0
+
+please create a new sprint in both and add the tasks for the necessary changes to those. Then make sure, all changes in c0de show up in c0de.at. Wait with preparing a release there as I want to add a few modifications to c0de-net first.

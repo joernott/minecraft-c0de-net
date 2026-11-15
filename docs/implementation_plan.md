@@ -42,6 +42,7 @@ A task is done when
 | 5 | Release 0.1.0 | c0de net on Modrinth and GitHub for all nodes | ✅ |
 | 6 | Documentation (0.2.0) | The handbook in German, and the programs of the c0de net tutorials on c0de.at are tested with every release | ✅ |
 | 7 | Feedback from the recipes (0.3.0) | The handbook answers the questions of the recipes of c0de.at, the errors are constants, and c0de net is published on CurseForge | ✅ |
+| 8 | c0de 0.6.0 (0.4.0) | c0de net runs on c0de 0.6.0, its handbook is a binder of c0de's handbooks instead of a Patchouli book, and the modifications of the user |  |
 
 ## Sprint 0: Concept and plan
 
@@ -134,6 +135,18 @@ A task is done when
 | 7.4.1 | When the CurseForge project of c0de is approved: add c0de as a required dependency to the 10 files of 0.2.0 on curseforge.com. The next release has it again by itself. Done by the user on 2026-11-13, after CurseForge approved c0de; c0de is also a default dependency of the project. | ✅ |
 | 7.5 | c0de net is built and tested against c0de 0.5.0 (`deps.c0de`), which validates programs with c0de/minecraft in the program runner and prints BOOLEANs as TRUE and FALSE; 0.3.0 requires it. CI on 2026-11-13: unit tests and the GameTests of all 10 nodes passed with c0de 0.5.0. | ✅ |
 | 7.6 | Release 0.3.0 for all Minecraft versions (GitHub pre-release with the runner library, Modrinth and CurseForge). The CurseForge files require c0de, so the project of c0de must be approved first (7.4.1); otherwise CurseForge refuses the upload. Released on 2026-11-13: the release workflow published 10 files on Modrinth and CurseForge, now with c0de as a dependency on CurseForge, and the GitHub pre-release with c0de-net-runner-0.3.0.jar. | ✅ |
+
+## Sprint 8: c0de 0.6.0
+
+**Goal:** c0de net is built and tested against c0de 0.6.0, and its handbook is one of c0de's own handbooks instead of a Patchouli book: c0de 0.6.0 replaced Patchouli by handbooks of its own (c0de tasks 16.17–16.25), and Patchouli no longer exists for the newer Minecraft versions. Planned on 2026-11-15; the user adds modifications of their own before the release, which is version 0.4.0.
+
+| Task | Description | Done |
+|---|---|:---:|
+| 8.1 | c0de net is built and tested against c0de 0.6.0 (`deps.c0de`). The development runs of the nodes before 26.1 load the libraries that c0de embeds (jar-in-jar) only when they are on the runtime classpath: `localRuntime` (Fabric) and the runtime configuration of NeoForge get kdbx (`de.soderer:kdbx`) and Bouncy Castle (`bcprov-jdk18on`) like snakeyaml, otherwise the GameTests of Fabric 1.21.1 crash with a ClassNotFoundException (found on the VM on 2026-11-15, c0de task 16.16). Unit tests, runner and the GameTests of all nodes. |  |
+| 8.2 | The handbook as a binder of c0de's handbooks (c0de concept 21-handbooks.md): `scripts/generate_book.py` writes it as Markdown pages for lavender-md (`assets/c0de/handbook/books/net.json`, `categories/net/…`, `entries/net/…`, English and German), c0de net registers a binder item `c0de_net:net_book` with c0de's `HandbookItem` (book `net`), with its own texture (a red binder with a label of its own colour), name, recipe and place in the creative tab. c0de 0.6.0 reads the crafting grids of the books from a single `recipes.json` (the one of c0de), so the handbook of c0de net shows no crafting grid until c0de merges the files of all mods (a task for c0de). |  |
+| 8.3 | Patchouli is removed: the Patchouli book and its recipe, the development dependency (`-Ppatchouli`, the mods folder of the NeoForge client), the optional dependency on Modrinth and CurseForge, and its mentions in README, Modrinth description, concept and development environment. |  |
+| 8.4 | The modifications of the user, added before the release. |  |
+| 8.5 | Release 0.4.0 for all Minecraft versions (GitHub pre-release with the runner library, Modrinth and CurseForge), requiring c0de 0.6.0. |  |
 
 ## Risks
 
