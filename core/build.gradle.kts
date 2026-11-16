@@ -6,7 +6,7 @@
 // scripts/check-whitespace.sh, because Spotless only accepts files within its project directory.
 plugins {
     `java-library`
-    id("com.diffplug.spotless") version "8.10.4"
+    id("com.diffplug.spotless") version "8.11.0"
 }
 
 repositories {

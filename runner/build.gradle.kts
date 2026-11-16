@@ -6,7 +6,7 @@
 //   java -cp c0de-runner-<c0de version>.jar:c0de-net-runner-<version>.jar de.joernott.c0de.core.runner.Main program.c0de
 plugins {
     `java-library`
-    id("com.diffplug.spotless") version "8.10.4"
+    id("com.diffplug.spotless") version "8.11.0"
 }
 
 repositories {
