@@ -11,7 +11,7 @@ The requirement keywords (MUST, SHOULD, MAY, …) are used as in the [c0de conce
 ## The mod
 
   - **Mod ID** `c0de_net`, **library** `c0de_net/http`. Since 0.4.0 also the **library** `c0de_net/mail` for SMTP and IMAP (see [The library c0de_net/mail](#the-library-c0de_netmail)); further libraries for other network protocols MAY follow (user decision); programs include them with `INCLUDE c0de_net/http` and `INCLUDE c0de_net/mail` and call their functions as `c0de_net/http/HTTP_GET` or `c0de_net/mail/SMTP_SEND`.
-  - **Dependencies**: c0de is REQUIRED; without c0de, the mod has nothing to do. c0de net requires the version of c0de that was current at its release (0.3.0 for c0de net 0.1.0, 0.4.0 for 0.2.0, 0.5.0 for 0.3.0) or newer, for the same Minecraft version and loader.
+  - **Dependencies**: c0de is REQUIRED; without c0de, the mod has nothing to do. c0de net requires the version of c0de that was current at its release (0.3.0 for c0de net 0.1.0, 0.4.0 for 0.2.0, 0.5.0 for 0.3.0, 0.6.1 for 0.4.0) or newer, for the same Minecraft version and loader.
   - **Versions**: the same Minecraft versions and loaders as c0de: 1.21.1, 1.21.11, 26.1.2, 26.2 and 26.3, each for Fabric and NeoForge. New Minecraft versions are added when c0de adds them.
   - **Environment**: client and server. The server runs the library, the client sends the requests. Both need the mod; a client without it can't send requests (see [Errors](#errors)).
   - **No blocks or items** of its own, except for its handbook (see [Documentation](#documentation)).

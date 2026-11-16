@@ -170,3 +170,7 @@ OK, I triggered the rerun for c0de now.
 1. the vm crashed and a couple of applictions got stuck, including visual studio code because Windows ran out of memory. That might explain  the client GameTest of 1.21.11-fabric crash as well. Before continuing with anything, I will restart the whole Windows system first.
 2. Should I start the client in the code-net folder for that?
 3. and 4.: I will do that after restarting Windows and running the test for 2
+
+## 2026-11-16 – Release of 0.4.0
+
+All tests were OK. We can do the 0.4.0 release of c0de-net

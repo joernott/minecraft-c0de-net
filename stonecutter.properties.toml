@@ -3,7 +3,7 @@
 mod.id = "c0de_net"
 mod.name = "c0de net"
 mod.group = "de.joernott.c0denet"
-mod.version = "0.3.0"
+mod.version = "0.4.0"
 mod.description = "Network libraries for c0de: c0de_net/http sends HTTP requests, c0de_net/mail sends and reads mail, from the client of the player who runs the program."
 mod.authors = "Jörn Ott"
 mod.license = "BSD-3-Clause"
