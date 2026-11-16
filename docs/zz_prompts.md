@@ -154,3 +154,9 @@ Please go ahead with c0de sprint 17 first
 the default values in your  proposal look fine, port 25 should be blocked by default unless explicitly enabled in the config. a timeout of 30s for a connection is long, but depending on the amount of spam checks, this is reasonable.
 
 Please go ahead with release 0.6.1 of c0de
+
+## 2026-11-16 – Working through sprint 8
+
+I pushed 0.6.1 yesterday night.
+
+Please start with the sprint in c0de-net. As I will be off for work for the next 8-9 hours, please complete as many steps as you can without my interaction in the meantime. Once you've done that, please make sure that the www-c0de sprint contains the necessary steps to reflect the changes, both in c0de and c0de-net and has tutorials for the new features

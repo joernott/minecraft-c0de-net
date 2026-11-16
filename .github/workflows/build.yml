@@ -28,6 +28,8 @@ jobs:
       - uses: gradle/actions/setup-gradle@v6
       - name: Whitespace
         run: scripts/check-whitespace.sh
+      - name: Version of the active node
+        run: scripts/check-version.sh
       - name: Generated Patchouli book
         # The book and its recipe are generated from docs/reference/net.md and committed
         run: |

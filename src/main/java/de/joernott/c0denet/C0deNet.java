@@ -17,7 +17,7 @@ public final class C0deNet {
     public static final String MOD_ID = "c0de_net";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     /** The version of the mod (mod.version in stonecutter.properties.toml). */
-    public static final String VERSION = /*$ mod_version*/ "0.1.0";
+    public static final String VERSION = /*$ mod_version*/"0.3.0";
     /** The built-in constant with the version of the mod (task 6.5). */
     public static final String VERSION_CONSTANT = "C0DE_NET_VERSION";
 
