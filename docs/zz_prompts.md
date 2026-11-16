@@ -164,3 +164,9 @@ Please start with the sprint in c0de-net. As I will be off for work for the next
 ## 2026-11-16 – Rerun of the release of 0.6.1
 
 OK, I triggered the rerun for c0de now.
+
+## 2026-11-16 – Restart of Windows, the check of the binder
+
+1. the vm crashed and a couple of applictions got stuck, including visual studio code because Windows ran out of memory. That might explain  the client GameTest of 1.21.11-fabric crash as well. Before continuing with anything, I will restart the whole Windows system first.
+2. Should I start the client in the code-net folder for that?
+3. and 4.: I will do that after restarting Windows and running the test for 2
