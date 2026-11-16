@@ -10,7 +10,7 @@ The requirement keywords (MUST, SHOULD, MAY, …) are used as in the [c0de conce
 
 ## The mod
 
-  - **Mod ID** `c0de_net`, **library** `c0de_net/http`. The mod MAY get further libraries for other network protocols later, e.g. `c0de_net/smtp` or `c0de_net/imap` (user decision); this concept describes `c0de_net/http`. Programs include it with `INCLUDE c0de_net/http` and call its functions as `c0de_net/http/HTTP_GET`.
+  - **Mod ID** `c0de_net`, **library** `c0de_net/http`. Since 0.4.0 also the **library** `c0de_net/mail` for SMTP and IMAP (see [The library c0de_net/mail](#the-library-c0de_netmail)); further libraries for other network protocols MAY follow (user decision); programs include them with `INCLUDE c0de_net/http` and `INCLUDE c0de_net/mail` and call their functions as `c0de_net/http/HTTP_GET` or `c0de_net/mail/SMTP_SEND`.
   - **Dependencies**: c0de is REQUIRED; without c0de, the mod has nothing to do. c0de net requires the version of c0de that was current at its release (0.3.0 for c0de net 0.1.0, 0.4.0 for 0.2.0, 0.5.0 for 0.3.0) or newer, for the same Minecraft version and loader.
   - **Versions**: the same Minecraft versions and loaders as c0de: 1.21.1, 1.21.11, 26.1.2, 26.2 and 26.3, each for Fabric and NeoForge. New Minecraft versions are added when c0de adds them.
   - **Environment**: client and server. The server runs the library, the client sends the requests. Both need the mod; a client without it can't send requests (see [Errors](#errors)).
@@ -140,6 +140,91 @@ The functions raise the errors of c0de where they fit and errors of their own fr
   - Client, `c0de_net-client.properties`: `allowRequests` (default true).
 
 The files are created with the default values like `c0de.properties`; invalid entries are reported and replaced by the defaults.
+
+## The library c0de_net/mail
+
+Since 0.4.0, c0de net has a second library: `c0de_net/mail` sends mail over SMTP and reads and manages mailboxes over IMAP (decided on 2026-11-15). Like HTTP requests, the connections are made by the game client of the player who runs the process (see [Running requests on the client](#running-requests-on-the-client)), so the server's network can't be reached through programs. Mail is plain text; HTML and attachments are not supported (yet).
+
+c0de net uses [Angus Mail](https://eclipse-ee4j.github.io/angus-mail/), the implementation of Jakarta Mail, embedded in its jar (angus-mail, jakarta.mail-api, jakarta.activation-api and angus-activation, about 0.8 MB together).
+
+### Types
+
+The connection data are struct types, like HTTP_CONNECTION. Programs declare them with `VARIABLE mail STRUCT c0de_net/mail/SMTP_SERVER` and set their elements with ASSIGN; every element has the default value of its type, and the defaults are the common case. The element `password` has the tag `security: "sensitive"` by its declaration, so the debugging tool shows `***` for it (c0de docs/concept/20-lib-security.md). The program decides how it fills it, e.g. from a SECRET of the vault of c0de.
+
+**`c0de_net/mail/SMTP_SERVER`**: a server that accepts mail for sending.
+
+| Element | Type | Meaning |
+|---|---|---|
+| `server` | STRING | the host name, e.g. `smtp.example.com` (required) |
+| `port` | INTEGER | 0 (default): 465 for `tls`, 587 otherwise. Port 25 is blocked unless the server allows it (`allowPort25`) |
+| `security` | STRING | `starttls` (default for ""), `tls` (an encrypted connection from the start) or `none` |
+| `user` | STRING | the user name; "" sends without logging in |
+| `password` | STRING | the password, sensitive |
+| `from` | STRING | the address of the sender, e.g. `"Base computer <steve@example.com>"` (required) |
+| `timeout` | INTEGER | seconds, 0 (default): 30; at most 30 (`mailTimeout`) |
+| `skip_ssl_validation` | BOOLEAN | accept any certificate, e.g. of a server in the home network |
+
+**`c0de_net/mail/IMAP_SERVER`**: a server with mailboxes.
+
+| Element | Type | Meaning |
+|---|---|---|
+| `server` | STRING | the host name (required) |
+| `port` | INTEGER | 0 (default): 993 for `tls`, 143 otherwise |
+| `security` | STRING | `tls` (default for ""), `starttls` or `none` |
+| `user` | STRING | the user name (required) |
+| `password` | STRING | the password, sensitive |
+| `timeout` | INTEGER | as above |
+| `skip_ssl_validation` | BOOLEAN | as above |
+| `folder` | STRING | the selected folder: IMAP_SELECT writes it into the variable; the functions for messages work in it |
+
+**`c0de_net/mail/MAIL`**: a message that IMAP_FETCH read: `uid` INTEGER (its number in the folder), `from` STRING, `to` ARRAY STRING, `cc` ARRAY STRING, `subject` STRING, `date` TIME, `text` STRING (the plain text part; "" for a message without one), `flags` ARRAY STRING (e.g. `\Seen`), `size` INTEGER (bytes).
+
+**`c0de_net/mail/MAILBOX`**: the status of a folder: `name` STRING, `messages` INTEGER, `recent` INTEGER, `unseen` INTEGER, `uid_next` INTEGER, `uid_validity` INTEGER.
+
+### Functions
+
+Every function opens a connection of its own, logs in, does its work and logs out; nothing stays open between two calls. The functions for messages work in the folder that IMAP_SELECT stored in the IMAP_SERVER variable; the program passes that variable to them. Without a selected folder they raise INVALID_ARGUMENT.
+
+| Function | Parameters | Results | Description |
+|---|---|---|---|
+| SMTP_SEND | server SMTP_SERVER, to STRING or ARRAY STRING, subject STRING, text STRING, cc ARRAY STRING (default empty), bcc ARRAY STRING (default empty), reply_to STRING (default "") | result STRING | Sends a plain text message and returns its Message-ID. All recipients together (to, cc, bcc) are at most `maxRecipients`, the message at most `maxMailSize` bytes. |
+| IMAP_LIST | server IMAP_SERVER, pattern STRING (default `*`) | result ARRAY STRING | The names of the folders that match the pattern (`*` any, `%` within one level). |
+| IMAP_CREATE | server IMAP_SERVER, folder STRING | – | Creates a folder. |
+| IMAP_DELETE | server IMAP_SERVER, folder STRING | – | Deletes a folder. |
+| IMAP_RENAME | server IMAP_SERVER, folder STRING, new_name STRING | – | Renames a folder. |
+| IMAP_STATUS | server IMAP_SERVER, folder STRING (default: the selected folder) | result MAILBOX | The status of a folder, without selecting it. |
+| IMAP_SELECT | server IMAP_SERVER (a variable, by reference), folder STRING (default `INBOX`) | result MAILBOX | Checks that the folder exists and stores its name in `folder` of the variable. |
+| IMAP_SEARCH | server IMAP_SERVER, criteria STRING (default `ALL`) | result ARRAY INTEGER | The UIDs of the messages of the selected folder that match the criteria, oldest first; at most `maxFetchMessages`, the newest. The criteria are those of IMAP: `ALL`, `UNSEEN`, `SEEN`, `FLAGGED`, `FROM text`, `TO text`, `SUBJECT text`, `BODY text`, `SINCE 1-Nov-2026`, `BEFORE 1-Nov-2026`, combined by spaces (all must match). |
+| IMAP_FETCH | server IMAP_SERVER, uids INTEGER or ARRAY INTEGER, text BOOLEAN (default TRUE) | result ARRAY MAIL | The messages with these UIDs, without `text` if text is FALSE. At most `maxFetchMessages` messages and `maxFetchSize` bytes (RESPONSE_TOO_LARGE). Reading the text marks a message as seen, like a mail program does. |
+| IMAP_STORE | server IMAP_SERVER, uids INTEGER or ARRAY INTEGER, flags STRING or ARRAY STRING, mode STRING (default `add`) | – | Adds, removes (`remove`) or replaces (`set`) flags: `\Seen`, `\Answered`, `\Flagged`, `\Deleted`, `\Draft` or keywords of the server. |
+| IMAP_MOVE | server IMAP_SERVER, uids INTEGER or ARRAY INTEGER, folder STRING | – | Moves messages into another folder. |
+| IMAP_EXPUNGE | server IMAP_SERVER | result INTEGER | Removes the messages of the selected folder that have the flag `\Deleted` and returns how many. |
+
+A UID that doesn't exist is left out (IMAP_FETCH returns fewer messages); a folder that doesn't exist raises MAIL_REJECTED.
+
+### Errors of the mail library
+
+The library has the errors of c0de net as constants of its own, e.g. `c0de_net/mail/MAIL_REJECTED`, and four more:
+
+| Code | Name | Handling | Description |
+|---|---|---|---|
+| 309 | INVALID_ARGUMENT | raise | A connection without server, a port outside of 1 to 65535, an unknown `security`, an SMTP_SERVER without `from`, an invalid address, a function for messages without selected folder, an unknown `mode`. |
+| 311 | PERMISSION_DENIED | raise | Port 25 while `allowPort25` is false. |
+| 1001 | CLIENT_UNAVAILABLE | raise | As for HTTP. |
+| 1003 | REQUEST_FAILED | raise | The connection failed: unknown host, connection refused, failed TLS handshake. |
+| 1004 | REQUEST_TIMEOUT | raise | No answer within the timeout. |
+| 1005 | RESPONSE_TOO_LARGE | raise | IMAP_FETCH would read more than `maxFetchSize` bytes. |
+| 1006 | MAIL_DISABLED | raise | Mail is switched off: by the server (`enableMail`) or by the client of the player (`allowMail`). |
+| 1007 | AUTHENTICATION_FAILED | raise | The server didn't accept the user name or the password. |
+| 1008 | MAIL_REJECTED | raise | The server refused the command: a recipient it doesn't accept, a folder that doesn't exist or already exists. The message is the answer of the server. |
+| 1009 | MAIL_LIMIT | raise | More recipients than `maxRecipients`, a larger message than `maxMailSize`, or more than `maxMailsPerMinute` messages of one player in a minute. |
+
+### Settings of the mail library
+
+  - Server, `c0de_net.properties`: `enableMail` (default true), `maxMailSize` (bytes of a message sent, default 65536), `maxRecipients` (per SMTP_SEND, default 20), `maxMailsPerMinute` (messages sent per player, default 10), `maxFetchSize` (bytes per IMAP_FETCH, default 1 MiB), `maxFetchMessages` (messages per IMAP_FETCH and IMAP_SEARCH, default 100), `mailTimeout` (seconds, the default and the maximum of `timeout`, default 30), `allowPort25` (default false: connections go to the submission ports of a mail provider, e.g. 465 and 587, not directly to the servers that receive mail, which spammers use).
+  - Client, `c0de_net-client.properties`: `allowMail` (default true): every player decides whether their client sends and reads mail.
+
+The limits were decided on 2026-11-15. The program runner of c0de uses the defaults and connects directly, like for HTTP.
 
 ## Documentation
 
