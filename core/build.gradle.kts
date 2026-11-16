@@ -21,6 +21,10 @@ java {
 }
 
 dependencies {
+    // c0de_net/mail (docs/concept.md#the-library-c0de_netmail): Jakarta Mail with its implementation Angus Mail
+    implementation("org.eclipse.angus:angus-mail:2.0.5")
+    // A mail server (SMTP and IMAP) in the tests
+    testImplementation("com.icegreen:greenmail-junit5:2.1.15")
     testImplementation(platform("org.junit:junit-bom:6.1.3"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")

@@ -27,6 +27,16 @@ repositories {
 dependencies {
     // c0de of the same Minecraft version, which runs the programs that use the library
     implementation(c0de("neoforge", sc.current.version, sc.properties["deps.c0de"]))
+    // c0de_net/mail: Jakarta Mail with Angus Mail, embedded in the mod jar
+    mailLibraries.forEach { library ->
+        implementation(library)
+        val (group, name, version) = library.split(":")
+        jarJar("$group:$name:[$version,${version.substringBefore('.').toInt() + 1}.0)") {
+            version {
+                prefer(version)
+            }
+        }
+    }
 }
 
 // The requests and answers are compiled into every node
@@ -84,6 +94,14 @@ neoForge {
             // The GameTests check the programs of the handbook
             systemProperty("c0denet.handbook", rootProject.file("docs/reference/net.md").absolutePath)
         }
+    }
+}
+
+// Created by ModDevGradle once the NeoForge version is set: libraries for development runs, which are not mods
+// (the jar-in-jar libraries are only unpacked in production). From 1.21.11 on, the normal runtime classpath is used.
+if (sc.current.parsed < "1.21.11") {
+    dependencies {
+        mailLibraries.forEach { "additionalRuntimeClasspath"(it) }
     }
 }
 

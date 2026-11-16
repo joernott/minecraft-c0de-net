@@ -1,6 +1,5 @@
 package de.joernott.c0denet.http;
 
-import de.joernott.c0denet.core.http.NetRequest;
 import java.util.Optional;
 import java.util.UUID;
 import net.minecraft.server.MinecraftServer;
@@ -20,8 +19,8 @@ public interface ClientChannel {
      */
     Optional<String> unavailable(MinecraftServer server, UUID player);
 
-    /** Sends a request to the client of a player. */
-    void send(MinecraftServer server, UUID player, long id, NetRequest request, long maxResponseSize);
+    /** Sends a request (an HTTP request or a mail call, as bytes) to the client of a player. */
+    void send(MinecraftServer server, UUID player, long id, byte[] request, long maxResponseSize);
 
     /** Cancels a request that the client of a player is sending. */
     void cancel(MinecraftServer server, UUID player, long id);

@@ -1,6 +1,6 @@
 // The runner library (task 6.1): c0de_net/http for the program runner of c0de, which runs c0de programs without
-// Minecraft (docs/runner.md in minecraft-c0de). It contains the requests of `core`, the library HttpLibrary of the
-// mod (which doesn't use Minecraft) and a provider that sends the requests directly. Released as
+// Minecraft (docs/runner.md in minecraft-c0de). It contains the requests of `core`, the libraries HttpLibrary and
+// MailLibrary of the mod (which don't use Minecraft), Angus Mail and a provider that runs the calls directly. Released as
 // c0de-net-runner-<version>.jar; it needs the runner of c0de on the class path:
 //
 //   java -cp c0de-runner-<c0de version>.jar:c0de-net-runner-<version>.jar de.joernott.c0de.core.runner.Main program.c0de
@@ -36,6 +36,7 @@ sourceSets {
                 "de/joernott/c0denet/runner/**",
                 "de/joernott/c0denet/core/**",
                 "de/joernott/c0denet/library/HttpLibrary.java",
+                "de/joernott/c0denet/library/MailLibrary.java",
             )
         }
     }
@@ -44,7 +45,11 @@ sourceSets {
 dependencies {
     // The interpreter of c0de; the runner of c0de brings it at run time
     compileOnly(c0deRunner(c0deVersion))
+    // c0de_net/mail; their classes are copied into the runner jar
+    mailLibraries.forEach { implementation(it) }
     testImplementation(c0deRunner(c0deVersion))
+    // A mail server (SMTP and IMAP) in the tests
+    testImplementation("com.icegreen:greenmail-junit5:2.1.15")
     testImplementation(platform("org.junit:junit-bom:6.1.3"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
@@ -54,6 +59,12 @@ tasks.jar {
     archiveFileName = "c0de-net-runner-$modVersion.jar"
     manifest {
         attributes("Implementation-Title" to "c0de-net-runner", "Implementation-Version" to modVersion)
+    }
+    // A single jar beside the runner of c0de: Angus Mail and Jakarta Mail inside, with their service files
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from(configurations.runtimeClasspath.map { classpath -> classpath.map { zipTree(it) } }) {
+        exclude("META-INF/MANIFEST.MF", "META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA", "module-info.class",
+            "META-INF/versions/*/module-info.class")
     }
 }
 

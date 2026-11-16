@@ -3,10 +3,12 @@ package de.joernott.c0denet.runner;
 import de.joernott.c0de.core.library.LibraryProvider;
 import de.joernott.c0de.core.library.LibraryRegistry;
 import de.joernott.c0de.core.value.StringValue;
+import de.joernott.c0denet.core.config.NetConfig;
 import de.joernott.c0denet.library.HttpLibrary;
+import de.joernott.c0denet.library.MailLibrary;
 
 /**
- * Adds c0de_net/http and C0DE_NET_VERSION to the program runner of c0de (task 6.1). The runner finds this provider
+ * Adds c0de_net/http, c0de_net/mail and C0DE_NET_VERSION to the program runner of c0de (task 6.1). The runner finds this provider
  * through META-INF/services when c0de-net-runner-<version>.jar is on its class path. The requests are sent directly
  * by the runner ({@link DirectRequests}), not through the client of a player.
  */
@@ -17,6 +19,7 @@ public final class NetRunnerLibraries implements LibraryProvider {
     @Override
     public void register(LibraryRegistry registry) {
         registry.add(new HttpLibrary(DirectRequests::call));
+        registry.add(new MailLibrary(() -> NetConfig.defaults(NetConfig.SERVER), DirectMail::send));
         registry.addConstant(VERSION_CONSTANT, new StringValue(version()));
     }
 

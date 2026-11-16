@@ -3,6 +3,7 @@ package de.joernott.c0denet.gametest.neoforge;
 //? if neoforge {
 /*import de.joernott.c0denet.C0deNet;
 import de.joernott.c0denet.gametest.HttpTests;
+import de.joernott.c0denet.gametest.MailTests;
 import de.joernott.c0denet.gametest.SmokeTests;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -41,6 +42,16 @@ public class NeoForgeGameTests {
     @GameTest(template = "empty", timeoutTicks = 2000)
     public static void playersWithoutTheModCantSendRequests(GameTestHelper helper) {
         HttpTests.playersWithoutTheModCantSendRequests(helper);
+    }
+
+    @GameTest(template = "empty")
+    public static void mailLibraryIsRegistered(GameTestHelper helper) {
+        MailTests.libraryIsRegistered(helper);
+    }
+
+    @GameTest(template = "empty", timeoutTicks = 2000)
+    public static void programsGetMailErrors(GameTestHelper helper) {
+        MailTests.programsGetMailErrors(helper);
     }
 }
 *///?}

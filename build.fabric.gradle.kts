@@ -57,6 +57,8 @@ dependencies {
         localRuntime("de.soderer:kdbx:26.1.10")
         localRuntime("org.bouncycastle:bcprov-jdk18on:1.86")
     }
+    // c0de_net/mail: Jakarta Mail with Angus Mail, embedded in the mod jar (include is not transitive)
+    mailLibraries.forEach { include(implementation(it)!!) }
 }
 
 loom {

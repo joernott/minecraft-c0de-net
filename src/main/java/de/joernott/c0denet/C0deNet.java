@@ -4,8 +4,10 @@ import de.joernott.c0de.library.ModLibraries;
 import de.joernott.c0de.core.value.StringValue;
 import de.joernott.c0de.platform.Platform;
 import de.joernott.c0denet.core.config.NetConfig;
+import de.joernott.c0denet.http.MailRequests;
 import de.joernott.c0denet.http.PendingRequests;
 import de.joernott.c0denet.library.HttpLibrary;
+import de.joernott.c0denet.library.MailLibrary;
 import de.joernott.c0denet.network.NetworkChannel;
 import java.io.IOException;
 import net.minecraft.resources.ResourceLocation;
@@ -40,6 +42,7 @@ public final class C0deNet {
         PendingRequests.channel(new NetworkChannel());
         Platform.INSTANCE.onServerTickEnd(PendingRequests::tick);
         ModLibraries.register(new HttpLibrary(PendingRequests::call));
+        ModLibraries.register(new MailLibrary(PendingRequests::config, MailRequests::send));
         ModLibraries.registerConstant(VERSION_CONSTANT, new StringValue(VERSION));
     }
 

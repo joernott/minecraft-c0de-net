@@ -19,12 +19,15 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import net.minecraft.server.MinecraftServer;
 
 /**
- * The requests of the processes on the server (docs/concept.md#waiting-for-the-answer). A function sends its request
- * to the client of the player who runs the process and returns {@link NativeResult#waitForValue()}: the cursor
- * calls it again in every step until the answer, an error or the timeout ends the call.
+ * The requests of the processes on the server (docs/concept.md#waiting-for-the-answer): HTTP requests of
+ * c0de_net/http and calls of c0de_net/mail. A function sends its request to the client of the player who runs the
+ * process and returns {@link NativeResult#waitForValue()}: the cursor calls it again in every step until the answer,
+ * an error or the timeout ends the call.
  *
  * <p>Only used on the server thread.
  */
@@ -35,7 +38,7 @@ public final class PendingRequests {
     /** The largest part of an answer: a packet to the server may have 32 KiB. */
     public static final int PART_SIZE = 30_000;
 
-    /** Bytes of an answer besides its body: status and headers. */
+    /** Bytes of an answer besides its body: status and headers, or the fields of a mail answer. */
     private static final int HEADER_ALLOWANCE = 64 * 1024;
 
     /** A request whose process didn't call its function for this many ticks is cancelled (the process ended). */
@@ -56,29 +59,35 @@ public final class PendingRequests {
 
     private PendingRequests() {}
 
+    /**
+     * What the client of a player does for a call: the request as bytes, its timeout and target (for the message of
+     * REQUEST_TIMEOUT), the largest answer, and how the bytes of the answer become the result of the call.
+     */
+    public record Job(byte[] request, int timeout, String target, long maxAnswer, Function<byte[], NativeResult> result) {}
+
     /** A request of a process. */
     private static final class Pending {
         final long id;
         final Object process;
         final UUID player;
-        final NetRequest request;
+        final Job job;
         boolean sent;
         long deadline;
         int lastCalled;
         int nextPart;
         final ByteArrayOutputStream answer = new ByteArrayOutputStream();
-        NetResponse response;
+        byte[] complete;
         NetException failure;
 
-        Pending(long id, Object process, UUID player, NetRequest request) {
+        Pending(long id, Object process, UUID player, Job job) {
             this.id = id;
             this.process = process;
             this.player = player;
-            this.request = request;
+            this.job = job;
         }
 
         boolean done() {
-            return response != null || failure != null;
+            return complete != null || failure != null;
         }
     }
 
@@ -97,10 +106,37 @@ public final class PendingRequests {
         config = newConfig;
     }
 
+    /** The server settings. */
+    public static NetConfig config() {
+        return config;
+    }
+
     /** The function of an HTTP method: sends the request, then waits for the answer. */
     public static NativeResult call(NativeCall call, HttpMethod method) {
+        return run(call, HttpLibrary.NAME, () -> {
+            NetRequest request = NetRequest.of(
+                    HttpLibrary.connection((StructValue) call.argument("connection")),
+                    method,
+                    ((StringValue) call.argument("endpoint")).value(),
+                    method.sendsData() ? ((StringValue) call.argument("data")).value() : "");
+            return new Job(
+                    request.toBytes(),
+                    request.timeout(),
+                    request.uri().getHost(),
+                    config.get(NetConfig.MAX_RESPONSE_SIZE),
+                    bytes -> HttpLibrary.result(NetResponse.fromBytes(bytes)));
+        });
+    }
+
+    /**
+     * A call that the client of the player who runs the process does: the job is made at the first call of the
+     * function (it may throw a NetException, the error of the call), then the cursor waits for the answer.
+     *
+     * @param library the name of the library, for the message outside the game
+     */
+    public static NativeResult run(NativeCall call, String library, Supplier<Job> makeJob) {
         if (!(call.process().host() instanceof ProcessHost host)) {
-            return NativeResult.error(NetError.INVALID_ARGUMENT.code(), HttpLibrary.NAME + " only works in the game");
+            return NativeResult.error(NetError.INVALID_ARGUMENT.code(), library + " only works in the game");
         }
         forget(host.server());
         int tick = host.server().getTickCount();
@@ -112,28 +148,31 @@ public final class PendingRequests {
                         NetError.CLIENT_UNAVAILABLE,
                         "Nobody runs the process: it was started without a player and its trigger block has no owner"));
             }
-            NetRequest request;
+            Job job;
             try {
-                request = NetRequest.of(
-                        HttpLibrary.connection((StructValue) call.argument("connection")),
-                        method,
-                        ((StringValue) call.argument("endpoint")).value(),
-                        method.sendsData() ? ((StringValue) call.argument("data")).value() : "");
+                job = makeJob.get();
             } catch (NetException e) {
                 return error(e);
             }
-            if (request.toBytes().length > MAX_REQUEST_SIZE) {
+            if (job.request().length > MAX_REQUEST_SIZE) {
                 return error(new NetException(
                         NetError.INVALID_ARGUMENT, "The request is larger than " + MAX_REQUEST_SIZE + " bytes"));
             }
-            pending = new Pending(nextId++, call.process(), player, request);
+            pending = new Pending(nextId++, call.process(), player, job);
             BY_PROCESS.put(call.process(), pending);
             BY_ID.put(pending.id, pending);
         }
         pending.lastCalled = tick;
         if (pending.done()) {
             remove(pending);
-            return pending.failure != null ? error(pending.failure) : result(pending.response);
+            if (pending.failure != null) {
+                return error(pending.failure);
+            }
+            try {
+                return pending.job.result().apply(pending.complete);
+            } catch (NetException e) {
+                return error(e);
+            }
         }
         Optional<String> unavailable = channel.unavailable(host.server(), pending.player);
         if (unavailable.isPresent()) {
@@ -143,21 +182,14 @@ public final class PendingRequests {
         if (!pending.sent) {
             if (running(pending.player) < config.get(NetConfig.MAX_REQUESTS_PER_PLAYER)) {
                 pending.sent = true;
-                pending.deadline =
-                        System.currentTimeMillis() + (pending.request.timeout() + GRACE_SECONDS) * 1000L;
-                channel.send(
-                        host.server(),
-                        pending.player,
-                        pending.id,
-                        pending.request,
-                        config.get(NetConfig.MAX_RESPONSE_SIZE));
+                pending.deadline = System.currentTimeMillis() + (pending.job.timeout() + GRACE_SECONDS) * 1000L;
+                channel.send(host.server(), pending.player, pending.id, pending.job.request(), pending.job.maxAnswer());
             }
         } else if (System.currentTimeMillis() > pending.deadline) {
             cancel(host.server(), pending);
             return error(new NetException(
                     NetError.REQUEST_TIMEOUT,
-                    "No answer from " + pending.request.uri().getHost() + " within " + pending.request.timeout()
-                            + " seconds"));
+                    "No answer from " + pending.job.target() + " within " + pending.job.timeout() + " seconds"));
         }
         return NativeResult.waitForValue();
     }
@@ -177,21 +209,16 @@ public final class PendingRequests {
             pending.failure = new NetException(NetError.REQUEST_FAILED, "The client sent the answer in a wrong order");
             return;
         }
-        if (pending.answer.size() + part.length > config.get(NetConfig.MAX_RESPONSE_SIZE) + HEADER_ALLOWANCE) {
+        if (pending.answer.size() + part.length > pending.job.maxAnswer() + HEADER_ALLOWANCE) {
             pending.failure = new NetException(
-                    NetError.RESPONSE_TOO_LARGE,
-                    "The answer is larger than " + config.get(NetConfig.MAX_RESPONSE_SIZE) + " bytes");
+                    NetError.RESPONSE_TOO_LARGE, "The answer is larger than " + pending.job.maxAnswer() + " bytes");
             channel.cancel(server, player, id);
             return;
         }
         pending.answer.write(part, 0, part.length);
         pending.nextPart++;
         if (index == total - 1) {
-            try {
-                pending.response = NetResponse.fromBytes(pending.answer.toByteArray());
-            } catch (NetException e) {
-                pending.failure = e;
-            }
+            pending.complete = pending.answer.toByteArray();
         }
     }
 
@@ -254,10 +281,6 @@ public final class PendingRequests {
     private static void remove(Pending pending) {
         BY_ID.remove(pending.id);
         BY_PROCESS.remove(pending.process);
-    }
-
-    private static NativeResult result(NetResponse response) {
-        return HttpLibrary.result(response);
     }
 
     private static NativeResult error(NetException e) {

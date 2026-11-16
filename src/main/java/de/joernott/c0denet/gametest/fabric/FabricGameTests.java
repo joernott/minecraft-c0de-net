@@ -2,6 +2,7 @@ package de.joernott.c0denet.gametest.fabric;
 
 //? if fabric {
 import de.joernott.c0denet.gametest.HttpTests;
+import de.joernott.c0denet.gametest.MailTests;
 import de.joernott.c0denet.gametest.SmokeTests;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -40,6 +41,16 @@ public class FabricGameTests {
     @GameTest(template = SmokeTests.EMPTY_STRUCTURE, timeoutTicks = 2000)
     public void playersWithoutTheModCantSendRequests(GameTestHelper helper) {
         HttpTests.playersWithoutTheModCantSendRequests(helper);
+    }
+
+    @GameTest(template = SmokeTests.EMPTY_STRUCTURE, timeoutTicks = 100)
+    public void mailLibraryIsRegistered(GameTestHelper helper) {
+        MailTests.libraryIsRegistered(helper);
+    }
+
+    @GameTest(template = SmokeTests.EMPTY_STRUCTURE, timeoutTicks = 2000)
+    public void programsGetMailErrors(GameTestHelper helper) {
+        MailTests.programsGetMailErrors(helper);
     }
 }
 //?}

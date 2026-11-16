@@ -46,11 +46,77 @@ public final class NetConfig {
             "Send the HTTP requests of the c0de processes you run from this computer. With false, they raise",
             "REQUESTS_DISABLED.");
 
+    /** Whether programs may use c0de_net/mail on this server. */
+    public static final BooleanSetting ENABLE_MAIL = new BooleanSetting(
+            "enableMail",
+            true,
+            "Programs may send and read mail with c0de_net/mail. With false, it raises MAIL_DISABLED.");
+
+    /** The largest message SMTP_SEND sends. */
+    public static final IntSetting MAX_MAIL_SIZE = new IntSetting(
+            "maxMailSize",
+            64 << 10,
+            1 << 10,
+            16 << 20,
+            "Largest message SMTP_SEND sends in bytes (1024 to 16777216). Larger messages raise MAIL_LIMIT.");
+
+    /** The recipients of one message. */
+    public static final IntSetting MAX_RECIPIENTS = new IntSetting(
+            "maxRecipients", 20, 1, 1000, "Recipients of one message (to, cc and bcc together, 1 to 1000).");
+
+    /** The messages one player may send in a minute. */
+    public static final IntSetting MAX_MAILS_PER_MINUTE = new IntSetting(
+            "maxMailsPerMinute",
+            10,
+            1,
+            10000,
+            "Messages the processes of one player may send in a minute (1 to 10000); more raise MAIL_LIMIT.");
+
+    /** The bytes IMAP_FETCH may read. */
+    public static final IntSetting MAX_FETCH_SIZE = new IntSetting(
+            "maxFetchSize",
+            1 << 20,
+            1 << 10,
+            16 << 20,
+            "Bytes IMAP_FETCH may read (1024 to 16777216). More raise RESPONSE_TOO_LARGE.");
+
+    /** The messages of one IMAP_FETCH or IMAP_SEARCH. */
+    public static final IntSetting MAX_FETCH_MESSAGES = new IntSetting(
+            "maxFetchMessages", 100, 1, 10000, "Messages of one IMAP_FETCH or IMAP_SEARCH (1 to 10000).");
+
+    /** The default and the largest timeout of a mail connection. */
+    public static final IntSetting MAIL_TIMEOUT = new IntSetting(
+            "mailTimeout", 30, 1, 300, "Default and largest timeout of a mail connection in seconds (1 to 300).");
+
+    /** Whether mail may go to port 25. */
+    public static final BooleanSetting ALLOW_PORT_25 = new BooleanSetting(
+            "allowPort25",
+            false,
+            "Allow mail connections to port 25. Without it, programs use the submission ports of a mail provider",
+            "(465, 587), not the servers that receive mail directly.");
+
+    /** Whether the client sends and reads the mail of the processes its player runs. */
+    public static final BooleanSetting ALLOW_MAIL = new BooleanSetting(
+            "allowMail",
+            true,
+            "Send and read the mail of the c0de processes you run from this computer. With false, it raises",
+            "MAIL_DISABLED.");
+
     /** The settings of the server file. */
-    public static final List<Setting<?>> SERVER = List.of(MAX_RESPONSE_SIZE, MAX_REQUESTS_PER_PLAYER);
+    public static final List<Setting<?>> SERVER = List.of(
+            MAX_RESPONSE_SIZE,
+            MAX_REQUESTS_PER_PLAYER,
+            ENABLE_MAIL,
+            MAX_MAIL_SIZE,
+            MAX_RECIPIENTS,
+            MAX_MAILS_PER_MINUTE,
+            MAX_FETCH_SIZE,
+            MAX_FETCH_MESSAGES,
+            MAIL_TIMEOUT,
+            ALLOW_PORT_25);
 
     /** The settings of the client file. */
-    public static final List<Setting<?>> CLIENT = List.of(ALLOW_REQUESTS);
+    public static final List<Setting<?>> CLIENT = List.of(ALLOW_REQUESTS, ALLOW_MAIL);
 
     private final Map<Setting<?>, Object> values;
     private final List<String> problems;

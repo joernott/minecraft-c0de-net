@@ -1,7 +1,6 @@
 package de.joernott.c0denet.network;
 
 import de.joernott.c0de.platform.Platform;
-import de.joernott.c0denet.core.http.NetRequest;
 import de.joernott.c0denet.http.ClientChannel;
 import de.joernott.c0denet.http.PendingRequests;
 import java.util.Arrays;
@@ -55,10 +54,10 @@ public final class NetworkChannel implements ClientChannel {
     }
 
     @Override
-    public void send(MinecraftServer server, UUID player, long id, NetRequest request, long maxResponseSize) {
+    public void send(MinecraftServer server, UUID player, long id, byte[] request, long maxResponseSize) {
         ServerPlayer online = server.getPlayerList().getPlayer(player);
         if (online != null) {
-            Platform.INSTANCE.sendToPlayer(online, new RequestPayload(id, maxResponseSize, request.toBytes()));
+            Platform.INSTANCE.sendToPlayer(online, new RequestPayload(id, maxResponseSize, request));
         }
     }
 

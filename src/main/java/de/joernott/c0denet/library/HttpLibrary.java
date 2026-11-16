@@ -86,10 +86,8 @@ public final class HttpLibrary implements Library {
     @Override
     public Map<String, Value> constants() {
         Map<String, Value> constants = new LinkedHashMap<>();
-        for (NetError error : NetError.values()) {
-            if (error != NetError.INVALID_ARGUMENT) {
-                constants.put(error.name(), new IntegerValue(error.code()));
-            }
+        for (NetError error : NetError.HTTP) {
+            constants.put(error.name(), new IntegerValue(error.code()));
         }
         return constants;
     }

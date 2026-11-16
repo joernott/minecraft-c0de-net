@@ -3,12 +3,10 @@ package de.joernott.c0denet.client;
 import de.joernott.c0de.network.ClientReceivers;
 import de.joernott.c0de.platform.Platform;
 import de.joernott.c0denet.C0deNet;
+import de.joernott.c0denet.core.ClientWork;
 import de.joernott.c0denet.core.config.NetConfig;
 import de.joernott.c0denet.core.http.NetError;
 import de.joernott.c0denet.core.http.NetException;
-import de.joernott.c0denet.core.http.NetRequest;
-import de.joernott.c0denet.core.http.NetResponse;
-import de.joernott.c0denet.core.http.RequestSender;
 import de.joernott.c0denet.network.AnswerPayload;
 import de.joernott.c0denet.network.CancelPayload;
 import de.joernott.c0denet.network.NetworkChannel;
@@ -20,12 +18,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.client.Minecraft;
 
 /**
- * The client side of the requests (docs/concept.md#running-requests-on-the-client): it sends the requests of the
- * processes its player runs and sends the answers back to the server in parts. The requests run in the threads of
+ * The client side of the requests (docs/concept.md#running-requests-on-the-client): it sends the HTTP requests and
+ * runs the mail calls of the processes its player runs and sends the answers back to the server in parts. The requests run in the threads of
  * the HTTP client; the payloads are sent on the client thread.
  */
 public final class ClientRequests {
-    private static final RequestSender SENDER = new RequestSender();
     private static final Map<Long, CompletableFuture<?>> RUNNING = new ConcurrentHashMap<>();
     private static NetConfig config = NetConfig.defaults(NetConfig.CLIENT);
 
@@ -49,21 +46,28 @@ public final class ClientRequests {
     }
 
     private static void receive(RequestPayload payload) {
-        if (!config.get(NetConfig.ALLOW_REQUESTS)) {
+        boolean mail = ClientWork.isMail(payload.request());
+        if (mail && !config.get(NetConfig.ALLOW_MAIL)) {
+            send(AnswerPayload.failure(
+                    payload.id(),
+                    NetError.MAIL_DISABLED.code(),
+                    "The client of the player doesn't send or read mail (allowMail is false)"));
+            return;
+        }
+        if (!mail && !config.get(NetConfig.ALLOW_REQUESTS)) {
             send(AnswerPayload.failure(
                     payload.id(),
                     NetError.REQUESTS_DISABLED.code(),
                     "The client of the player doesn't send requests (allowRequests is false)"));
             return;
         }
-        NetRequest request;
+        CompletableFuture<byte[]> running;
         try {
-            request = NetRequest.fromBytes(payload.request());
+            running = ClientWork.run(payload.request(), payload.maxResponseSize());
         } catch (NetException e) {
             send(AnswerPayload.failure(payload.id(), e.error().code(), e.getMessage()));
             return;
         }
-        CompletableFuture<NetResponse> running = SENDER.send(request, payload.maxResponseSize());
         // Recorded first: a request that fails at once completes before whenComplete returns
         RUNNING.put(payload.id(), running);
         running.whenComplete((response, failure) -> Minecraft.getInstance().execute(() -> {
@@ -81,7 +85,7 @@ public final class ClientRequests {
                 }
                 return;
             }
-            for (AnswerPayload part : NetworkChannel.parts(payload.id(), response.toBytes())) {
+            for (AnswerPayload part : NetworkChannel.parts(payload.id(), response)) {
                 send(part);
             }
         }));
