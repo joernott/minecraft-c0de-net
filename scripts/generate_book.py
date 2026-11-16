@@ -48,6 +48,11 @@ ICONS = {
     "settings": "minecraft:writable_book",
     "c0de_net_http": "c0de:call_block",
     "http_connection": "c0de:type_struct_block",
+    "c0de_net_mail": "minecraft:paper",
+    "smtp_server": "c0de:type_struct_block",
+    "imap_server": "c0de:type_struct_block",
+    "mail": "c0de:type_struct_block",
+    "mailbox": "c0de:type_struct_block",
     "errors": "c0de:type_error_block",
     "examples": "c0de:program_block",
 }

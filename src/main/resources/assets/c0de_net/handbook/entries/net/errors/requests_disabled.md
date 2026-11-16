@@ -3,7 +3,7 @@
   "title": "REQUESTS_DISABLED",
   "icon": "c0de:type_error_block",
   "category": "errors",
-  "ordinal": 3
+  "ordinal": 4
 }
 ```
 

@@ -3,7 +3,7 @@
   "title": "HTTP_STATUS",
   "icon": "c0de:type_error_block",
   "category": "errors",
-  "ordinal": 1
+  "ordinal": 2
 }
 ```
 

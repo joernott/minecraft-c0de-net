@@ -18,3 +18,5 @@ Eine Anfrage braucht Zeit. Die CALL-Zeile wartet, bis die Antwort ankommt, ein F
 Wenn der Prozess endet, während eine Anfrage läuft, wird die Anfrage abgebrochen. Nach einem Neustart des Servers sendet ein wiederhergestellter Prozess seine Anfrage erneut. Denk daran bei Anfragen, die Daten ändern, z. B. POST und DELETE.
 
 In einer Einzelspielerwelt laufen Server und Client auf demselben Computer, und Anfragen funktionieren genauso.
+
+Die Funktionen von c0de\_net/mail arbeiten genauso: Der Client dieses Spielers verbindet sich mit dem Mailserver.

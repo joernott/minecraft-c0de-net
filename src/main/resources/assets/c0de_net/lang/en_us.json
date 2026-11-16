@@ -1,4 +1,4 @@
 {
   "book.c0de_net.net.name": "c0de net Handbook",
-  "book.c0de_net.net.landing_text": "c0de net adds the library c0de\\_net/http to c0de. With it, programs send HTTP requests to web servers and REST APIs and read the answers. This handbook describes the connection type, the functions, the errors and the settings, with examples."
+  "book.c0de_net.net.landing_text": "c0de net adds the libraries c0de\\_net/http and c0de\\_net/mail to c0de. With them, programs send HTTP requests to web servers and REST APIs and read the answers, send mail and read mailboxes. This handbook describes the types, the functions, the errors and the settings, with examples."
 }

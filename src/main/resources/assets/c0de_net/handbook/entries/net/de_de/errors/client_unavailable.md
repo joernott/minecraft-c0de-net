@@ -3,7 +3,7 @@
   "title": "CLIENT_UNAVAILABLE",
   "icon": "c0de:type_error_block",
   "category": "errors",
-  "ordinal": 2
+  "ordinal": 3
 }
 ```
 

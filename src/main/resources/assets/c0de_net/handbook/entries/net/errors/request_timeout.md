@@ -3,7 +3,7 @@
   "title": "REQUEST_TIMEOUT",
   "icon": "c0de:type_error_block",
   "category": "errors",
-  "ordinal": 5
+  "ordinal": 6
 }
 ```
 

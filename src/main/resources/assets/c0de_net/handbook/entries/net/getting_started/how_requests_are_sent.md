@@ -18,3 +18,5 @@ A request takes time. The CALL line waits until the answer arrives, an error occ
 If the process ends while a request is running, the request is cancelled. After a server restart, a restored process sends its request again. Keep this in mind for requests that change data, like POST and DELETE.
 
 On a single-player world, the server and the client run on the same computer, and requests work the same way.
+
+The functions of c0de\_net/mail work the same way: the client of that player connects to the mail server.

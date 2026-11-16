@@ -2,6 +2,19 @@
 
 All notable changes of c0de net. The section of a version is also its changelog on Modrinth.
 
+## 0.4.0
+
+Mail, and the handbook as a binder of c0de, for c0de 0.6.1.
+
+- **c0de_net/mail**: a new library that sends mail over SMTP and reads and manages mailboxes over IMAP. `INCLUDE c0de_net/mail` and call SMTP_SEND, IMAP_LIST, IMAP_CREATE, IMAP_DELETE, IMAP_RENAME, IMAP_STATUS, IMAP_SELECT, IMAP_SEARCH, IMAP_FETCH, IMAP_STORE, IMAP_MOVE or IMAP_EXPUNGE. Mail is plain text.
+- **SMTP_SERVER and IMAP_SERVER**: structs with the server, port, security (TLS, STARTTLS or none), user name, password, timeout and SSL settings. The password is sensitive: the debugging tool shows `***`. IMAP_SELECT stores the selected folder in the IMAP_SERVER variable. MAIL and MAILBOX hold messages and the status of folders.
+- **Mail on the client**: like HTTP requests, the game of the player who runs the program connects to the mail server. Players switch mail off with `allowMail=false`, servers with `enableMail=false`.
+- **Limits**: the server limits the size of messages (64 KiB), recipients (20), messages per player and minute (10), and what IMAP_FETCH and IMAP_SEARCH read (1 MiB, 100 messages). Port 25 is blocked unless `allowPort25` is set.
+- **Errors**: MAIL_DISABLED, AUTHENTICATION_FAILED, MAIL_REJECTED and MAIL_LIMIT, as constants of `c0de_net/mail` with the other errors it raises.
+- **Program runner**: the runner library brings c0de_net/mail too, with Angus Mail inside.
+- **Handbook**: the handbook is one of the binders of c0de's handbooks, with a teal label, in English and German. Patchouli is no longer used.
+- **c0de 0.6.1** or newer is required.
+
 ## 0.3.0
 
 Answers to the questions of the recipes on c0de.at, for c0de 0.5.0.

@@ -1,10 +1,10 @@
 # c0de-net-Handbuch
 
-c0de net ergänzt c0de um die Bibliothek c0de_net/http. Mit ihr senden Programme HTTP-Anfragen an Webserver und REST-APIs und lesen die Antworten. Dieses Handbuch beschreibt den Verbindungstyp, die Funktionen, die Fehler und die Einstellungen, mit Beispielen.
+c0de net ergänzt c0de um die Bibliotheken c0de_net/http und c0de_net/mail. Mit ihnen senden Programme HTTP-Anfragen an Webserver und REST-APIs und lesen die Antworten, senden Mails und lesen Postfächer. Dieses Handbuch beschreibt die Typen, die Funktionen, die Fehler und die Einstellungen, mit Beispielen.
 
 ## Erste Schritte
 
-Programme, die die Bibliothek verwenden, binden sie mit INCLUDE c0de_net/http ein. Ihr Typ und ihre Funktionen beginnen mit dem Namen der Bibliothek, z. B. c0de_net/http/HTTP_GET.
+Programme, die eine Bibliothek verwenden, binden sie ein, z. B. mit INCLUDE c0de_net/http oder INCLUDE c0de_net/mail. Ihre Typen und Funktionen beginnen mit dem Namen der Bibliothek, z. B. c0de_net/http/HTTP_GET.
 
 Jedes Programm hat, auch ohne das INCLUDE, die Konstante `C0DE_NET_VERSION` mit der Version von c0de net als Text, z. B. "0.2.0".
 
@@ -22,6 +22,8 @@ Wenn der Prozess endet, während eine Anfrage läuft, wird die Anfrage abgebroch
 
 In einer Einzelspielerwelt laufen Server und Client auf demselben Computer, und Anfragen funktionieren genauso.
 
+Die Funktionen von c0de_net/mail arbeiten genauso: Der Client dieses Spielers verbindet sich mit dem Mailserver.
+
 ### Das Handbuch
 
 Dieses Handbuch ist im Spiel ein roter Ordner, eines der Handbücher von c0de (seit c0de 0.6.1), mit einem Etikett in Türkis.
@@ -36,7 +38,18 @@ Umgib einen INCLUDE-Block mit acht Fäden. Schließlich geht es um das World Wid
 
 Der Server hat die Datei `config/c0de_net.properties`. `maxResponseSize` begrenzt die Größe einer Antwort in Bytes (1 KiB bis 16 MiB, Standard 1 MiB). `maxRequestsPerPlayer` begrenzt, wie viele Anfragen gleichzeitig auf dem Client eines Spielers laufen (1 bis 64, Standard 8); weitere Anfragen warten.
 
-Jeder Spieler hat die Datei `config/c0de_net-client.properties`. Mit `allowRequests=false` sendet sein Client keine Anfragen, und die Anfragen seiner Prozesse lösen REQUESTS_DISABLED aus.
+Für c0de_net/mail hat der Server diese Einstellungen in derselben Datei:
+
+- `enableMail`: false schaltet die Mail-Bibliothek ab (Standard true)
+- `maxMailSize`: die Bytes einer Nachricht, die SMTP_SEND sendet (Standard 65536)
+- `maxRecipients`: die Empfänger einer Nachricht, to, cc und bcc zusammen (Standard 20)
+- `maxMailsPerMinute`: die Nachrichten, die ein Spieler pro Minute senden darf (Standard 10)
+- `maxFetchSize`: die Bytes, die ein IMAP_FETCH lesen darf (Standard 1 MiB)
+- `maxFetchMessages`: die Nachrichten eines IMAP_FETCH oder IMAP_SEARCH (Standard 100)
+- `mailTimeout`: das Standard- und das größte Zeitlimit einer Mail-Verbindung in Sekunden (Standard 30)
+- `allowPort25`: true erlaubt Mail-Verbindungen zu Port 25 (Standard false)
+
+Jeder Spieler hat die Datei `config/c0de_net-client.properties`. Mit `allowRequests=false` sendet sein Client keine Anfragen, und die Anfragen seiner Prozesse lösen REQUESTS_DISABLED aus. Mit `allowMail=false` sendet und liest sein Client keine Mails, und die Mail-Funktionen seiner Prozesse lösen MAIL_DISABLED aus.
 
 Beide Dateien werden mit den Standardwerten angelegt. Ungültige Einträge werden im Log gemeldet und durch die Standardwerte ersetzt.
 
@@ -301,15 +314,358 @@ CALL c0de_net/http/HTTP_PUT
     RESULT status status
 ```
 
+## c0de_net/mail
+
+Die Mail-Bibliothek sendet Mails über SMTP und liest und verwaltet Postfächer über IMAP. Mails sind reiner Text, ohne HTML und Anhänge.
+
+Jede Funktion öffnet eine eigene Verbindung, meldet sich an, erledigt ihre Arbeit und meldet sich ab. Zwischen zwei Aufrufen bleibt nichts offen. Die Funktionen für Nachrichten arbeiten in dem Ordner, den IMAP_SELECT in der IMAP_SERVER-Variable gespeichert hat; gib ihnen also diese Variable.
+
+### SMTP_SERVER
+
+Ein Strukturtyp mit der Verbindung zu einem Server, der Mails sendet, z. B. dem deines Mail-Anbieters.
+
+Deklariere ihn mit `VARIABLE smtp STRUCT c0de_net/mail/SMTP_SERVER` und setze seine Elemente mit ASSIGN. `server` und `from` sind nötig, die anderen Elemente beginnen mit Standardwerten, die zu den meisten Anbietern passen.
+
+- `server` STRING: der Servername, z. B. smtp.example.com
+- `port` INTEGER: 1 bis 65535, oder 0 für 465 mit `tls` und sonst 587 (Standard 0)
+- `security` STRING: `starttls` (der Standard für einen leeren Text), `tls` für eine Verbindung, die von Anfang an verschlüsselt ist, oder `none`
+- `user` STRING: der Benutzername, leer, um ohne Anmeldung zu senden
+- `password` STRING: das Passwort
+- `from` STRING: die Adresse des Absenders, z. B. `Base computer <steve@example.com>`
+- `timeout` INTEGER: Sekunden, die ein Aufruf dauern darf, oder 0 für den Standard des Servers (30 Sekunden, das ist auch der größte Wert)
+- `skip_ssl_validation` BOOLEAN: true, um jedes Zertifikat anzunehmen, z. B. eines Servers in deinem Heimnetz (Standard false)
+
+Port 25 ist gesperrt, außer der Server erlaubt ihn. Verwende den Einlieferungsport deines Mail-Anbieters, 465 oder 587.
+
+Das Element `password` hat das Tag `security: "sensitive"`, deshalb zeigt das Debugging-Werkzeug `***` statt seines Werts. Schreib es wie bei HTTP_CONNECTION nicht ins Programm: Übergib es als Parameter oder lies es aus dem Tresor von c0de.
+
+**Beispiel**
+
+```c0de
+PROGRAM postman
+NOOP
+INCLUDE c0de_net/mail
+NOOP
+FUNCTION run
+    PARAMETER password STRING
+BEGIN
+    VARIABLE smtp STRUCT c0de_net/mail/SMTP_SERVER
+    ASSIGN smtp.server "smtp.example.com" ;
+    ASSIGN smtp.user "steve@example.com" ;
+    ASSIGN smtp.password password ;
+    ASSIGN smtp.from "Base computer <steve@example.com>" ;
+END FUNCTION
+```
+
+### IMAP_SERVER
+
+Ein Strukturtyp mit der Verbindung zu einem Server mit Postfächern.
+
+Deklariere ihn mit `VARIABLE imap STRUCT c0de_net/mail/IMAP_SERVER`. `server` und `user` sind nötig.
+
+- `server` STRING: der Servername, z. B. imap.example.com
+- `port` INTEGER: 1 bis 65535, oder 0 für 993 mit `tls` und sonst 143 (Standard 0)
+- `security` STRING: `tls` (der Standard für einen leeren Text), `starttls` oder `none`
+- `user` STRING: der Benutzername
+- `password` STRING: das Passwort, vertraulich wie das von SMTP_SERVER
+- `timeout` INTEGER: wie bei SMTP_SERVER
+- `skip_ssl_validation` BOOLEAN: wie bei SMTP_SERVER
+- `folder` STRING: der ausgewählte Ordner; IMAP_SELECT setzt ihn
+
+**Beispiel**
+
+```c0de
+VARIABLE imap STRUCT c0de_net/mail/IMAP_SERVER
+ASSIGN imap.server "imap.example.com" ;
+ASSIGN imap.user "steve@example.com" ;
+ASSIGN imap.password password ;
+```
+
+### MAIL
+
+Ein Strukturtyp mit einer Nachricht, die IMAP_FETCH gelesen hat.
+
+- `uid` INTEGER: die Nummer der Nachricht in ihrem Ordner
+- `from` STRING: der Absender
+- `to` ARRAY STRING: die Empfänger
+- `cc` ARRAY STRING: die Empfänger von Kopien
+- `subject` STRING: der Betreff
+- `date` TIME: wann die Nachricht gesendet wurde
+- `text` STRING: der reine Text der Nachricht, leer bei einer Nachricht ohne ihn oder wenn IMAP_FETCH ihn nicht gelesen hat
+- `flags` ARRAY STRING: die Flags, z. B. `\Seen`
+- `size` INTEGER: die Größe in Bytes
+
+### MAILBOX
+
+Ein Strukturtyp mit dem Status eines Ordners, von IMAP_STATUS und IMAP_SELECT.
+
+- `name` STRING: der Name des Ordners
+- `messages` INTEGER: die Zahl der Nachrichten
+- `recent` INTEGER: die Zahl der neuen Nachrichten seit dem letzten Blick
+- `unseen` INTEGER: die Zahl der Nachrichten ohne das Flag `\Seen`
+- `uid_next` INTEGER: die UID, die die nächste Nachricht bekommt
+- `uid_validity` INTEGER: ändert sich, wenn die UIDs des Ordners neu vergeben werden
+
+### SMTP_SEND
+
+Sendet eine Nachricht als reinen Text und gibt ihre Message-ID zurück.
+
+Alle Empfänger zusammen, to, cc und bcc, dürfen höchstens 20 sein, und die Nachricht höchstens 64 KiB groß. Ein Spieler darf 10 Nachrichten pro Minute senden. Der Server kann diese Grenzen ändern.
+
+**Parameter und Ergebnisse**
+
+- `server` STRUCT c0de_net/mail/SMTP_SERVER: der Server
+- `to` STRING oder ARRAY STRING: die Empfänger
+- `subject` STRING: der Betreff (optional, Standard leer)
+- `text` STRING: der Text (optional, Standard leer)
+- `cc` ARRAY STRING: Empfänger von Kopien (optional, Standard keine)
+- `bcc` ARRAY STRING: Empfänger von Kopien, die die anderen nicht sehen (optional, Standard keine)
+- `reply_to` STRING: die Adresse für Antworten (optional, Standard leer: der Absender)
+- Ergebnis `result` STRING: die Message-ID
+
+**Beispiel**
+
+```c0de
+CALL c0de_net/mail/SMTP_SEND
+    PARAMETER server smtp ;
+    PARAMETER to "alex@example.com" ;
+    PARAMETER subject "The farm" ;
+    PARAMETER text "The wheat is ready." ;
+```
+
+### IMAP_LIST
+
+Gibt die Namen der Ordner zurück.
+
+Im Muster steht `*` für beliebigen Text und `%` für beliebigen Text innerhalb einer Ordnerebene.
+
+**Parameter und Ergebnisse**
+
+- `server` STRUCT c0de_net/mail/IMAP_SERVER: der Server
+- `pattern` STRING: die Ordner, die aufgelistet werden (optional, Standard `*`: alle)
+- Ergebnis `result` ARRAY STRING: die Namen der Ordner
+
+**Beispiel**
+
+```c0de
+CALL c0de_net/mail/IMAP_LIST
+    PARAMETER server imap ;
+    RESULT result folders
+```
+
+### IMAP_CREATE
+
+Legt einen Ordner an.
+
+Ein Ordner, den es schon gibt, löst MAIL_REJECTED aus.
+
+**Parameter und Ergebnisse**
+
+- `server` STRUCT c0de_net/mail/IMAP_SERVER: der Server
+- `folder` STRING: der Name des neuen Ordners
+
+**Beispiel**
+
+```c0de
+CALL c0de_net/mail/IMAP_CREATE
+    PARAMETER server imap ;
+    PARAMETER folder "Orders" ;
+```
+
+### IMAP_DELETE
+
+Löscht einen Ordner mit seinen Nachrichten.
+
+**Parameter und Ergebnisse**
+
+- `server` STRUCT c0de_net/mail/IMAP_SERVER: der Server
+- `folder` STRING: der Name des Ordners
+
+**Beispiel**
+
+```c0de
+CALL c0de_net/mail/IMAP_DELETE
+    PARAMETER server imap ;
+    PARAMETER folder "Old orders" ;
+```
+
+### IMAP_RENAME
+
+Benennt einen Ordner um.
+
+**Parameter und Ergebnisse**
+
+- `server` STRUCT c0de_net/mail/IMAP_SERVER: der Server
+- `folder` STRING: der Name des Ordners
+- `new_name` STRING: sein neuer Name
+
+**Beispiel**
+
+```c0de
+CALL c0de_net/mail/IMAP_RENAME
+    PARAMETER server imap ;
+    PARAMETER folder "Orders" ;
+    PARAMETER new_name "Old orders" ;
+```
+
+### IMAP_STATUS
+
+Gibt den Status eines Ordners zurück, ohne ihn auszuwählen.
+
+**Parameter und Ergebnisse**
+
+- `server` STRUCT c0de_net/mail/IMAP_SERVER: der Server
+- `folder` STRING: der Ordner (optional, Standard leer: der ausgewählte Ordner)
+- Ergebnis `result` STRUCT c0de_net/mail/MAILBOX: sein Status
+
+**Beispiel**
+
+```c0de
+CALL c0de_net/mail/IMAP_STATUS
+    PARAMETER server imap ;
+    PARAMETER folder "INBOX" ;
+    RESULT result box
+```
+
+### IMAP_SELECT
+
+Wählt einen Ordner aus: prüft, dass es ihn gibt, und speichert seinen Namen in `folder` der Variable.
+
+Übergib die Variable selbst, keine Berechnung, denn die Funktion ändert sie. Die Funktionen für Nachrichten, IMAP_SEARCH, IMAP_FETCH, IMAP_STORE, IMAP_MOVE und IMAP_EXPUNGE, arbeiten im ausgewählten Ordner.
+
+**Parameter und Ergebnisse**
+
+- `server` STRUCT c0de_net/mail/IMAP_SERVER: eine Variable mit dem Server
+- `folder` STRING: der Ordner (optional, Standard `INBOX`)
+- Ergebnis `result` STRUCT c0de_net/mail/MAILBOX: sein Status
+
+**Beispiel**
+
+```c0de
+CALL c0de_net/mail/IMAP_SELECT
+    PARAMETER server imap ;
+    PARAMETER folder "INBOX" ;
+    RESULT result box
+```
+
+### IMAP_SEARCH
+
+Gibt die UIDs der Nachrichten des ausgewählten Ordners zurück, die zu den Kriterien passen, die älteste zuerst.
+
+Die Kriterien sind Wörter von IMAP, getrennt durch Leerzeichen, und alle müssen passen: `ALL`, `SEEN`, `UNSEEN`, `FLAGGED`, `UNFLAGGED`, `ANSWERED`, `UNANSWERED`, `DELETED`, `UNDELETED`, `DRAFT`, und mit einem Wert dahinter `FROM`, `TO`, `CC`, `SUBJECT` und `BODY` mit einem Text, `SINCE`, `BEFORE` und `ON` mit einem Datum wie 1-Nov-2026. Ein Text mit Leerzeichen kommt in doppelte Anführungszeichen, z. B. `SUBJECT \"wheat order\"` in der Textnotation. Bei mehr Treffern, als der Server erlaubt (100), kommen die neuesten zurück.
+
+**Parameter und Ergebnisse**
+
+- `server` STRUCT c0de_net/mail/IMAP_SERVER: der Server mit dem ausgewählten Ordner
+- `criteria` STRING: die Kriterien (optional, Standard `ALL`)
+- Ergebnis `result` ARRAY INTEGER: die UIDs
+
+**Beispiel**
+
+```c0de
+CALL c0de_net/mail/IMAP_SEARCH
+    PARAMETER server imap ;
+    PARAMETER criteria "UNSEEN FROM alex" ;
+    RESULT result uids
+```
+
+### IMAP_FETCH
+
+Liest Nachrichten des ausgewählten Ordners.
+
+Eine UID, die es nicht gibt, wird ausgelassen. Das Lesen des Texts markiert eine Nachricht als gelesen, wie ein Mailprogramm es tut; mit `text` FALSE werden nur die anderen Elemente gelesen, und die Nachricht bleibt ungelesen. Ein Aufruf liest höchstens 100 Nachrichten und 1 MiB, sonst löst er RESPONSE_TOO_LARGE aus.
+
+**Parameter und Ergebnisse**
+
+- `server` STRUCT c0de_net/mail/IMAP_SERVER: der Server mit dem ausgewählten Ordner
+- `uids` INTEGER oder ARRAY INTEGER: die UIDs der Nachrichten
+- `text` BOOLEAN: ob der Text gelesen wird (optional, Standard TRUE)
+- Ergebnis `result` ARRAY STRUCT c0de_net/mail/MAIL: die Nachrichten
+
+**Beispiel**
+
+```c0de
+CALL c0de_net/mail/IMAP_FETCH
+    PARAMETER server imap ;
+    PARAMETER uids uids ;
+    RESULT result letters
+```
+
+### IMAP_STORE
+
+Ändert die Flags von Nachrichten des ausgewählten Ordners.
+
+Die Flags von IMAP sind `\Seen`, `\Answered`, `\Flagged`, `\Deleted` und `\Draft`; andere Wörter sind Schlüsselwörter, wenn der Server sie unterstützt. Der Modus `add` fügt die Flags hinzu, `remove` entfernt sie und `set` ersetzt alle Flags. In der Textnotation wird ein Backslash doppelt geschrieben: `"\\Seen"`.
+
+**Parameter und Ergebnisse**
+
+- `server` STRUCT c0de_net/mail/IMAP_SERVER: der Server mit dem ausgewählten Ordner
+- `uids` INTEGER oder ARRAY INTEGER: die UIDs der Nachrichten
+- `flags` STRING oder ARRAY STRING: die Flags
+- `mode` STRING: `add`, `remove` oder `set` (optional, Standard `add`)
+
+**Beispiel**
+
+```c0de
+CALL c0de_net/mail/IMAP_STORE
+    PARAMETER server imap ;
+    PARAMETER uids uids ;
+    PARAMETER flags "\\Seen" ;
+```
+
+### IMAP_MOVE
+
+Verschiebt Nachrichten des ausgewählten Ordners in einen anderen Ordner.
+
+**Parameter und Ergebnisse**
+
+- `server` STRUCT c0de_net/mail/IMAP_SERVER: der Server mit dem ausgewählten Ordner
+- `uids` INTEGER oder ARRAY INTEGER: die UIDs der Nachrichten
+- `folder` STRING: der Ordner, in den sie kommen
+
+**Beispiel**
+
+```c0de
+CALL c0de_net/mail/IMAP_MOVE
+    PARAMETER server imap ;
+    PARAMETER uids uids ;
+    PARAMETER folder "Orders" ;
+```
+
+### IMAP_EXPUNGE
+
+Entfernt die Nachrichten des ausgewählten Ordners, die das Flag `\Deleted` haben, und gibt zurück, wie viele.
+
+**Parameter und Ergebnisse**
+
+- `server` STRUCT c0de_net/mail/IMAP_SERVER: der Server mit dem ausgewählten Ordner
+- Ergebnis `result` INTEGER: die Zahl der entfernten Nachrichten
+
+**Beispiel**
+
+```c0de
+CALL c0de_net/mail/IMAP_EXPUNGE
+    PARAMETER server imap ;
+    RESULT result removed
+```
+
 ## Fehler
 
-Die Funktionen lösen diese Fehler aus. Fang sie mit einer Variable vom Typ ERROR in der CALL-Zeile ab und vergleiche ihren `code` mit den Konstanten der Bibliothek, z. B. `c0de_net/http/HTTP_STATUS`. Sie enthalten die Codes und kommen wie die Funktionen mit INCLUDE c0de_net/http. INVALID_ARGUMENT ist eine Konstante von c0de.
+Die Funktionen lösen diese Fehler aus. Fang sie mit einer Variable vom Typ ERROR in der CALL-Zeile ab und vergleiche ihren `code` mit den Konstanten der Bibliothek, z. B. `c0de_net/http/HTTP_STATUS`. Sie enthalten die Codes und kommen wie die Funktionen mit dem INCLUDE. c0de_net/mail hat die Konstanten der Fehler, die es auslöst, z. B. `c0de_net/mail/REQUEST_FAILED`. INVALID_ARGUMENT und PERMISSION_DENIED sind Konstanten von c0de.
 
 ### INVALID_ARGUMENT
 
 Code 309: Die Verbindung oder der Endpunkt ist ungültig.
 
 Der Server ist leer, der Port liegt nicht zwischen 0 und 65535, das Zeitlimit liegt nicht zwischen 0 und 300, der Proxy ist keine http://-URL, oder ein Header kann nicht gesendet werden. Der Endpunkt macht die URL ungültig, z. B. mit einem Leerzeichen (siehe HTTP_CONNECTION). Der Fehler wird auch ausgelöst, wenn die Anfrage größer als 1.000.000 Bytes ist.
+
+Für c0de_net/mail: eine Verbindung ohne Server, ein SMTP_SERVER ohne `from`, ein IMAP_SERVER ohne `user`, ein unbekanntes `security`, ein Zeitlimit über dem größten, eine ungültige Adresse, unbekannte Kriterien von IMAP_SEARCH, ein unbekannter `mode` von IMAP_STORE oder eine Funktion für Nachrichten ohne ausgewählten Ordner.
+
+### PERMISSION_DENIED
+
+Code 311: eine Mail-Verbindung zu Port 25, die der Server nicht erlaubt.
+
+Über Port 25 nehmen Mailserver Mails voneinander an, und Spammer nutzen ihn auch. Sende über den Einlieferungsport deines Mail-Anbieters, 465 oder 587, der Benutzername und Passwort braucht.
 
 ### HTTP_STATUS
 
@@ -361,9 +717,35 @@ Code 1005, `c0de_net/http/RESPONSE_TOO_LARGE`: Die Antwort ist größer, als der
 
 Die Grenze ist `maxResponseSize` in `config/c0de_net.properties`, standardmäßig 1 MiB. Frag bei der API weniger Daten an, z. B. eine Seite einer Liste.
 
+Für IMAP_FETCH ist die Grenze `maxFetchSize`. Lies weniger Nachrichten auf einmal oder ohne ihren Text.
+
+### MAIL_DISABLED
+
+Code 1006, `c0de_net/mail/MAIL_DISABLED`: Mail ist abgeschaltet.
+
+Der Server hat `enableMail=false` in `config/c0de_net.properties` gesetzt, oder der Spieler, der den Prozess ausführt, hat `allowMail=false` in `config/c0de_net-client.properties` gesetzt.
+
+### AUTHENTICATION_FAILED
+
+Code 1007, `c0de_net/mail/AUTHENTICATION_FAILED`: Der Mailserver hat den Benutzernamen oder das Passwort nicht angenommen.
+
+Viele Anbieter wollen für Programme ein App-Passwort statt des Passworts des Kontos.
+
+### MAIL_REJECTED
+
+Code 1008, `c0de_net/mail/MAIL_REJECTED`: Der Mailserver hat den Befehl abgelehnt.
+
+Z. B. einen Empfänger, den er nicht annimmt, einen Ordner, den es nicht gibt, oder einen Ordner zum Anlegen, den es schon gibt. Die Meldung ist die Antwort des Servers.
+
+### MAIL_LIMIT
+
+Code 1009, `c0de_net/mail/MAIL_LIMIT`: Eine Grenze des Servers ist erreicht.
+
+Mehr Empfänger als `maxRecipients`, eine größere Nachricht als `maxMailSize` oder mehr Nachrichten eines Spielers pro Minute als `maxMailsPerMinute`. Warte eine Minute, bevor du wieder sendest.
+
 ## Beispiele
 
-Vollständige Programme, die c0de_net/http verwenden. Die Server sind Beispiele; ersetze sie durch die API, die du verwenden willst.
+Vollständige Programme, die c0de_net/http und c0de_net/mail verwenden. Die Server sind Beispiele; ersetze sie durch die API oder den Mail-Anbieter, den du verwenden willst.
 
 ### Wettervorhersage
 
@@ -469,5 +851,78 @@ BEGIN
         EXIT 2 ;
     END IF
     EXIT 0 ;
+END FUNCTION
+```
+
+### Mail von der Farm
+
+Sendet eine Nachricht, wenn die Farm voll ist.
+
+Stell den Auslöserblock neben einen Komparator an der Truhe der Farm und gib ihm ein Konstanten-Item `password` mit dem Passwort deines Mail-Kontos. Die Nachricht wird vom Computer des Spielers gesendet, dem der Auslöserblock gehört.
+
+```c0de
+PROGRAM farm_mail
+NOOP
+INCLUDE c0de_net/mail
+NOOP
+FUNCTION full
+    PARAMETER password STRING
+BEGIN
+    VARIABLE smtp STRUCT c0de_net/mail/SMTP_SERVER
+    ASSIGN smtp.server "smtp.example.com" ;
+    ASSIGN smtp.user "steve@example.com" ;
+    ASSIGN smtp.password password ;
+    ASSIGN smtp.from "Farm <steve@example.com>" ;
+    CALL c0de_net/mail/SMTP_SEND
+        PARAMETER server smtp ;
+        PARAMETER to "steve@example.com" ;
+        PARAMETER subject "The farm is full" ;
+        PARAMETER text "Come and empty the chest." ;
+END FUNCTION
+```
+
+### Bestellungen lesen
+
+Liest die ungelesenen Nachrichten mit "order" im Betreff, gibt ihre Betreffs aus und verschiebt sie in den Ordner Orders.
+
+```c0de
+PROGRAM orders
+NOOP
+INCLUDE c0de_net/mail
+NOOP
+FUNCTION read
+    PARAMETER password STRING
+    RESULT count INTEGER
+BEGIN
+    VARIABLE imap STRUCT c0de_net/mail/IMAP_SERVER
+    VARIABLE box STRUCT c0de_net/mail/MAILBOX
+    VARIABLE uids ARRAY INTEGER
+    VARIABLE letters ARRAY STRUCT c0de_net/mail/MAIL
+    ASSIGN imap.server "imap.example.com" ;
+    ASSIGN imap.user "steve@example.com" ;
+    ASSIGN imap.password password ;
+    CALL c0de_net/mail/IMAP_SELECT
+        PARAMETER server imap ;
+        RESULT result box
+    CALL c0de_net/mail/IMAP_SEARCH
+        PARAMETER server imap ;
+        PARAMETER criteria "UNSEEN SUBJECT order" ;
+        RESULT result uids
+    CALL c0de_net/mail/IMAP_FETCH
+        PARAMETER server imap ;
+        PARAMETER uids uids ;
+        RESULT result letters
+    EACH letter letters
+    BEGIN
+        CALL PRINT
+            PARAMETER value letter.from ⊕ ": " ⊕ letter.subject ;
+    END EACH
+    CALL c0de_net/mail/IMAP_MOVE
+        PARAMETER server imap ;
+        PARAMETER uids uids ;
+        PARAMETER folder "Orders" ;
+    CALL LEN
+        PARAMETER value uids ;
+        RESULT result count
 END FUNCTION
 ```
