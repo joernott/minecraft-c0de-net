@@ -174,3 +174,12 @@ OK, I triggered the rerun for c0de now.
 ## 2026-11-16 – Release of 0.4.0
 
 All tests were OK. We can do the 0.4.0 release of c0de-net
+
+## 2026-11-16 – The tag of 0.4.0, a security warning of VS Code
+
+the run completed but VSCode froze while displaying a security warning about the gradle-runner.
+
+The tag has been pushed
+
+The warning message is from Language Support for Java and reads "Security Warning! The gradle wrapper 'C:\Users\white\git\minecraft-c0de-net\gradle\wrapper\gradle-wrapper.jar'" [sha256 '621008afc4f5d59357fcf06ffa644dd5aade5e091bdc363742710445f73cdaf8'] could be malicious. Should it be trusted?";
+It also gave an OutOfMemoryError just now
