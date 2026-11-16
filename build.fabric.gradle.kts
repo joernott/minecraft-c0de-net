@@ -92,6 +92,11 @@ loom {
             register("clientGameTest") {
                 client()
                 property("fabric.client.gametest")
+                // The answers of requests reach the network at any time, from the threads of the HTTP client and of
+                // the mail calls; the network synchronizer of the client GameTests then crashes the test now and
+                // then ("Detected interfacing with packets at a lower level", 1.21.11 on 2026-11-16). The test waits
+                // for the process itself.
+                property("fabric.client.gametest.disableNetworkSynchronizer")
                 programArgs("--username", "Tester1")
                 runDirectory = project.file("build/clientGameTest")
             }
