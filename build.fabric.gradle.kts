@@ -33,7 +33,7 @@ sourceSets.main {
 
 dependencies {
     minecraft("com.mojang:minecraft:${sc.current.version}")
-    val parchment = sc.properties.getOrNull<String>("deps.parchment")
+    val parchment = sc.properties.getOrNull("deps.parchment")
     if (parchment != null) {
         mappings(loom.layered {
             officialMojangMappings()
@@ -45,9 +45,9 @@ dependencies {
     }
 
     // Use `mod{dependency type}` even on 26.1+ - loom-back-compat converts them
-    modImplementation("net.fabricmc:fabric-loader:${sc.properties.get<String>("deps.fabric_loader")}")
+    modImplementation("net.fabricmc:fabric-loader:${sc.properties.get("deps.fabric_loader")}")
     // Players install the complete Fabric API, which fabric.mod.json requires
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${sc.properties.get<String>("deps.fabric_api")}")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${sc.properties.get("deps.fabric_api")}")
     // c0de of the same Minecraft version, which runs the programs that use the library
     modImplementation(c0de("fabric", sc.current.version, sc.properties["deps.c0de"]))
     // c0de embeds snakeyaml with jar-in-jar; the development runs before 26.1 don't load the embedded jar
@@ -56,7 +56,7 @@ dependencies {
     // Development runs without Patchouli: -Ppatchouli=false
     if (providers.gradleProperty("patchouli").orNull != "false") {
         // Not every Minecraft version has a Patchouli release
-        sc.properties.getOrNull<String>("deps.patchouli")?.let { modLocalRuntime("vazkii.patchouli:Patchouli:$it-FABRIC") }
+        sc.properties.getOrNull("deps.patchouli")?.let { modLocalRuntime("vazkii.patchouli:Patchouli:$it-FABRIC") }
     }
 }
 
@@ -135,7 +135,7 @@ tasks {
             register("issues", sc.properties["mod.issues_url"])
             register("minecraft", sc.properties["mod.mc_compat"])
             register("c0de", sc.properties["deps.c0de"])
-            register("loader", Regex("\\d+\\.\\d+").find(sc.properties.get<String>("deps.fabric_loader"))!!.value)
+            register("loader", Regex("\\d+\\.\\d+").find(sc.properties.get("deps.fabric_loader"))!!.value)
         }
 
         filesMatching("fabric.mod.json") { expand(props) }
@@ -165,9 +165,9 @@ tasks {
 // and both project IDs are set
 publishMods {
     val modVersion = property("mod.version") as String
-    val projectId = sc.properties.get<String>("publish.modrinth_id")
+    val projectId = sc.properties.get("publish.modrinth_id")
     val token = providers.environmentVariable("MODRINTH_TOKEN")
-    val curseforgeId = sc.properties.get<String>("publish.curseforge_id")
+    val curseforgeId = sc.properties.get("publish.curseforge_id")
     val curseforgeToken = providers.environmentVariable("CURSEFORGE_TOKEN")
     // A version that is already released on GitHub is published from the jars of its release
     // (-Ppublish.released_jars=<folder>, .github/workflows/curseforge.yml, task 7.4)
@@ -193,10 +193,10 @@ publishMods {
         accessToken = token
         // The server runs the library, the client sends the requests
         environment = CLIENT_AND_SERVER
-        minecraftVersions.addAll(sc.properties.get<String>("mod.mc_releases").split(",").map { it.trim() })
+        minecraftVersions.addAll(sc.properties.get("mod.mc_releases").split(",").map { it.trim() })
         requires("fabric-api", "c0de")
         // Patchouli only where the mod was tested with it (deps.patchouli)
-        if (sc.properties.getOrNull<String>("deps.patchouli") != null) optional("patchouli")
+        if (sc.properties.getOrNull("deps.patchouli") != null) optional("patchouli")
     }
     curseforge {
         this.projectId = curseforgeId
@@ -206,10 +206,10 @@ publishMods {
         // -Ppublish.curseforge_without_c0de leaves c0de out: CurseForge refuses it as a dependency until its project is
         // approved (task 7.4); add it to the files on curseforge.com afterwards
         val c0de = !providers.gradleProperty("publish.curseforge_without_c0de").isPresent
-        minecraftVersions.addAll(sc.properties.get<String>("mod.mc_releases").split(",").map { it.trim() })
+        minecraftVersions.addAll(sc.properties.get("mod.mc_releases").split(",").map { it.trim() })
         requires("fabric-api")
         if (c0de) requires("c0de")
-        if (sc.properties.getOrNull<String>("deps.patchouli") != null) optional("patchouli")
+        if (sc.properties.getOrNull("deps.patchouli") != null) optional("patchouli")
     }
 }
 

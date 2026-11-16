@@ -15,7 +15,7 @@ plugins {
 
     // Applies the right Loom variant for obfuscated (<26.1) and unobfuscated (>=26.1) versions
     // https://codeberg.org/KikuGie/loom-back-compat
-    id("dev.kikugie.loom-back-compat") version "0.4.2"
+    id("dev.kikugie.loom-back-compat") version "0.4.3"
 
     // Downloads the JDKs required by the toolchains (Java 21 for 1.21.x, Java 25 for 26.x)
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"

@@ -19,7 +19,7 @@ stonecutter parameters {
     }
 
     // The version of the mod for C0DE_NET_VERSION (C0deNet.VERSION)
-    swaps["mod_version"] = "\"${properties.get<String>("mod.version")}\";"
+    swaps["mod_version"] = "\"${properties.get("mod.version")}\";"
 
     replacements {
         // Replacements work in both directions (when the active node changes), so they must be unambiguous

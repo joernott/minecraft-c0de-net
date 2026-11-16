@@ -34,7 +34,7 @@ dependencies {
     implementation(c0de("neoforge", sc.current.version, sc.properties["deps.c0de"]))
     // Patchouli is optional: with it, the handbook of the mod can be crafted and read. It only goes into the mods
     // folder of the first client, as in c0de. Not every Minecraft version has a Patchouli release
-    sc.properties.getOrNull<String>("deps.patchouli")?.let { patchouliMod("vazkii.patchouli:Patchouli:$it-NEOFORGE") }
+    sc.properties.getOrNull("deps.patchouli")?.let { patchouliMod("vazkii.patchouli:Patchouli:$it-NEOFORGE") }
 }
 
 // The requests and answers are compiled into every node
@@ -48,7 +48,7 @@ sourceSets.main {
 neoForge {
     version = property("deps.neo_loader") as String
 
-    sc.properties.getOrNull<String>("deps.parchment")?.let {
+    sc.properties.getOrNull("deps.parchment")?.let {
         parchment {
             minecraftVersion = sc.current.version
             mappingsVersion = it
@@ -169,9 +169,9 @@ tasks {
 // and both project IDs are set
 publishMods {
     val modVersion = property("mod.version") as String
-    val projectId = sc.properties.get<String>("publish.modrinth_id")
+    val projectId = sc.properties.get("publish.modrinth_id")
     val token = providers.environmentVariable("MODRINTH_TOKEN")
-    val curseforgeId = sc.properties.get<String>("publish.curseforge_id")
+    val curseforgeId = sc.properties.get("publish.curseforge_id")
     val curseforgeToken = providers.environmentVariable("CURSEFORGE_TOKEN")
     // A version that is already released on GitHub is published from the jars of its release
     // (-Ppublish.released_jars=<folder>, .github/workflows/curseforge.yml, task 7.4)
@@ -197,10 +197,10 @@ publishMods {
         accessToken = token
         // The server runs the library, the client sends the requests
         environment = CLIENT_AND_SERVER
-        minecraftVersions.addAll(sc.properties.get<String>("mod.mc_releases").split(",").map { it.trim() })
+        minecraftVersions.addAll(sc.properties.get("mod.mc_releases").split(",").map { it.trim() })
         requires("c0de")
         // Patchouli only where the mod was tested with it (deps.patchouli)
-        if (sc.properties.getOrNull<String>("deps.patchouli") != null) optional("patchouli")
+        if (sc.properties.getOrNull("deps.patchouli") != null) optional("patchouli")
     }
     curseforge {
         this.projectId = curseforgeId
@@ -210,9 +210,9 @@ publishMods {
         // -Ppublish.curseforge_without_c0de leaves c0de out: CurseForge refuses it as a dependency until its project is
         // approved (task 7.4); add it to the files on curseforge.com afterwards
         val c0de = !providers.gradleProperty("publish.curseforge_without_c0de").isPresent
-        minecraftVersions.addAll(sc.properties.get<String>("mod.mc_releases").split(",").map { it.trim() })
+        minecraftVersions.addAll(sc.properties.get("mod.mc_releases").split(",").map { it.trim() })
         if (c0de) requires("c0de")
-        if (sc.properties.getOrNull<String>("deps.patchouli") != null) optional("patchouli")
+        if (sc.properties.getOrNull("deps.patchouli") != null) optional("patchouli")
     }
 }
 
