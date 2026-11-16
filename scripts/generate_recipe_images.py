@@ -54,13 +54,16 @@ def texture(jar: Path, name: str):
 
 def icon(item: str):
     namespace, name = item.split(":")
+    if namespace == "c0de" and name == "handbook":
+        # The binder of c0de, with the label in the colour of the book (generate_book.COLOR)
+        binder = texture(c0de_jar(), "assets/c0de/textures/item/handbook.png")
+        label = texture(c0de_jar(), "assets/c0de/textures/item/handbook_label.png")
+        color = (0x3F, 0xB8, 0xC8)
+        return [[(l[0] * color[0] // 255, l[1] * color[1] // 255, l[2] * color[2] // 255, 255) if l[3] else b
+                 for b, l in zip(brow, lrow)] for brow, lrow in zip(binder, label)]
     if namespace == "c0de":
         # The icons of the language blocks are their top textures, as in c0de
         return texture(c0de_jar(), "assets/c0de/textures/block/" + name + ".png")
-    if namespace == "patchouli":
-        # The handbook is a green book
-        book = texture(CLIENT_JAR, "assets/minecraft/textures/item/book.png")
-        return [[(r // 2, min(255, g + 40), b // 2, a) for r, g, b, a in row] for row in book]
     return texture(CLIENT_JAR, "assets/minecraft/textures/item/" + name + ".png")
 
 

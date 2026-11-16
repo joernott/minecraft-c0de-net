@@ -24,7 +24,7 @@ On a single-player world, the server and the client run on the same computer, an
 
 ### The handbook
 
-This book is crafted with Patchouli on Minecraft 1.21.1.
+This handbook is a red binder in the game, one of the handbooks of c0de (since c0de 0.6.1), with a label in teal.
 
 **Recipe**
 

@@ -1,0 +1,37 @@
+{
+  "c0de_net:handbook": {
+    "slots": [
+      [
+        "minecraft:string"
+      ],
+      [
+        "minecraft:string"
+      ],
+      [
+        "minecraft:string"
+      ],
+      [
+        "minecraft:string"
+      ],
+      [
+        "c0de:include_block"
+      ],
+      [
+        "minecraft:string"
+      ],
+      [
+        "minecraft:string"
+      ],
+      [
+        "minecraft:string"
+      ],
+      [
+        "minecraft:string"
+      ]
+    ],
+    "result": "c0de:handbook",
+    "count": 1,
+    "book": "c0de_net:net",
+    "color": "#3FB8C8"
+  }
+}

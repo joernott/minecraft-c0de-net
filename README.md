@@ -8,7 +8,7 @@ The mod supports Fabric and NeoForge on Minecraft 1.21.1, 1.21.11, 26.1.2, 26.2 
 
 ## Documentation
 
-  - [Handbook](docs/reference/net.md): the type HTTP_CONNECTION, the functions HTTP_GET to HTTP_PUT, the errors, the settings and examples. With Patchouli on Minecraft 1.21.1, it is also a green book in the game, crafted from an INCLUDE block surrounded by eight strings.
+  - [Handbook](docs/reference/net.md): the type HTTP_CONNECTION, the functions HTTP_GET to HTTP_PUT, the errors, the settings and examples. In the game, it is one of the handbooks of c0de (since c0de 0.6.1): a red binder with a teal label, crafted from an INCLUDE block surrounded by eight strings.
   - [Handbuch](docs/de/reference/net.md): the handbook in German
   - [Concept](docs/concept.md): how the library works and why requests run on the client
   - [Implementation plan](docs/implementation_plan.md): sprints and tasks
@@ -35,7 +35,7 @@ Requirements: JDK 21 or newer to run Gradle. Gradle downloads the JDKs and the c
 ./gradlew :runner:check :runner:jar     # the runner library c0de-net-runner-<version>.jar and its tests
 ./gradlew :1.21.1-fabric:runGametest    # runs the GameTests on Fabric
 ./gradlew :1.21.1-fabric:runClient      # starts the Fabric client with c0de and c0de net
-python scripts/generate_book.py         # generates the Patchouli book from the handbook
+python scripts/generate_book.py         # generates the handbook in the game from the handbook
 ```
 
 The project uses [Stonecutter](https://stonecutter.kikugie.dev/) like c0de: every combination of Minecraft version and loader is a node, e.g. `1.21.1-fabric`. The committed sources are in the state of the node `1.21.1-fabric`.

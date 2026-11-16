@@ -57,12 +57,6 @@ dependencies {
         localRuntime("de.soderer:kdbx:26.1.10")
         localRuntime("org.bouncycastle:bcprov-jdk18on:1.86")
     }
-    // Patchouli is optional: with it, the handbook of the mod can be crafted and read
-    // Development runs without Patchouli: -Ppatchouli=false
-    if (providers.gradleProperty("patchouli").orNull != "false") {
-        // Not every Minecraft version has a Patchouli release
-        sc.properties.getOrNull("deps.patchouli")?.let { modLocalRuntime("vazkii.patchouli:Patchouli:$it-FABRIC") }
-    }
 }
 
 loom {
@@ -200,8 +194,6 @@ publishMods {
         environment = CLIENT_AND_SERVER
         minecraftVersions.addAll(sc.properties.get("mod.mc_releases").split(",").map { it.trim() })
         requires("fabric-api", "c0de")
-        // Patchouli only where the mod was tested with it (deps.patchouli)
-        if (sc.properties.getOrNull("deps.patchouli") != null) optional("patchouli")
     }
     curseforge {
         this.projectId = curseforgeId
@@ -214,7 +206,6 @@ publishMods {
         minecraftVersions.addAll(sc.properties.get("mod.mc_releases").split(",").map { it.trim() })
         requires("fabric-api")
         if (c0de) requires("c0de")
-        if (sc.properties.getOrNull("deps.patchouli") != null) optional("patchouli")
     }
 }
 

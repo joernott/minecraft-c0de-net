@@ -2,7 +2,7 @@
 
 **The web for your c0de programs.** c0de net adds the library `c0de_net/http` to [c0de](https://modrinth.com/mod/c0de), the programming language made of blocks. Your programs send HTTP requests to web servers and REST APIs and read the answers: check the weather, post a message to a chat bot, or switch the lamp of your home automation with a lever in Minecraft.
 
-> This is the first alpha, version 0.1.0. Expect rough edges, and please report bugs and ideas on GitHub.
+> This is an early version. Expect rough edges, and please report bugs and ideas on GitHub.
 
 ## Features
 
@@ -40,8 +40,8 @@ END FUNCTION
 
 ## Requirements
 
-- [c0de](https://modrinth.com/mod/c0de) 0.3.0 or newer, for the same Minecraft version and loader
+- [c0de](https://modrinth.com/mod/c0de) 0.6.1 or newer, for the same Minecraft version and loader
 - Minecraft 1.21.1, 1.21.11, 26.1.2, 26.2 or 26.3 (26.x needs Java 25)
 - **Fabric** with [Fabric API](https://modrinth.com/mod/fabric-api), or **NeoForge**
 - On the server **and** on the clients. On Fabric, a player without c0de net can join, but their programs can't send requests; a NeoForge server requires c0de net on every client.
-- Optional, on Minecraft 1.21.1: [Patchouli](https://modrinth.com/mod/patchouli) adds the handbook as a green book, crafted from an INCLUDE block surrounded by eight strings.
+- The handbook is in the game too, as a binder of the handbooks of c0de, crafted from an INCLUDE block surrounded by eight strings.

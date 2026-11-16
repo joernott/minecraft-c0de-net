@@ -24,7 +24,7 @@ In einer Einzelspielerwelt laufen Server und Client auf demselben Computer, und 
 
 ### Das Handbuch
 
-Dieses Buch wird mit Patchouli auf Minecraft 1.21.1 hergestellt.
+Dieses Handbuch ist im Spiel ein roter Ordner, eines der Handbücher von c0de (seit c0de 0.6.1), mit einem Etikett in Türkis.
 
 **Rezept**
 

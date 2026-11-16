@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * The German translation of the handbook (docs/de/reference/net.md, tasks 6.2 and 6.3) has the structure of the
- * English file, which the Patchouli book and the website c0de.at rely on: the same headings in the same order and
+ * English file, which the handbook in the game and the website c0de.at rely on: the same headings in the same order and
  * levels (names like {@code ### HTTP_GET} unchanged), the same programs (only the text of comments is translated),
  * and images that exist.
  */

@@ -30,7 +30,7 @@ jobs:
         run: scripts/check-whitespace.sh
       - name: Version of the active node
         run: scripts/check-version.sh
-      - name: Generated Patchouli book
+      - name: Generated handbook
         # The book and its recipe are generated from docs/reference/net.md and committed
         run: |
           python3 scripts/generate_book.py

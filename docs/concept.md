@@ -145,6 +145,6 @@ The files are created with the default values like `c0de.properties`; invalid en
 
 As in c0de:
   - **Handbook** in the repository: `docs/reference/net.md` describes the type, the functions, the errors and examples, in the format of the c0de handbooks.
-  - **Patchouli book** "c0de net handbook", generated from `docs/reference/net.md` like the handbooks of c0de, only on the Minecraft versions where c0de has Patchouli as optional dependency (1.21.1). It is crafted from a c0de INCLUDE block, the block that includes libraries, surrounded by eight strings: after all, it is about the World Wide Web (user decision).
+  - **Handbook in the game** "c0de net Handbook", the book `c0de_net:net` of the handbooks of c0de (c0de docs/concept/21-handbooks.md; handbooks of other mods since c0de 0.6.1; until 0.3.0 a Patchouli book), generated from `docs/reference/net.md` like the handbooks of c0de, on every Minecraft version. Its binder is the generic binder of c0de with a teal label. It is crafted from a c0de INCLUDE block, the block that includes libraries, surrounded by eight strings: after all, it is about the World Wide Web (user decision).
   - **README**, **CHANGELOG** (whose sections are the changelogs on Modrinth) and the **Modrinth page** (`docs/modrinth.md`).
   - **Development environment** (`docs/development_environment.md`): the same tools, VM and CI as c0de.

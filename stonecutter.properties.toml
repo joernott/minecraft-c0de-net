@@ -24,8 +24,6 @@ loomx.loom_version = "1.18-SNAPSHOT"
 # Releases the mod is marked compatible with on Modrinth, separated by commas
 mod.mc_releases = "1.21.1"
 deps.parchment = "2024.11.17"
-# Optional: the in-game handbook; only loaded in the development runs
-deps.patchouli = "1.21.1-93"
 
 [fabric."1.21.1"]
 # Compatibility range in fabric.mod.json

@@ -24,17 +24,9 @@ repositories {
     c0deReleases()
 }
 
-// The jar of Patchouli for the mods folder of the first development client
-val patchouliMod: Configuration by configurations.creating {
-    isTransitive = false
-}
-
 dependencies {
     // c0de of the same Minecraft version, which runs the programs that use the library
     implementation(c0de("neoforge", sc.current.version, sc.properties["deps.c0de"]))
-    // Patchouli is optional: with it, the handbook of the mod can be crafted and read. It only goes into the mods
-    // folder of the first client, as in c0de. Not every Minecraft version has a Patchouli release
-    sc.properties.getOrNull("deps.patchouli")?.let { patchouliMod("vazkii.patchouli:Patchouli:$it-NEOFORGE") }
 }
 
 // The requests and answers are compiled into every node
@@ -131,19 +123,6 @@ tasks {
         exclude("fabric.mod.json")
     }
 
-    val copyPatchouli = register<Sync>("copyPatchouli") {
-        group = "c0de net"
-        description = "Puts Patchouli into the mods folder of the first development client (run/neoforge/mods)"
-        from(patchouliMod)
-        into(rootProject.file("run/neoforge$runSuffix/mods"))
-        // Other mods the player put into the folder stay
-        preserve { include("**/*") }
-    }
-
-    named("runClient") {
-        dependsOn(copyPatchouli)
-    }
-
     named("createMinecraftArtifacts") {
         dependsOn("stonecutterGenerate")
     }
@@ -199,8 +178,6 @@ publishMods {
         environment = CLIENT_AND_SERVER
         minecraftVersions.addAll(sc.properties.get("mod.mc_releases").split(",").map { it.trim() })
         requires("c0de")
-        // Patchouli only where the mod was tested with it (deps.patchouli)
-        if (sc.properties.getOrNull("deps.patchouli") != null) optional("patchouli")
     }
     curseforge {
         this.projectId = curseforgeId
@@ -212,7 +189,6 @@ publishMods {
         val c0de = !providers.gradleProperty("publish.curseforge_without_c0de").isPresent
         minecraftVersions.addAll(sc.properties.get("mod.mc_releases").split(",").map { it.trim() })
         if (c0de) requires("c0de")
-        if (sc.properties.getOrNull("deps.patchouli") != null) optional("patchouli")
     }
 }
 
