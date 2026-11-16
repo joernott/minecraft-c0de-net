@@ -160,3 +160,7 @@ Please go ahead with release 0.6.1 of c0de
 I pushed 0.6.1 yesterday night.
 
 Please start with the sprint in c0de-net. As I will be off for work for the next 8-9 hours, please complete as many steps as you can without my interaction in the meantime. Once you've done that, please make sure that the www-c0de sprint contains the necessary steps to reflect the changes, both in c0de and c0de-net and has tutorials for the new features
+
+## 2026-11-16 – Rerun of the release of 0.6.1
+
+OK, I triggered the rerun for c0de now.

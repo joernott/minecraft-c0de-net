@@ -4,7 +4,7 @@ mod.id = "c0de_net"
 mod.name = "c0de net"
 mod.group = "de.joernott.c0denet"
 mod.version = "0.3.0"
-mod.description = "Network libraries for c0de, starting with c0de_net/http: programs send HTTP requests from the client of the player who runs them."
+mod.description = "Network libraries for c0de: c0de_net/http sends HTTP requests, c0de_net/mail sends and reads mail, from the client of the player who runs the program."
 mod.authors = "Jörn Ott"
 mod.license = "BSD-3-Clause"
 mod.sources_url = "https://github.com/joernott/minecraft-c0de-net"
@@ -15,7 +15,7 @@ publish.modrinth_id = "P2irzbnD"
 publish.curseforge_id = "1800920"
 
 # The version of c0de the mod is built and tested against; the mod requires it or a newer one
-deps.c0de = "0.6.0"
+deps.c0de = "0.6.1"
 deps.fabric_loader = "0.19.5"
 loomx.loom_version = "1.18-SNAPSHOT"
 
