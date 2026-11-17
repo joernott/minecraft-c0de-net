@@ -183,3 +183,9 @@ The tag has been pushed
 
 The warning message is from Language Support for Java and reads "Security Warning! The gradle wrapper 'C:\Users\white\git\minecraft-c0de-net\gradle\wrapper\gradle-wrapper.jar'" [sha256 '621008afc4f5d59357fcf06ffa644dd5aade5e091bdc363742710445f73cdaf8'] could be malicious. Should it be trusted?";
 It also gave an OutOfMemoryError just now
+
+## 2026-11-17 – c0de 0.6.2 for the development clients
+
+did you deploy the new version of c0de into the minecraft-c0de-net instances?
+
+yes, do both once the release is done

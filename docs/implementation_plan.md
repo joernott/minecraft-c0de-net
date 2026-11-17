@@ -155,6 +155,15 @@ A task is done when
 | 8.9 | The program runner library knows c0de_net/mail (validation; runs without a client like c0de_net/http), the handbook (English and German, with examples) and its binder pages, README, Modrinth description, changelog. The tutorials of c0de.at get recipes for every function (www-c0de tasks 13.8 to 13.10).  Done on 2026-11-16: the runner jar contains Angus Mail (a program with the jar beside the runner of c0de 0.6.0 got REQUEST_FAILED from Angus), MailRunnerTest runs a program that sends, searches, reads, flags and expunges against GreenMail; the handbook has the chapter c0de_net/mail, four errors and two examples. | ✅ |
 | 8.10 | Release 0.4.0 for all Minecraft versions (GitHub pre-release with the runner library, Modrinth and CurseForge), requiring c0de 0.6.1. Version 0.4.0 on 2026-11-16; released on 2026-11-16 (GitHub pre-release with 21 assets, Modrinth and CurseForge). | ✅ |
 
+## Sprint 9: c0de 0.6.2
+
+**Goal:** c0de net is built and tested against c0de 0.6.2, which fixes the password dialog of the persistent vault, the wrench and the program runner (c0de sprint 18), so the development clients of c0de net run the fixed c0de. Planned on 2026-11-17.
+
+| Task | Description | Done |
+|---|---|:---:|
+| 9.1 | c0de net is built and tested against c0de 0.6.2 (`deps.c0de`); CI of all nodes. |  |
+| 9.2 | Release 0.4.1 with c0de 0.6.2, when the user asks for it. |  |
+
 ## Risks
 
 | Risk | Mitigation |
