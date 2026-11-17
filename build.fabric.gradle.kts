@@ -140,7 +140,10 @@ tasks {
             register("sources", sc.properties["mod.sources_url"])
             register("issues", sc.properties["mod.issues_url"])
             register("minecraft", sc.properties["mod.mc_compat"])
-            register("c0de", sc.properties["deps.c0de"])
+            // c0de from deps.c0de_min up to the next major version (task 9.3)
+            val c0deMin = sc.properties["deps.c0de_min"]
+            register("c0de_min", c0deMin)
+            register("c0de_next", "${c0deMin.substringBefore('.').toInt() + 1}.0.0")
             register("loader", Regex("\\d+\\.\\d+").find(sc.properties.get("deps.fabric_loader"))!!.value)
         }
 

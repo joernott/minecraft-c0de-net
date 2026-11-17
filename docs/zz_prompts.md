@@ -189,3 +189,7 @@ It also gave an OutOfMemoryError just now
 did you deploy the new version of c0de into the minecraft-c0de-net instances?
 
 yes, do both once the release is done
+
+For the future, make sure that the dependency between c0de and c0de-net is a bit more relaxed. Unless some underlying api changes in c0de, that require a redesign of c0de-net, c0de-net should have a dependency to a core version or any later version with the same major version number.
+
+is there any change in c0de that requires a newer c0de-net version to be build than 0.4.0?

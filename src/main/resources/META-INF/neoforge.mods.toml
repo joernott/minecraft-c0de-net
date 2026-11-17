@@ -24,6 +24,6 @@ side = "BOTH"
 [[dependencies.${id}]]
 modId = "c0de"
 type = "required"
-versionRange = "[${c0de},)"
+versionRange = "[${c0de_min},${c0de_next})"
 ordering = "AFTER"
 side = "BOTH"
