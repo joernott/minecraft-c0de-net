@@ -193,3 +193,7 @@ yes, do both once the release is done
 For the future, make sure that the dependency between c0de and c0de-net is a bit more relaxed. Unless some underlying api changes in c0de, that require a redesign of c0de-net, c0de-net should have a dependency to a core version or any later version with the same major version number.
 
 is there any change in c0de that requires a newer c0de-net version to be build than 0.4.0?
+
+## 2026-11-18 – The release is shelved
+
+Let's shelve the c0de-net release until we have something more substantial in it.
