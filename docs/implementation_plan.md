@@ -161,9 +161,9 @@ A task is done when
 
 | Task | Description | Done |
 |---|---|:---:|
-| 9.1 | c0de net is built and tested against c0de 0.6.2 (`deps.c0de`); CI of all nodes. |  |
+| 9.1 | c0de net is built and tested against c0de 0.6.2 (`deps.c0de`); CI of all nodes.  Done on 2026-11-17: CI of sprint-9 green on all 16 jobs (after a 429 of Maven Central in the first run). | ✅ |
 | 9.2 | Release 0.4.1 with c0de 0.6.2, when the user asks for it. |  |
-| 9.3 | Requested on 2026-11-17: a more relaxed dependency on c0de. Unless an API of c0de changes in a way that requires a redesign of c0de net, c0de net requires a minimum version of c0de or any later version with the same major version, instead of the version it was built against or newer. `deps.c0de_min` (0.6.1, the handbooks of other mods) gives the minimum; `fabric.mod.json` requires `>=0.6.1 <1.0.0`, `neoforge.mods.toml` `[0.6.1,1.0.0)`. `deps.c0de` stays the version c0de net is built and tested against. |  |
+| 9.3 | Requested on 2026-11-17: a more relaxed dependency on c0de. Unless an API of c0de changes in a way that requires a redesign of c0de net, c0de net requires a minimum version of c0de or any later version with the same major version, instead of the version it was built against or newer. `deps.c0de_min` (0.6.1, the handbooks of other mods) gives the minimum; `fabric.mod.json` requires `>=0.6.1 <1.0.0`, `neoforge.mods.toml` `[0.6.1,1.0.0)`. `deps.c0de` stays the version c0de net is built and tested against.  Done on 2026-11-17; CI green. | ✅ |
 
 ## Risks
 
