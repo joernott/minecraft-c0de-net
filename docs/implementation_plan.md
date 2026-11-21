@@ -164,7 +164,7 @@ A task is done when
 | 9.1 | c0de net is built and tested against c0de 0.6.2 (`deps.c0de`); CI of all nodes.  Done on 2026-11-17: CI of sprint-9 green on all 16 jobs (after a 429 of Maven Central in the first run). | ✅ |
 | 9.2 | Release 0.4.1 with c0de 0.6.2, when the user asks for it.  Shelved on 2026-11-18 until c0de net has something more substantial to release. |  |
 | 9.3 | Requested on 2026-11-17: a more relaxed dependency on c0de. Unless an API of c0de changes in a way that requires a redesign of c0de net, c0de net requires a minimum version of c0de or any later version with the same major version, instead of the version it was built against or newer. `deps.c0de_min` (0.6.1, the handbooks of other mods) gives the minimum; `fabric.mod.json` requires `>=0.6.1 <1.0.0`, `neoforge.mods.toml` `[0.6.1,1.0.0)`. `deps.c0de` stays the version c0de net is built and tested against.  Done on 2026-11-17; CI green. | ✅ |
-| 9.4 | c0de net is built and tested against c0de 0.7.0 (`deps.c0de`); `deps.c0de_min` stays 0.6.1, as c0de net uses nothing new of 0.7.0. |  |
+| 9.4 | c0de net is built and tested against c0de 0.7.0 (`deps.c0de`); `deps.c0de_min` stays 0.6.1, as c0de net uses nothing new of 0.7.0.  Done on 2026-11-21: unit tests on all nodes; server GameTests on the VM on all 10 nodes pass (the 8 tests of c0de net, with the tests of c0de 0.7.0 on all but 1.21.1-neoforge). | ✅ |
 
 ## Risks
 

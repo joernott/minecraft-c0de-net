@@ -201,3 +201,5 @@ Let's shelve the c0de-net release until we have something more substantial in it
 ## 2026-11-21 – c0de 0.7.0 released
 
 (prompt in minecraft-c0de) The tag has been pushed
+
+push c0de net when the tests pass
