@@ -15,7 +15,7 @@ publish.modrinth_id = "P2irzbnD"
 publish.curseforge_id = "1800920"
 
 # The version of c0de the mod is built and tested against
-deps.c0de = "0.6.2"
+deps.c0de = "0.7.0"
 # The oldest version of c0de the mod works with: the mod requires it or any later version with the same major
 # version (task 9.3). Raised only when c0de net needs something new of c0de, e.g. a changed API.
 deps.c0de_min = "0.6.1"

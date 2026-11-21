@@ -197,3 +197,7 @@ is there any change in c0de that requires a newer c0de-net version to be build t
 ## 2026-11-18 – The release is shelved
 
 Let's shelve the c0de-net release until we have something more substantial in it.
+
+## 2026-11-21 – c0de 0.7.0 released
+
+(prompt in minecraft-c0de) The tag has been pushed
